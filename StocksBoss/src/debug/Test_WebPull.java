@@ -14,10 +14,29 @@ public class Test_WebPull {
 	 */
 	public static void main(String[] args) {
 		String stockSymbol = "goog";
-		String yqlBaseUrl = "http://query.yahooapis.com/v1/public/yql";
-		String yqlQuery = "SELECT * FROM yahoo.finance.quotes WHERE symbol in ('" + stockSymbol.toUpperCase() + "')";
-		String yqlOptions = "&format=json";
-		yqlOptions += "&env=" + "http://datatables.org/alltables.env";
+		String xmlBaseUrl = "http://finance.yahoo.com/d/quotes.csv?";
+		String xmlsQuery = "s=" + stockSymbol;
+		String xmlfQuery = "f=snxl1pt8w";
+		/*
+		 * s - symbol
+		 * n - name
+		 * x - stock exchange
+		 * l1 - last trade price
+		 * p - previous close price
+		 * e7 - EPSE Current Year
+		 * e8 - EPSE Next Year
+		 * e9 - EPSE Next Quarter
+		 * j - 52-week low
+		 * k - 52-week high
+		 * j6 - % change from 52-week low
+		 * k5 - % change from 52-week high
+		 * m3 - 50-day moving average
+		 * m4 - 200-day moving average
+		 * m6 - % change from 200-day moving average
+		 * m8 - % change from 50-day moving average
+		 * t8 - 1 year target price
+		 * w - 52-week range [low-high]
+		 */
 		
 		HttpURLConnection httpConnect = null;
 		URL queryUrl = null;
@@ -26,8 +45,8 @@ public class Test_WebPull {
 		StringBuilder builder = null;
 		
 		try {
-			String yqlQueryUrl = yqlBaseUrl + "?q=" + URLEncoder.encode(yqlQuery, "UTF-8") + yqlOptions;
-			queryUrl = new URL(yqlQueryUrl);
+			String xmlQueryUrl = xmlBaseUrl + xmlsQuery + "&" + xmlfQuery;
+			queryUrl = new URL(xmlQueryUrl);
 			httpConnect = (HttpURLConnection) queryUrl.openConnection();
 			httpConnect.setRequestMethod("GET");
 			httpConnect.setDoOutput(true);
@@ -46,26 +65,13 @@ public class Test_WebPull {
 			}
 			
 			if (builder.length() > 0) {
-				String jsonText = builder.toString();
-				System.out.printf("[+] %s\n\n", jsonText);
-				String[] jsonParts = jsonText.split("\\{");
-				String[] stockInfo = jsonParts[4].replace("}", "").split(",");
+				String xmlText = builder.toString();
+				System.out.printf("[+] %s\n\n", xmlText);
+				String[] stockInfo = xmlText.replace("\"", "").split(",");
 				
-				String symbol = stockInfo[0].replace("\"", "");
-				String price = stockInfo[1].replace("\"", "");
-				String lastTrade = stockInfo[13].replace("\"", "");
-				String name = stockInfo[52].replace("\"", "");
-				String espeCurrentYear = stockInfo[17].replace("\"", "");
-				String espeNextYear = stockInfo[18].replace("\"", "");
-				String espeNextQuarter = stockInfo[19].replace("\"", "");
-				
-				System.out.printf("[+] %s\n", symbol);
-				System.out.printf("[+] %s\n", price);
-				System.out.printf("[+] %s\n", lastTrade);
-				System.out.printf("[+] %s\n", name);
-				System.out.printf("[+] %s\n", espeCurrentYear);
-				System.out.printf("[+] %s\n", espeNextYear);
-				System.out.printf("[+] %s\n", espeNextQuarter);
+				for (int n = 0; n < stockInfo.length; n++) {
+					System.out.printf("[%s] %s\n", n, stockInfo[n]);
+				}
 				
 			} else {
 				System.out.printf("[-] No Results");
