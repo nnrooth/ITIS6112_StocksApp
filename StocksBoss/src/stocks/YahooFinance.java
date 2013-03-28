@@ -99,5 +99,12 @@ public class YahooFinance {
 		httpConnect.disconnect(); queryUrl = null; buffy = null; builder = null;
 		return stockInfo;
 	}
+	
+	/**
+	 * Possible custom query method???
+	 */
+	public static String[] customQuery(String queryValue, String queryParams) {
+		return null;
+	}
 
 }

@@ -22,6 +22,9 @@ public class Test_StockPopulate {
 				System.out.printf("[+] Name: %s\n", stock.getName());
 				System.out.printf("[+] Value: %s\n", stock.getCurrentPrice());
 				System.out.printf("[+] P Close: %s\n", stock.getPreviousClosingPrice());
+				System.out.printf("[+] EPSE CY: %s\n", stock.getEpseCYear());
+				System.out.printf("[+] EPSE NY: %s\n", stock.getEpseNYear());
+				System.out.printf("[+] EPSE NQ: %s\n", stock.getEpseNQuarter());
 			} else {
 				System.out.printf("[-] No Results\n");
 			}
