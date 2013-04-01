@@ -12,7 +12,7 @@ public class Test_YahooFinance {
 	public static void main(String[] args) {
 		System.out.printf("[+] Search by symbol test\n\n");
 		
-		String stockSymbol; String[] stockInfo;  
+		String stockSymbol; String[] stockInfo;
 		Scanner scanIn = new Scanner(System.in);
 		boolean search = true; String newSearch;
 		

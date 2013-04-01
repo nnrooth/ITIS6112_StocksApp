@@ -13,7 +13,7 @@ public class EstimatedGrowth {
 	 * @param epse Order : current year, next year, next quarter
 	 * @return An average score based on all EPSEs
 	 */
-	private static BigDecimal getScore(BigDecimal currentPrice, BigDecimal[] epse) {
+	public static double getScore(BigDecimal currentPrice, BigDecimal[] epse) {
 		double egScore = 0.00; double egScore2 = 0.00; double placeHolder = 0.00;
 		for (int n = 0; n < epse.length; n++) {
 			double change = epse[n].doubleValue() / currentPrice.doubleValue();
@@ -56,7 +56,7 @@ public class EstimatedGrowth {
 		System.out.printf("[+] Method 1: %s\n", (egScore / 3));
 		System.out.printf("[+] Method 2: %s\n", (egScore2 / 3));
 		
-		return BigDecimal.valueOf(egScore / 3); // This is always returning positive... Nead to change scoring
+		return (egScore / 3); // This is always returning positive... Nead to change scoring
 		
 		/*
 		 * Ideas for new scoring method

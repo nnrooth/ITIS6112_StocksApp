@@ -1,9 +1,9 @@
 package stocks;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+
+import utils.WebData;
 
 /**
  * This class performs all data retrieval from YahooFinance
@@ -14,7 +14,7 @@ import java.net.URL;
 public class YahooFinance {
 
 	private static String queryBaseUrl = "http://finance.yahoo.com/d/quote?";
-	private static String queryParamsDefault = "nsxl1pe7e8e9";
+	private static String queryParamsDefault = "sxl1pe7e8e9";
 	
 	public static String[] searchSymbol(String queryValue) {
 		return searchSymbol(queryValue, queryParamsDefault);
@@ -41,63 +41,46 @@ public class YahooFinance {
 	 * | m8 - % change from 50-day moving average  | *
 	 * | t8 - 1 year target price                  | *
 	 * | w - 52-week range [low-high]              | *
+	 * | y - dividend yield                        | *
+	 * | r - p/e ratio                             | *
 	 * +-------------------------------------------+ *
 	 * * * * * * * * * * * * * * * * * * * * * * * * */
 	public static String[] searchSymbol(String queryValue, String queryParams) {
-		HttpURLConnection httpConnect = null;
-		URL queryUrl = null;
-		BufferedReader buffy = null; // lulzy reference to buffy the vampire slayer
-		String line = null;
-		StringBuilder builder = null;
-		String[] stockInfo = null;
+		URL queryUrl = null; URL queryUrl2 = null;
+		String xmlText; String[] splitText; String companyName;
+		ArrayList<String> stockInfo = null;
 		
 		// Use regex to validate query
 		if (!queryValue.matches("[a-zA-Z]{1,4}")) {
-			return stockInfo;
+			return null;
 		}
 		
 		String querySValue = "s=" + queryValue;
 		String queryFValue = "f=" + queryParams;
+		String queryFValue2 = "f=" + "n"; // Query for company name
 		
 		try {
-			String queryFullUrl = queryBaseUrl + querySValue + "&" + queryFValue;
-			
-			queryUrl = new URL(queryFullUrl); // Create a new url object
-			httpConnect = (HttpURLConnection) queryUrl.openConnection(); // Create a new connection object
-			httpConnect.setRequestMethod("GET"); // Send query using url encoding
-			httpConnect.setDoOutput(true); // Allow reading http response
-			httpConnect.setReadTimeout(2500); // Set response timeout at 2.5 seconds
-			httpConnect.connect(); // Open connection with server
-		
-			// Create a BufferedReader from the InputStream for the server response
-			buffy = new BufferedReader(
-				new InputStreamReader(
-					httpConnect.getInputStream()
-			));
-			
-			// Read the response into a StringBuilder object
-			builder = new StringBuilder();
-			while ((line = buffy.readLine()) != null) {
-				builder.append(line + "\n");
+			queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
+			queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
+			xmlText = WebData.makeRequest(queryUrl).replace("\"", "").trim();
+			companyName = WebData.makeRequest(queryUrl2).replace("\"",  "").trim();
+			splitText = xmlText.split(",");
+			stockInfo = new ArrayList<String>();
+			stockInfo.add(companyName);
+			for (int n = 0; n < splitText.length; n++) {
+				stockInfo.add(splitText[n].trim());
 			}
-			
-			// Clean and parse the resulting string into a String array
-			if (builder.length() > 0) {
-				String xmlText = builder.toString();
-
-				if (!xmlText.contains("N/A")) {
-					// Does not properly split when company name has a comma (e.g. csco)
-					stockInfo = xmlText.replace("\"", "").split(",");
-				}
-			}
-			
 		} catch (Exception e) {
+			e.printStackTrace();
 			/* Need to implement proper error try catches */
 		}
 
 		// Close connection and return the String array of stock info
-		httpConnect.disconnect(); queryUrl = null; buffy = null; builder = null;
-		return stockInfo;
+		queryUrl = null;
+		
+		String[] info = new String[stockInfo.size()];
+	    info = stockInfo.toArray(info);
+		return info;
 	}
 	
 	/**
@@ -106,5 +89,4 @@ public class YahooFinance {
 	public static String[] customQuery(String queryValue, String queryParams) {
 		return null;
 	}
-
 }

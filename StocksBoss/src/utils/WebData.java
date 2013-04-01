@@ -6,8 +6,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 public class WebData {
 
+	public static void main(String[] args) {
+		Document doc = getSoup(null);
+		Elements a = doc.getAllElements();
+	}
+	
+	public static Document getSoup(URL url) {
+		String html = "<html><head><title>First parse</title></head>"
+				  + "<body><p>Parsed HTML into a doc.</p></body></html>";
+		Document doc = Jsoup.parse(html);
+		return doc;
+	}
+	
 	public static String makeRequest(URL url) throws IOException {
 		HttpURLConnection httpConnect = null;
 		BufferedReader buffy = null; // lulzy reference to buffy the vampire slayer
@@ -31,8 +47,6 @@ public class WebData {
 		while ((line = buffy.readLine()) != null) {
 			builder.append(line + "\n");
 		}
-		
 		return builder.toString();
-	}
+	}	
 }
-
