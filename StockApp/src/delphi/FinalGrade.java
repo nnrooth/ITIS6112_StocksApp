@@ -89,14 +89,10 @@ public class FinalGrade {
 
 		// Getting the key matching score
 		KeyMatch s = new KeyMatch();
-		ArrayList<String> abc = new ArrayList<String>();
-		abc = s.getMatchingKeywords(s.getNews(stock.getSymbol()));
-		String[] keyMatched = new String[abc.size()];
-		keyMatched = abc.toArray(keyMatched);
 		
 		KeywordMatching km = new KeywordMatching();
 		double kScore = 0.0;
-		kScore = km.keyScore(keyMatched);
+		kScore = km.keyScore(s.getMatchingKeywords(s.getNews(stock.getSymbol())));
 		System.out.printf("[+] K Score: %s\n", kScore);
 		
 		// getting closing price score

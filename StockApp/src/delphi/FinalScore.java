@@ -17,14 +17,9 @@ public class FinalScore {
 			   
 		int finalScore = 0;
 		
-		KeyMatch s = new KeyMatch();
-		ArrayList<String> abc = new ArrayList<String>();
-		abc = s.getMatchingKeywords(s.getNews(stock.getSymbol()));
-		String[] keyMatched = new String[abc.size()];
-		keyMatched = abc.toArray(keyMatched);
-		
+		KeyWord_v2 s = new KeyWord_v2();		
 		KeywordMatching km = new KeywordMatching();
-		kwScore = km.keyScore(keyMatched);
+		kwScore = km.keyScore(s.getMatchingKeywords(s.getNews(stock.getSymbol())));
 		
 		t10Score = Top10.getScore(stock.getSymbol());
 		

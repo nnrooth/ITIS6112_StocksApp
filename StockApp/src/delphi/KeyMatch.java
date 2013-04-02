@@ -14,7 +14,7 @@ public class KeyMatch {
 
 		String url = String.format("https://www.google.com/finance/company_news?q=%s", symbol);
 		Document d = WebData.getSoup(url);
-		Elements links = d.getElementsByClass("name");
+		Elements links = d.getElementsByClass("name"); // FIXME - Throws intermittent nullpointer exceptions
 
 		int linkCount = links.size(); 
 		text = new String[linkCount];
@@ -40,14 +40,10 @@ public class KeyMatch {
 	public ArrayList<String> getMatchingKeywords(String[] text) {
 		// String[] matchingKeywords;
 		ArrayList<String> matchedKeywords = new ArrayList<String>();
-		String[] keywords = { "strong", "attractive traget",
-				"positive momentum", "still a buy", "gain", "rise", "rising",
-				"relative strength", "optimism", "potential boost", "bolster",
-				"safe heaven", "durable", "profit", "profitable", "high",
-				"increase", "increasing", "speculation", "sccessful", "reap",
-				"harmful", "complaints", "sued by", "declining", "decline",
-				"decreasing", "decrease", "going down", "greater pessimism",
-				"don't but", "low", "fall", "failure", "fluctuales" };
+		String[] keywords = { "strong","attractive target","positive momentum","still a buy","gain","rise","rising","strength","relative strength","boost","optimism","potential boost","bolster","safe   heaven","durable","profit",
+				"profitable","high","increase","increasing","speculation","successful","reap","harmful","complaints",
+				"sued by","declining","decline","decreasing","decrease","going down","greater pessimism",
+				"don't but","low","fall","failure","fluctuates","buy","sell" };
 		// matchingKeywords = new String[200];
 		for (int i = 0; i < text.length; i++) {
 			for (int j = 0; j < keywords.length; j++) {
