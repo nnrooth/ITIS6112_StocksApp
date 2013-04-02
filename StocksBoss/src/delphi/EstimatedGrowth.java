@@ -4,11 +4,6 @@ import java.math.BigDecimal;
 
 public class EstimatedGrowth {
 	
-	public static void main(String[] args) {
-		BigDecimal[] epses = {BigDecimal.valueOf(0.10), BigDecimal.valueOf(0.12), BigDecimal.valueOf(0.02)};
-		System.out.printf("[+] Score: %s\n", getScore(BigDecimal.valueOf(10.00), epses));
-	}
-	
 	/**
 	 * Calculates the Estimate Growth Score based on EPSEstimates
 	 * 
@@ -16,7 +11,7 @@ public class EstimatedGrowth {
 	 * @param epse Order : current year, next year, next quarter
 	 * @return An average score based on all EPSEs
 	 */
-	public static int getScore(BigDecimal currentPrice, BigDecimal[] epse) {
+	public static double getScore(BigDecimal currentPrice, BigDecimal[] epse) {
 		if (currentPrice == null || epse == null) {
 			return 0;
 		} else if (epse[0] == null || epse[1] == null || epse[2] == null) {
@@ -43,6 +38,6 @@ public class EstimatedGrowth {
 			if (change >= .01) { egScore -= 8; } else
 			if (change > .00) { egScore -= 10; }
 			
-		} return (int) Math.round(egScore / 3.00); // Rounding down, need to round up
+		} return (egScore / 3.00);
 	}
 }

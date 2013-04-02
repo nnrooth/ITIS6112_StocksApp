@@ -46,9 +46,9 @@ public class YahooFinance {
 	 * +-------------------------------------------+ *
 	 * * * * * * * * * * * * * * * * * * * * * * * * */
 	public static String[] searchSymbol(String queryValue, String queryParams) {
-		URL queryUrl = null; URL queryUrl2 = null;
+		URL queryUrl = null, queryUrl2 = null;
 		String xmlText; String[] splitText; String companyName;
-		ArrayList<String> stockInfo = null;
+		ArrayList<String> stockInfo = null; String[] info = null;
 		
 		// Use regex to validate query
 		if (!queryValue.matches("[a-zA-Z]{1,4}")) {
@@ -63,6 +63,11 @@ public class YahooFinance {
 			queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 			queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
 			xmlText = WebData.makeRequest(queryUrl).replace("\"", "").trim();
+			
+			if (xmlText.contains("N/A")) {
+				return info;
+			}
+			
 			companyName = WebData.makeRequest(queryUrl2).replace("\"",  "").trim();
 			splitText = xmlText.split(",");
 			stockInfo = new ArrayList<String>();
@@ -70,16 +75,14 @@ public class YahooFinance {
 			for (int n = 0; n < splitText.length; n++) {
 				stockInfo.add(splitText[n].trim());
 			}
+			
+			info = new String[stockInfo.size()];
+		    info = stockInfo.toArray(info);
+		    
 		} catch (Exception e) {
-			e.printStackTrace();
-			/* Need to implement proper error try catches */
+			info = null;
 		}
-
-		// Close connection and return the String array of stock info
-		queryUrl = null;
 		
-		String[] info = new String[stockInfo.size()];
-	    info = stockInfo.toArray(info);
 		return info;
 	}
 	

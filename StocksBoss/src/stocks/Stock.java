@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  * This class represents a stock object.
  * Stock attributes:
  * 	name, symbol, exchange, currentPrice, previousClosingPrice,
- * 	epseCYear, epseNYear, epseNQuarter, delphiRating
+ * 	epseCYear, epseNYear, epseNQuarter, score
  * 
  * @author NNRooth
  *
@@ -19,13 +19,12 @@ public class Stock {
 	
 	private BigDecimal currentPrice; // Most up to date price retrieved
 	private BigDecimal previousClosingPrice; // Value at the most recent closing of the market
-	private BigDecimal priorPreviousClosingPrice; // Previous previous closing price
 	
 	private BigDecimal epseCYear; // Earnings per share estimate for current year
 	private BigDecimal epseNYear; // Earnings per share estimate for next year
 	private BigDecimal epseNQuarter; // Earnings per share estimate for next quarter
 	
-	private int delphiRating; // Value derived from Delphi calculation. Range [-10:10]
+	private int score; // Value derived from Delphi calculation. Range [-10:10]
 	
 	/**
 	 * Null Constructor
@@ -39,7 +38,7 @@ public class Stock {
 		this.epseCYear = null;
 		this.epseNYear = null;
 		this.epseNQuarter = null;
-		delphiRating = 0;
+		score = 0;
 	}
 	
 	public Stock(String[] stockInfo) {
@@ -52,7 +51,7 @@ public class Stock {
 		setEpseCYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
-		setDelphiRating(0);
+		setScore(0);
 	}
 	
 	// Begin block of get/set methods
@@ -71,11 +70,8 @@ public class Stock {
 	public BigDecimal getPreviousClosingPrice() { return previousClosingPrice; }
 	public void setPreviousClosingPrice(BigDecimal previousClosingPrice) { this.previousClosingPrice = previousClosingPrice; }
 	
-	public BigDecimal getPriorPreviousClosingPrice() { return priorPreviousClosingPrice; }
-	public void setPriorPreviousClosingPrice(BigDecimal priorPreviousClosingPrice) { this.priorPreviousClosingPrice = priorPreviousClosingPrice; }
-	
-	public int getDelphiRating() { return delphiRating; }
-	public void setDelphiRating(int delphiRating) { this.delphiRating = delphiRating; }
+	public int getScore() { return score; }
+	public void setScore(int score) { this.score = score; }
 	
 	public BigDecimal getEpseCYear() { return epseCYear; }
 	public void setEpseCYear(BigDecimal epseCYear) { this.epseCYear = epseCYear; }

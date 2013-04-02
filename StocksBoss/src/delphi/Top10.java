@@ -9,15 +9,16 @@ import utils.WebData;
 
 public class Top10 {
 
-	public static void main(String[] args) {
-		System.out.printf("[+] Score: %s", getScore("msft"));
-	}
-	
-	public static int getScore(String symbol) {
-		int score = 0;
+	public static double getScore(String symbol) {
+		double score = 0;
 		
-		if (isInBottom10(symbol)) { score -= 10; } else
-		if (isInTop10(symbol)) { score += 10; }
+		// Use regex to validate query
+		if (!symbol.matches("[a-zA-Z]{1,4}")) {
+			return score;
+		}
+		
+		if (isInTop10(symbol)) { score += 10; } else
+		if (isInBottom10(symbol)) { score -= 10; }
 		
 		
 		return score;
@@ -25,8 +26,9 @@ public class Top10 {
 	
 	private static boolean isInTop10(String symbol) {
 		boolean found = false;
+		
 		try {
-			URL url = new URL("http://slant.investorplace.com/2012/12/10-worst-stocks-of-2012/");
+			URL url = new URL("http://beta.fool.com/brewcrewfool/2013/02/10/the-top-10-stocks-for-2013-and-beyond/24111/");
 			Document d = WebData.getSoup(url);
 			
 			String query = String.format(">%s<", symbol);
@@ -42,6 +44,7 @@ public class Top10 {
 		boolean found = false;
 		try {
 			URL url = new URL("http://slant.investorplace.com/2012/12/10-worst-stocks-of-2012/");
+			url = new URL("http://investorplace.com/2012/06/10-worst-stocks-so-far-in-2012/view-all/");
 			Document d = WebData.getSoup(url);
 			
 			String query = String.format(">%s<", symbol);

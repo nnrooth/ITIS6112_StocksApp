@@ -1,142 +1,35 @@
 package delphi;
 
-/*import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;*/
-import java.io.IOException;
-import java.net.*;
 import java.util.ArrayList;
 
-//import java.util.List;
-//import org.json.JSONArray;
-//import org.json.JSONException;
-
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
-/*import org.jsoup.nodes.Element;
- //import org.jsoup.nodes.Node;*/
-
-//import org.jsoup.nodes.TextNode;
-
 import org.jsoup.select.Elements;
 
-//import org.w3c.dom.Document;
+import utils.WebData;
 
 public class KeyMatch {
 	static int count = 0;
 
 	public String[] getNews(String symbol) {
 		String[] text = null;
-		try {
-			/*
-			 * // get URL content //url = new
-			 * URL("http://www.google.com/finance/market_news"); String
-			 * stock_name = "AAPL"; //url = new
-			 * URL("http://www.google.com/finance/company_news?q=NASDAQ%3" +
-			 * stock_name + "&ei=ts9RUdj0Faa6lAODEA"); url = new
-			 * URL("http://www.google.com/ig/api?stock=AAPL"); URLConnection
-			 * conn = url.openConnection();
-			 * 
-			 * // open the stream and put it into BufferedReader BufferedReader
-			 * br = new BufferedReader( new
-			 * InputStreamReader(conn.getInputStream()));
-			 * 
-			 * String inputLine;
-			 * 
-			 * //save to this filename String fileName = "./Stockstest.xml";
-			 * File file = new File(fileName);
-			 * 
-			 * 
-			 * if (!file.exists()) { System.out.println("Hello");
-			 * file.createNewFile(); }
-			 * 
-			 * //use FileWriter to write file FileWriter fw = new
-			 * FileWriter(file.getAbsoluteFile()); BufferedWriter bw = new
-			 * BufferedWriter(fw);
-			 * 
-			 * while ((inputLine = br.readLine()) != null) {
-			 * bw.write(inputLine); }
-			 * 
-			 * bw.close(); br.close();
-			 * 
-			 * System.out.println("Done 1 ");
-			 * 
-			 * url1 = new
-			 * URL("https://www.google.com/finance/company_news?q=AAPL");
-			 * URLConnection conn1 = url1.openConnection();
-			 * 
-			 * // open the stream and put it into BufferedReader BufferedReader
-			 * br1 = new BufferedReader( new
-			 * InputStreamReader(conn1.getInputStream()));
-			 * 
-			 * String inputLine1;
-			 * 
-			 * //save to this filename String fileName1 = "./Stockstest1.html";
-			 * File file1 = new File(fileName1);
-			 * 
-			 * 
-			 * if (!file1.exists()) { System.out.println("Hello");
-			 * file1.createNewFile(); }
-			 * 
-			 * //use FileWriter to write file FileWriter fw1 = new
-			 * FileWriter(file1.getAbsoluteFile()); BufferedWriter bw1 = new
-			 * BufferedWriter(fw1);
-			 * 
-			 * while ((inputLine1 = br1.readLine()) != null) {
-			 * bw1.write(inputLine1); }
-			 * 
-			 * bw1.close(); br1.close();
-			 * 
-			 * System.out.println("Done 2 ");
-			 */
 
-			String url = String.format("https://www.google.com/finance/company_news?q=%s", symbol);
-			
-			Document doc = Jsoup.connect(url).get();
+		String url = String.format("https://www.google.com/finance/company_news?q=%s", symbol);
+		Document d = WebData.getSoup(url);
+		Elements links = d.getElementsByClass("name");
 
-			// Document doc = Jsoup.connect("http://example.com/").get();
-			// String title = doc.title();
-			// Element class1 = doc.getElementById("news-main");
-			// Elements[] abc = new Elements[1];
-			Elements abc = doc.getElementsByClass("name");
-			/*
-			 * //class1.getAllElements(); //String[] news_links = new
-			 * String[abc.size()]; //for(int i = 0;i < abc.size();i++)
-			 * //news_links[i] =
-			 * abc.get(i).getElementsByAttribute("href").attr("href"
-			 * ).toString(); //String title_of_link =
-			 * abc.get(0).getElementsByAttribute("href").text();
-			 * //System.out.println(news_links[0]);
-			 */
-
-			text = new String[abc.size()];
-			for (int i = 0; i < abc.size(); i++) {
-				Document doc1 = Jsoup
-						.connect(
-								abc.get(i).getElementsByAttribute("href")
-										.attr("href").toString()).timeout(4000)
-						.get();
-				Elements paragraphs = doc1.select("p");
-				text[count] = paragraphs.text();
-				count++;
-			}
-
-			/*
-			 * Document doc1 = Jsoup.connect(news_links[1]).get();
-			 * List<TextNode> abc1 = doc.body().textNodes(); Elements paragraphs
-			 * = doc1.select("p"); String text = paragraphs.text();
-			 * System.out.println("hello");
-			 */
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		int linkCount = links.size(); 
+		linkCount = 3;
+		text = new String[linkCount];
+		String link;
+		for (int i = 0; i < linkCount; i++) {
+			link = links.get(i).getElementsByAttribute("href").attr("href").toString();
+			Document story = WebData.getSoup(link);
+			Elements paragraphs = story.select("p");
+			text[count] = paragraphs.text();
+			count++;
 		}
-		return text;
+		
+	return text;
 	}
 
 	/*

@@ -2,13 +2,15 @@ package debug;
 
 import java.util.Scanner;
 import stocks.Stock;
+import stocks.YahooFinance;
 
-public class Test_FinalScore {
+public class Test_DelphiLogic {
 
 	public static void main(String[] args) {
 		System.out.printf("[+] Search by symbol test\n\n");
 		
-		Stock stock = new Stock();	String stockSymbol;  
+		Stock stock; String stockSymbol;
+		String[] stockInfo;
 		Scanner scanIn = new Scanner(System.in);
 		boolean search = true; String newSearch;
 		
@@ -16,13 +18,16 @@ public class Test_FinalScore {
 			System.out.printf("[.] Sybmol: ");
 			stockSymbol = scanIn.nextLine();
 			
+			stockInfo = YahooFinance.searchSymbol(stockSymbol);
+			if (stockInfo != null) {
+				stock = new Stock(stockInfo);
+				stock.setScore(delphi.FinalScore.getScore(stock));
+			} else {
+				stock = new Stock();
+			}
+			
 			if (stock.getSymbol() != null) {
-				System.out.printf("[+] Name: %s\n", stock.getName());
-				System.out.printf("[+] Value: %s\n", stock.getCurrentPrice());
-				System.out.printf("[+] P Close: %s\n", stock.getPreviousClosingPrice());
-				System.out.printf("[+] EPSE CY: %s\n", stock.getEpseCYear());
-				System.out.printf("[+] EPSE NY: %s\n", stock.getEpseNYear());
-				System.out.printf("[+] EPSE NQ: %s\n", stock.getEpseNQuarter());
+				System.out.printf("[+] Score: %s\n", stock.getScore());
 			} else {
 				System.out.printf("[-] No Results\n");
 			}
