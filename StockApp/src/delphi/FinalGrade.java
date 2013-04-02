@@ -11,9 +11,6 @@ import stocks.Stock;
 
 public class FinalGrade {
 
-	/**
-	 * @param args
-	 */
 	public double score(double kScore, double pcScore, double tbScore, double estimatedGrowthScore) {
 		double score = 0.0;
 		
@@ -109,11 +106,11 @@ public class FinalGrade {
 		/*int pcScore = PreviousPrice.getScore(stock.getCurrentPrice(), stock.getPreviousClosingPrice(), stock.getPriorPreviousClosingPrice());*/
 		System.out.printf("[+] PC Score: %s\n", pcScore);
 						
-		int tbScore = Top10.getScore(stock.getSymbol());
+		double tbScore = Top10.getScore(stock.getSymbol());
 		System.out.printf("[+] TB Score: %s\n", tbScore);
 		BigDecimal[] epses = {stock.getEpseCYear(), stock.getEpseNYear(), stock.getEpseNQuarter()};
 		
-		int egScore = EstimatedGrowth.getScore(stock.getCurrentPrice(), epses);
+		double egScore = EstimatedGrowth.getScore(stock.getCurrentPrice(), epses);
 		System.out.printf("[+] EG Score: %s\n", egScore);
 		
 		// Calling the method to calculate the final grade.

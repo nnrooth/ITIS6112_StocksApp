@@ -38,10 +38,11 @@ public class KeywordMatching {
 		scoreRule.put("fluctuates", -2);
 
 		double score = 0.0;
-		for (int i = 0; i < matchedKeywords.length; i++) {
+		int matchCount = matchedKeywords.length;
+		for (int i = 0; i < matchCount; i++) {
 			if (scoreRule.get(matchedKeywords[i]) != null)
 				score = score + scoreRule.get(matchedKeywords[i]);
 		}
-		return score;
+		return (score / matchCount);
 	}
 }

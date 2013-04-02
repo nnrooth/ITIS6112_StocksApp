@@ -8,7 +8,6 @@ import org.jsoup.select.Elements;
 import utils.WebData;
 
 public class KeyMatch {
-	static int count = 0;
 
 	public String[] getNews(String symbol) {
 		String[] text = null;
@@ -18,15 +17,13 @@ public class KeyMatch {
 		Elements links = d.getElementsByClass("name");
 
 		int linkCount = links.size(); 
-		linkCount = 3;
 		text = new String[linkCount];
 		String link;
 		for (int i = 0; i < linkCount; i++) {
 			link = links.get(i).getElementsByAttribute("href").attr("href").toString();
 			Document story = WebData.getSoup(link);
-			Elements paragraphs = story.select("p");
-			text[count] = paragraphs.text();
-			count++;
+			Elements paragraphs = story.select("p"); // FIXME - Throws intermittent nullpointers exceptions
+			text[i] = paragraphs.text();
 		}
 		
 	return text;
@@ -69,8 +66,6 @@ public class KeyMatch {
 					matchedKeywords.remove(j);
 			}
 		}
-		for (int h = 0; h < matchedKeywords.size(); h++)
-			System.out.println(matchedKeywords.get(h));
 		return matchedKeywords;
 	}
 }

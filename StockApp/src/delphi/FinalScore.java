@@ -37,8 +37,9 @@ public class FinalScore {
 		pcScore = (pcScore1 + pcScore2) / 2.00;
 		
 		finalScore = (int) Math.round(
-					(kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
-					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT));
+					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
+					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))
+													* 100.0) / 100.0);
 		
 		return finalScore;
 	}

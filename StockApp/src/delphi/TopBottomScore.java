@@ -34,8 +34,7 @@ public class TopBottomScore {
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+		// TODO Remove Method
 		TopBottomScore tbs = new TopBottomScore();
 		String[] top={"Apple","Google", "Microsoft"};
 		String[] bot={"Ducati","Food Lion","Reynolds"};

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class PreviousPrice {
 
 	public static void main(String[] args) {
+		// TODO Remove Method
 		int startPrice = 10, endPrice = 0;
 		
 		for (int n=startPrice; n >= endPrice; n--) {
@@ -35,7 +36,7 @@ public class PreviousPrice {
 		
 		if (percentChange >= 1) { score += 10; } else
 		if (percentChange <= -1) { score -= 10; } else
-		{ score = percentChange * 10.00; }
+		{ score = percentChange * 1000.00; }
 		
 		return score;
 	}

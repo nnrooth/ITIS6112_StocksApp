@@ -14,10 +14,13 @@ public class Test_DelphiLogic {
 		Scanner scanIn = new Scanner(System.in);
 		boolean search = true; String newSearch;
 		
+		long startTime, endTime, runTime;
+		
 		while(search) {
 			System.out.printf("[.] Sybmol: ");
 			stockSymbol = scanIn.nextLine();
 			
+			startTime = System.currentTimeMillis();
 			stockInfo = YahooFinance.searchSymbol(stockSymbol);
 			if (stockInfo != null) {
 				stock = new Stock(stockInfo);
@@ -31,6 +34,10 @@ public class Test_DelphiLogic {
 			} else {
 				System.out.printf("[-] No Results\n");
 			}
+			
+			endTime = System.currentTimeMillis();
+			runTime = (endTime - startTime) / 1000;
+			System.out.printf("[+] Completed in %s seconds\n", runTime);
 			
 			System.out.printf("[.] New Search [y, N]: ");
 			newSearch = scanIn.nextLine();
