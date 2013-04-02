@@ -1,6 +1,6 @@
 package stocks;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 /**
  * This class represents a stock object.
@@ -17,12 +17,13 @@ public class Stock {
 	private String symbol; // Stock ticker symbol
 	private String exchange; // Stock exchange
 	
-	private BigInteger currentPrice; // Most up to date price retrieved
-	private BigInteger previousClosingPrice; // Value at the most recent closing of the market
+	private BigDecimal currentPrice; // Most up to date price retrieved
+	private BigDecimal previousClosingPrice; // Value at the most recent closing of the market
+	private BigDecimal priorPreviousClosingPrice; // Previous previous closing price
 	
-	private BigInteger epseCYear; // Earnings per share estimate for current year
-	private BigInteger epseNYear; // Earnings per share estimate for next year
-	private BigInteger epseNQuarter; // Earnings per share estimate for next quarter
+	private BigDecimal epseCYear; // Earnings per share estimate for current year
+	private BigDecimal epseNYear; // Earnings per share estimate for next year
+	private BigDecimal epseNQuarter; // Earnings per share estimate for next quarter
 	
 	private int delphiRating; // Value derived from Delphi calculation. Range [-10:10]
 	
@@ -41,6 +42,19 @@ public class Stock {
 		delphiRating = 0;
 	}
 	
+	public Stock(String[] stockInfo) {
+		int count = 0;
+		setName(stockInfo[count++]);
+		setSymbol(stockInfo[count++]);
+		setExchange(stockInfo[count++]);
+		setCurrentPrice(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setPreviousClosingPrice(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setEpseCYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setDelphiRating(0);
+	}
+	
 	// Begin block of get/set methods
 	public String getName() { return name; }
 	public void setName(String name) {	this.name = name; }
@@ -51,22 +65,25 @@ public class Stock {
 	public String getExchange() { return exchange; }
 	public void setExchange(String exchange) { this.exchange = exchange; }
 	
-	public BigInteger getCurrentPrice() { return currentPrice; }
-	public void setCurrentPrice(BigInteger currentPrice) { this.currentPrice = currentPrice; }
+	public BigDecimal getCurrentPrice() { return currentPrice; }
+	public void setCurrentPrice(BigDecimal currentPrice) { this.currentPrice = currentPrice; }
 	
-	public BigInteger getPreviousClosingPrice() { return previousClosingPrice; }
-	public void setPreviousClosingPrice(BigInteger previousClosingPrice) { this.previousClosingPrice = previousClosingPrice; }
+	public BigDecimal getPreviousClosingPrice() { return previousClosingPrice; }
+	public void setPreviousClosingPrice(BigDecimal previousClosingPrice) { this.previousClosingPrice = previousClosingPrice; }
+	
+	public BigDecimal getPriorPreviousClosingPrice() { return priorPreviousClosingPrice; }
+	public void setPriorPreviousClosingPrice(BigDecimal priorPreviousClosingPrice) { this.priorPreviousClosingPrice = priorPreviousClosingPrice; }
 	
 	public int getDelphiRating() { return delphiRating; }
 	public void setDelphiRating(int delphiRating) { this.delphiRating = delphiRating; }
 	
-	public BigInteger getEpseCYear() { return epseCYear; }
-	public void setEpseCYear(BigInteger epseCYear) { this.epseCYear = epseCYear; }
+	public BigDecimal getEpseCYear() { return epseCYear; }
+	public void setEpseCYear(BigDecimal epseCYear) { this.epseCYear = epseCYear; }
 	
-	public BigInteger getEpseNYear() { return epseNYear; }
-	public void setEpseNYear(BigInteger epseNYear) { this.epseNYear = epseNYear; }
+	public BigDecimal getEpseNYear() { return epseNYear; }
+	public void setEpseNYear(BigDecimal epseNYear) { this.epseNYear = epseNYear; }
 	
-	public BigInteger getEpseNQuarter() { return epseNQuarter; }
-	public void setEpseNQuarter(BigInteger epseNQuarter) { this.epseNQuarter = epseNQuarter; }
+	public BigDecimal getEpseNQuarter() { return epseNQuarter; }
+	public void setEpseNQuarter(BigDecimal epseNQuarter) { this.epseNQuarter = epseNQuarter; }
 	// End block of get/set methods
 }

@@ -6,21 +6,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 public class WebData {
 
-	public static void main(String[] args) {
-		Document doc = getSoup(null);
-		Elements a = doc.getAllElements();
-	}
-	
 	public static Document getSoup(URL url) {
-		String html = "<html><head><title>First parse</title></head>"
-				  + "<body><p>Parsed HTML into a doc.</p></body></html>";
-		Document doc = Jsoup.parse(html);
+		Document doc = null;
+		Connection connect = Jsoup.connect(url.toString());
+		int timeout = 2500;
+		try {
+			connect.timeout(timeout);
+			doc = connect.get();
+		} catch (IOException e1) {
+			try {
+				connect.timeout(timeout * 2);
+				doc = connect.get();
+			} catch (IOException e2) {
+				try {
+					connect.timeout(timeout * 3);
+					doc = connect.get();
+				} catch (IOException ignored) {}
+			}
+		}
 		return doc;
 	}
 	
