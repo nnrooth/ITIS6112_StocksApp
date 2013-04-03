@@ -54,6 +54,7 @@ public class KeywordMatching {
 			if (scoreRule.get(matchedKeywords.get(i)) != null)
 				score = score + scoreRule.get(matchedKeywords.get(i));
 		}
+		System.out.println(score);
 		return (score / matchCount);
 	}
 }
