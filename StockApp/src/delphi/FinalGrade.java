@@ -2,9 +2,6 @@ package delphi;
 
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import stocks.Stock;
@@ -26,10 +23,6 @@ public class FinalGrade {
 				if (tbScore != 0.0) {
 					if (estimatedGrowthScore != 0.0) {
 						// Have received all inputs
-						System.out.println(keyPercent * kScore);
-						System.out.println(pastClosingPercent * pcScore);
-						System.out.println(topBottomPercent * tbScore);
-						System.out.println(estimatedGrowthPercent * estimatedGrowthScore);
 						score = (keyPercent * kScore)
 								+ (pastClosingPercent * pcScore)
 								+ (topBottomPercent * tbScore)
@@ -44,11 +37,6 @@ public class FinalGrade {
 					}
 				}
 				else{ // In case the company is not listed in the Top or Bottom List
-					System.out.println("Company not listed in the Top or Bottom List");
-					System.out.println(keyPercent * kScore);
-					System.out.println(pastClosingPercent * pcScore);
-					System.out.println(topBottomPercent * tbScore);
-					System.out.println(estimatedGrowthPercent * estimatedGrowthScore);
 					score = (keyPercent * kScore)
 							+ (pastClosingPercent * pcScore)
 							+ (topBottomPercent * tbScore)
@@ -56,15 +44,9 @@ public class FinalGrade {
 					
 				}
 			}
-			else{// Percentage Change Score is 0.0
-				System.out.println("No change in the last 2 day closing prices.");
-			}
+			else{/* Percentage Change Score is 0.0 */}
 
-		}
-		else{// No keywords have matched.
-			System.out.println("No keywordds have matched. We have to improve our search keywords list.");
-			
-		}
+		} else{/* No keywords have matched.	*/}
 
 		return score;
 	}

@@ -46,8 +46,8 @@ public class Top10 {
 		boolean found = false;
 		try {
 			URL url = new URL("http://slant.investorplace.com/2012/12/10-worst-stocks-of-2012/");
-			url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&page=1&col=7");
-			url = new URL("http://investorplace.com/2012/06/10-worst-stocks-so-far-in-2012/view-all/");
+			url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&col=7&asc=1");
+			//url = new URL("http://investorplace.com/2012/06/10-worst-stocks-so-far-in-2012/view-all/");
 			Document d = WebData.getSoup(url);
 			
 			String query = String.format(">%s<", symbol);
@@ -57,5 +57,21 @@ public class Top10 {
 		} catch (MalformedURLException ignored) {}
 		
 		return found;
+	}
+	
+	public static String[] getTop10() {
+		String[] top10List = {
+				"TCCO",	"SYMX", "CVM", "THLD", "TRNS",
+				"CTRM", "BLIN", "ADNC", "RMKR", "ENMD"
+			};
+		return top10List;
+	}
+	
+	public static String[] getBottom10() {
+		String[] bottom10List = {
+				"JRCC", "IDN", "KWK", "URRE", "AFFY",
+				"FBN", "NBG", "AUMN", "JAG", "PRIS"
+			};
+		return bottom10List;
 	}
 }

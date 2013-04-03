@@ -30,9 +30,7 @@ public class KeyWord_v2 {
 			}
 		}
 		catch (MalformedURLException e) {
-			//e.printStackTrace();
 		} catch (IOException e) {
-			//e.printStackTrace();
 		} catch (Exception ignored) {
 			text.clear();
 			text.add("");
