@@ -69,6 +69,8 @@ public class WebData {
 					}
 				}
 			}
+		} catch (Exception e) {
+			return null;
 		}
 	
 		// Create a BufferedReader from the InputStream for the server response

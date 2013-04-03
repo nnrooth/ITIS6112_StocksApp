@@ -66,6 +66,7 @@ public class FinalGrade {
 	}
 
 	public static void main(String[] args) {
+		// TODO Remove method
 		System.out.printf("[+] Search by symbol test\n\n");
 		
 		Stock stock;	String stockSymbol;

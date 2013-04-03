@@ -3,6 +3,7 @@ package debug;
 import java.util.Scanner;
 import stocks.Stock;
 import stocks.YahooFinance;
+import utils.Controller;
 
 public class Test_DelphiLogic {
 
@@ -49,5 +50,4 @@ public class Test_DelphiLogic {
 		
 		scanIn.close();
 	}
-
 }

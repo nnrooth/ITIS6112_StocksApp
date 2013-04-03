@@ -29,9 +29,11 @@ public class Top10 {
 		
 		try {
 			URL url = new URL("http://beta.fool.com/brewcrewfool/2013/02/10/the-top-10-stocks-for-2013-and-beyond/24111/");
+			url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=2&page=1&col=7");
+			
 			Document d = WebData.getSoup(url);
 			
-			String query = String.format(">%s<", symbol);
+			String query = String.format("%s</a>", symbol);
 			
 			found = d.toString().toUpperCase().contains(query);
 			
@@ -44,6 +46,7 @@ public class Top10 {
 		boolean found = false;
 		try {
 			URL url = new URL("http://slant.investorplace.com/2012/12/10-worst-stocks-of-2012/");
+			url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&page=1&col=7");
 			url = new URL("http://investorplace.com/2012/06/10-worst-stocks-so-far-in-2012/view-all/");
 			Document d = WebData.getSoup(url);
 			
