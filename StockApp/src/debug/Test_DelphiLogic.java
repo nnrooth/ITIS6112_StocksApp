@@ -6,7 +6,6 @@ import java.util.Scanner;
 import delphi.Top10;
 import stocks.Stock;
 import stocks.YahooFinance;
-import utils.Controller;
 
 public class Test_DelphiLogic {
 
@@ -20,24 +19,26 @@ public class Test_DelphiLogic {
 		
 		long startTime, endTime, runTime;
 		
-		System.out.printf("[.] View Top/Bottom Ten [y, N]: ");
+		System.out.printf("[.] View Top/Bottom Stocks [y, N]: ");
 		String viewTop = scanIn.nextLine();
 		if (viewTop.toLowerCase().equals("y")) {
-			String[] top10List = Top10.getTop10();
-			String[] bottom10List = Top10.getBottom10();
+			String[] top10List = Top10.getTop10Regex();
+			String[] bottom10List = Top10.getBottom10Regex();
 			
 			Random randy = new Random();
+			int maxRandy = 250; // TODO determine randymax
+			int viewCount = 10; // TODO change to 10 for presentation
 			
-			System.out.printf("[+] Top 10 List\n");
-			for (int n = 0; n < top10List.length; n++) {
-				try { Thread.sleep(randy.nextInt(1000)); } catch (InterruptedException e) {} finally {
-				System.out.printf("[%s]\t%s\n", (n + 1), top10List[n]); }
+			System.out.printf("[+] Top Stocks\tBottom Stocks\n");
+			
+			if (viewCount > top10List.length) {
+				viewCount = top10List.length;
+			} else if (viewCount > bottom10List.length){
+				viewCount = bottom10List.length;
 			}
-			
-			System.out.printf("\n[+] Bottom 10 List\n");
-			for (int n = 0; n < bottom10List.length; n++) {
-				try { Thread.sleep(randy.nextInt(1000)); } catch (InterruptedException e) {} finally {
-					System.out.printf("[%s]\t%s\n", (n + 1), bottom10List[n]); }
+			for (int n = 0; n < viewCount; n++) {
+				try { Thread.sleep(randy.nextInt(maxRandy)); } catch (InterruptedException e) {} finally {
+				System.out.printf("[%s]\t%s\t%s\n", (n + 1), top10List[n], bottom10List[n]); }
 			}
 		}
 		
