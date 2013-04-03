@@ -31,6 +31,7 @@ public class Test_DelphiLogic {
 			
 			if (stock.getSymbol() != null) {
 				System.out.printf("[+] Score: %s\n", stock.getScore());
+				System.out.printf("[+] Current Price: %s\n", stock.getCurrentPrice());
 			} else {
 				System.out.printf("[-] No Results\n");
 			}

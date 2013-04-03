@@ -45,6 +45,10 @@ public class FinalGrade {
 				}
 				else{ // In case the company is not listed in the Top or Bottom List
 					System.out.println("Company not listed in the Top or Bottom List");
+					System.out.println(keyPercent * kScore);
+					System.out.println(pastClosingPercent * pcScore);
+					System.out.println(topBottomPercent * tbScore);
+					System.out.println(estimatedGrowthPercent * estimatedGrowthScore);
 					score = (keyPercent * kScore)
 							+ (pastClosingPercent * pcScore)
 							+ (topBottomPercent * tbScore)

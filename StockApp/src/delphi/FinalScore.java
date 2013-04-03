@@ -31,10 +31,12 @@ public class FinalScore {
 		
 		pcScore = (pcScore1 + pcScore2) / 2.00;
 		
-		finalScore = (int) Math.round(
-					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
-					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))
-													* 100.0) / 100.0);
+		FinalGrade fg = new FinalGrade();
+		finalScore = (int)Math.round(fg.score(kwScore,pcScore, t10Score, egScore));
+//		finalScore = (int) Math.round(
+//					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
+//					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))
+//													* 100.0) / 100.0);
 		
 		return finalScore;
 	}
