@@ -75,7 +75,7 @@ public class FinalGrade {
 
 
 		// Getting the key matching score
-		KeyMatch s = new KeyMatch();
+		KeyWordExpert s = new KeyWordExpert();
 		
 		KeywordMatching km = new KeywordMatching();
 		double kScore = 0.0;

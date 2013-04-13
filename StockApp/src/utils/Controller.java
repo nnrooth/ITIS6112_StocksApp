@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import delphi.ClosingPrice;
 import delphi.EstimatedGrowth;
 import delphi.FinalGrade;
-import delphi.KeyMatch;
+import delphi.KeyWordExpert;
 import delphi.KeywordMatching;
 import delphi.Top10;
 import stocks.Stock;
@@ -36,7 +36,7 @@ public class Controller {
 		String[] stockInfo = stocks.YahooFinance.searchSymbol(symbol);
 		stock = new Stock(stockInfo);
 
-		KeyMatch s = new KeyMatch();
+		KeyWordExpert s = new KeyWordExpert();
 		KeywordMatching km = new KeywordMatching();
 		double kScore = 0.0;
 		kScore = km.keyScore(s.getMatchingKeywords(s.getNews(stock.getSymbol())));

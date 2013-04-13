@@ -36,7 +36,7 @@ public class EstimatedGrowth {
 			if (change >= .03) { egScore -= 4; } else
 			if (change >= .02) { egScore -= 6; } else
 			if (change >= .01) { egScore -= 8; } else
-			if (change > .00) { egScore -= 10; }
+			if (change  > .00) { egScore -= 10; }
 			
 		} return (egScore / 3.00);
 	}
