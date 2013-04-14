@@ -11,7 +11,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import web.WebData;
+import utils.WebData;
 
 public class KeyWordExpert {
 
@@ -106,7 +106,7 @@ public class KeyWordExpert {
 	
 	public String[] getNews(String symbol) throws IOException {
 		String[] text = null;
-		URL url; int timeout = 2500 /* MilliSeconds */;
+		URL url; int timeout = 2000 /* MilliSeconds */;
 		String response = null; int strike = 0; int strikes = 1;
 		
 		while (response == null || strike++ < strikes) {
@@ -182,10 +182,17 @@ public class KeyWordExpert {
 		return matchedKeywords;
 	}
 	
-	public double getScore(ArrayList<String> matchedKeywords) {
+	public double getScore(String symbol) {
+		try {
+			return getScore(getMatchingKeywords(getNews(symbol)));
+		} catch (Exception e) {
+			return 1000.0;
+		}
+	}
+	
+	private double getScore(ArrayList<String> matchedKeywords) {
 		
 		Map<String, Integer> keywordList = getKeywordList();
-		
 
 		double score = 0.0;
 		int matchCount = matchedKeywords.size();

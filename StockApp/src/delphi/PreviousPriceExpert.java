@@ -2,19 +2,9 @@ package delphi;
 
 import java.math.BigDecimal;
 
-public class PreviousPrice {
+import stocks.Stock;
 
-	public static void main(String[] args) {
-		// TODO Remove Method
-		int startPrice = 10, endPrice = 0;
-		
-		for (int n=startPrice; n >= endPrice; n--) {
-			System.out.printf("[+] Score: %s\n", getScore(BigDecimal.valueOf(startPrice - n), BigDecimal.valueOf(startPrice)));
-		}
-		for (int n=endPrice; n <= startPrice; n++) {
-			System.out.printf("[+] Score: %s\n", getScore(BigDecimal.valueOf(startPrice + n), BigDecimal.valueOf(startPrice)));
-		}
-	}
+public class PreviousPriceExpert {
 	
 	/**
 	 * Accepts the current price, previous closing price, and the previous previous closing price
@@ -24,11 +14,13 @@ public class PreviousPrice {
 	 * @param pp2 - Previous previous closing price
 	 * @return Score calculated by change from previous two closing prices
 	 */
-	public static double getScore(BigDecimal cp, BigDecimal pp) {
+	public static double getScore(Stock stock) {
 		double percentChange, score = 0;
+		BigDecimal cp = stock.getCurrentPrice();
+		BigDecimal pp = stock.getPreviousClosingPrice();
 		
 		if (cp == null || pp == null) {
-			return 0;
+			return 0.00;
 		}
 		
 		// percent change from yesterday's closing price

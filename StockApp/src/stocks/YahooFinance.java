@@ -58,17 +58,23 @@ public class YahooFinance {
 		String querySValue = "s=" + queryValue;
 		String queryFValue = "f=" + queryParams;
 		String queryFValue2 = "f=" + "n"; // Query for company name
+		int timeout = 2000;
 		
 		try {
 			queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 			queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
-			xmlText = WebData.makeRequest(queryUrl).replace("\"", "").trim();
+			WebData web1 = new WebData(queryUrl, timeout);
+			WebData web2 = new WebData(queryUrl, timeout);
+			(new Thread(web1)).start();
+			(new Thread(web2)).start();
+			while(Thread.activeCount() > 1){}
+			xmlText = web1.getResponse().replace("\"", "").trim();
 			
 			if (xmlText.contains("N/A")) {
 				return info;
 			}
 			
-			companyName = WebData.makeRequest(queryUrl2).replace("\"",  "").trim();
+			companyName = web2.getResponse().replace("\"",  "").trim();
 			splitText = xmlText.split(",");
 			stockInfo = new ArrayList<String>();
 			stockInfo.add(companyName);

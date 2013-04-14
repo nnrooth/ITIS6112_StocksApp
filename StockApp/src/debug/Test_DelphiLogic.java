@@ -3,7 +3,7 @@ package debug;
 import java.util.Random;
 import java.util.Scanner;
 
-import delphi.Top10;
+import delphi.Top10Expert;
 import stocks.Stock;
 import stocks.YahooFinance;
 
@@ -22,8 +22,8 @@ public class Test_DelphiLogic {
 		System.out.printf("[.] View Top/Bottom Stocks [y, N]: ");
 		String viewTop = scanIn.nextLine();
 		if (viewTop.toLowerCase().equals("y")) {
-			String[] top10List = Top10.getTop10Regex();
-			String[] bottom10List = Top10.getBottom10Regex();
+			String[] top10List = Top10Expert.getTop10Regex();
+			String[] bottom10List = Top10Expert.getBottom10Regex();
 			
 			Random randy = new Random();
 			int maxRandy = 250; // TODO determine randymax

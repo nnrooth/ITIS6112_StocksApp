@@ -3,7 +3,7 @@ package debug;
 import java.util.Random;
 import java.util.Scanner;
 
-import delphi.Top10;
+import delphi.Top10Expert;
 
 public class Test_Top10Regex {
 
@@ -19,8 +19,8 @@ public class Test_Top10Regex {
 			System.out.printf("[.] View Count: ");
 			int viewCount = Integer.parseInt(scanIn.nextLine());
 			
-			String[] top10List = Top10.getTop10Regex();
-			String[] bottom10List = Top10.getBottom10Regex();
+			String[] top10List = Top10Expert.getTop10Regex();
+			String[] bottom10List = Top10Expert.getBottom10Regex();
 			
 			if (viewCount > top10List.length) {
 				viewCount = top10List.length;

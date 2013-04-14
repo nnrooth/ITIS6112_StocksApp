@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import utils.WebData;
 
-public class Top10 {
+public class Top10Expert {
 
 	public static double getScore(String symbol) {
 		double score = 0;
@@ -37,14 +37,15 @@ public class Top10 {
 	}
 	
 	private static String getBottom10Listing() {
-		String results = "";
+		String response = ""; int timeout = 2500;
 		try {
-			URL url = new URL("http://slant.investorplace.com/2012/12/10-worst-stocks-of-2012/");
-			url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&col=7&asc=1");
-			//url = new URL("http://investorplace.com/2012/06/10-worst-stocks-so-far-in-2012/view-all/");
-			results = WebData.makeRequest(url);
+			URL url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&col=20");
+			WebData request = new WebData(url, timeout);
+			(new Thread(request)).start();
+			while(Thread.activeCount() > 1){}
+			response = request.getResponse();
 		} catch (Exception ignored1) {}
-		return results;
+		return response;
 	}
 	
 	public static String[] getBottom10Regex() {
@@ -65,13 +66,15 @@ public class Top10 {
 	}
 	
 	private static String getTop10Listing() {
-		String results = "";
+		String response = ""; int timeout = 2500;
 		try {
-			URL url = new URL("http://beta.fool.com/brewcrewfool/2013/02/10/the-top-10-stocks-for-2013-and-beyond/24111/");
-			url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=2&page=1&col=7");
-			results = WebData.makeRequest(url);
+			URL url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=10&col=20&asc=1");
+			WebData request = new WebData(url, timeout);
+			(new Thread(request)).start();
+			while(Thread.activeCount() > 1){}
+			response = request.getResponse();
 		} catch (Exception ignored1) {}
-		return results;
+		return response;
 	}
 	
 	public static String[] getTop10Regex() {

@@ -2,7 +2,9 @@ package delphi;
 
 import java.math.BigDecimal;
 
-public class EstimatedGrowth {
+import stocks.Stock;
+
+public class EstimatedGrowthExpert {
 	
 	/**
 	 * Calculates the Estimate Growth Score based on EPSEstimates
@@ -11,7 +13,14 @@ public class EstimatedGrowth {
 	 * @param epse Order : current year, next year, next quarter
 	 * @return An average score based on all EPSEs
 	 */
-	public static double getScore(BigDecimal currentPrice, BigDecimal[] epse) {
+	public static double getScore(Stock stock) {
+		// BigDecimal currentPrice, BigDecimal[] epse
+		BigDecimal currentPrice = stock.getCurrentPrice();
+		BigDecimal[] epse = new BigDecimal[] {
+				stock.getEpseCYear(),
+				stock.getEpseNYear(),
+				stock.getEpseNQuarter()
+		};
 		if (currentPrice == null || epse == null) {
 			return 0;
 		} else if (epse[0] == null || epse[1] == null || epse[2] == null) {

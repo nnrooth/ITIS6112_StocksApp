@@ -1,7 +1,6 @@
 package delphi;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import stocks.Stock;
 
@@ -11,33 +10,27 @@ public class FinalScore {
 	private static final double EG_WEIGHT = 0.50;
 	private static final double PC_WEIGHT = 0.10;
 	
-	public static int getScore(Stock stock) {
-		double kwScore = 0, t10Score = 0, egScore = 0,
-			   pcScore = 0, pcScore1 = 0, pcScore2 = 0;
-			   
-		int finalScore = 0;
+	public static BigDecimal getScore(Stock stock) {
+		String symbol = stock.getSymbol();
 		
-		KeyWord_v2 s = new KeyWord_v2();		
-		KeywordMatching km = new KeywordMatching();
-		kwScore = km.keyScore(s.getMatchingKeywords(s.getNews(stock.getSymbol())));
+		double 	kwScore = 0, t10Score = 0, 
+				egScore = 0, pcScore = 0;
 		
-		t10Score = Top10.getScore(stock.getSymbol());
+		double finalScore = 0;
 		
-		BigDecimal[] epses = {stock.getEpseCYear(), stock.getEpseNYear(), stock.getEpseNQuarter()};
-		egScore = EstimatedGrowth.getScore(stock.getCurrentPrice(), epses);
+		KeyWordExpert kwExpert = new KeyWordExpert();
+		kwScore = kwExpert.getScore(symbol);
 		
-		pcScore1 = ClosingPrice.closingPriceScore(stock.getCurrentPrice().doubleValue(), stock.getPreviousClosingPrice().doubleValue());
-		pcScore2 = PreviousPrice.getScore(stock.getCurrentPrice(), stock.getPreviousClosingPrice());
+		t10Score = Top10Expert.getScore(stock.getSymbol());
 		
-		pcScore = (pcScore1 + pcScore2) / 2.00;
+		egScore = EstimatedGrowthExpert.getScore(stock);
 		
-		FinalGrade fg = new FinalGrade();
-		finalScore = (int)Math.round(fg.score(kwScore,pcScore, t10Score, egScore));
-		finalScore = (int) Math.round(
+		pcScore = PreviousPriceExpert.getScore(stock);
+		
+		finalScore = Math.round(
 					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
-					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))
-													* 100.0) / 100.0);
+					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))));
 		
-		return finalScore;
+		return BigDecimal.valueOf(finalScore);
 	}
 }
