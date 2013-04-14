@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,21 +15,29 @@ import web.WebData;
 
 public class KeyWordExpert {
 
-	// TODO Either main thread is not waiting for async threads to finish, or web requests are throwing errors. about 10-15% error rate.
+	// TODO Timeout is working, but needs to be refined for better speeds.
 	
 	public static void main(String[] args) {
 		String[] news;
 		long startTime, endTime, runTime, totalTime, testRuns, errors, empty;
 		
-		testRuns = 30;
+		Random randy = new Random();
+		for (int n = 0; n < 25; n++) {
+			randy.nextInt();
+		}
+		
+		String[] symbols = new String[] {"goog", "msft", "amzn", "csco", "aapl", "able", "nvda", "jpm", "lnkd", "uvxy"};
+		
+		testRuns = 2;
 		errors = 0; empty = 0;
 		totalTime = 0;
 		
 		System.out.printf("[*] Starting %s test runs\n", testRuns);
 		for (int run = 0; run < testRuns; run++) { 
 			startTime = System.currentTimeMillis() /* MilliSeconds */;
+			KeyWordExpert expert = new KeyWordExpert();
 			try {
-				news = getNews("goog");
+				news = expert.getNews(symbols[randy.nextInt(symbols.length)]);
 			} catch (IOException e) {
 				news = null;
 			}
@@ -38,6 +47,8 @@ public class KeyWordExpert {
 				errors++;
 			} else if (news.equals("")) {
 				empty++;
+			} else {
+				System.out.printf("[+]\t%s\t%s\t%s\n", news[0].contains("Strong"), news[1].contains("Strong"), news[2].contains("Strong"));				
 			}
 			totalTime += runTime /* MilliSeconds */;
 		}
@@ -93,20 +104,22 @@ public class KeyWordExpert {
 		return keyWordList;
 	}
 	
-	public static String[] getNews(String symbol) throws IOException {
+	public String[] getNews(String symbol) throws IOException {
 		String[] text = null;
-
-		URL url = new URL(String.format("https://www.google.com/finance/company_news?q=%s", symbol));
-		WebData request1 = new WebData(0, url);
-		(new Thread(request1)).start();
-		while(Thread.activeCount() > 1){}
-		String response = request1.getResponse();
-		if (response == null) {
-			return null;
-		}
-		Document d = Jsoup.parse(response);
+		URL url; int timeout = 2500 /* MilliSeconds */;
+		String response = null; int strike = 0; int strikes = 1;
 		
+		while (response == null || strike++ < strikes) {
+			url = new URL(String.format("https://www.google.com/finance/company_news?q=%s", symbol));
+			WebData request = new WebData(url, timeout);
+			(new Thread(request)).start();
+			while(Thread.activeCount() > 1){}
+			response = request.getResponse();
+		}
+		
+		Document d = Jsoup.parse(response);
 		Elements links = null; int linkCount;
+		
 		try {
 			links = d.getElementsByClass("name"); // XXX - Quick and dirty fix
 			linkCount = links.size(); 
@@ -118,8 +131,8 @@ public class KeyWordExpert {
 		String link; WebData[] requests = new WebData[linkCount];
 		for (int i = 0; i < linkCount; i++) {
 			link = links.get(i).getElementsByAttribute("href").attr("href").toString();
-			url = new URL(link);
-			requests[i] = new WebData(i, url);
+			url = new URL( link.substring( ( link.indexOf("&url=") + 5 ), link.indexOf("&cid=") ) );
+			requests[i] = new WebData(url, timeout);
 		}
 		
 		for (int n = 0; n < requests.length; n++) {
@@ -132,7 +145,7 @@ public class KeyWordExpert {
 			response = requests[n].getResponse();
 			try {
 				Document story = Jsoup.parse(response);
-				Elements paragraphs = story.select("p"); // XXX - Errors are checked now, need to do it gracefully
+				Elements paragraphs = story.select("p"); // XXX - Quick and dirty fix
 				text[n] = paragraphs.text();
 			} catch (Exception e) {
 				return null;
