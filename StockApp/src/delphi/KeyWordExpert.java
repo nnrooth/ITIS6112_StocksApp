@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,48 +16,19 @@ public class KeyWordExpert {
 
 	// TODO Timeout is working, but needs to be refined for better speeds.
 	
-	public static void main(String[] args) {
-		String[] news;
-		long startTime, endTime, runTime, totalTime, testRuns, errors, empty;
-		
-		Random randy = new Random();
-		for (int n = 0; n < 25; n++) {
-			randy.nextInt();
+	public double getScore(String symbol) {
+		double score = 0.00;
+		try {
+			String[] news = getNews(symbol);
+			ArrayList<String> matches = getMatchingKeywords(news);
+			score = getScore(matches);
+		} catch (Exception e) {
+			score = 0.01;
 		}
 		
-		String[] symbols = new String[] {"goog", "msft", "amzn", "csco", "aapl", "able", "nvda", "jpm", "lnkd", "uvxy"};
-		
-		testRuns = 2;
-		errors = 0; empty = 0;
-		totalTime = 0;
-		
-		System.out.printf("[*] Starting %s test runs\n", testRuns);
-		for (int run = 0; run < testRuns; run++) { 
-			startTime = System.currentTimeMillis() /* MilliSeconds */;
-			KeyWordExpert expert = new KeyWordExpert();
-			try {
-				news = expert.getNews(symbols[randy.nextInt(symbols.length)]);
-			} catch (IOException e) {
-				news = null;
-			}
-			endTime = System.currentTimeMillis() /* MilliSeconds */;
-			runTime = (endTime - startTime) /* MilliSeconds */;
-			if (news == null) {
-				errors++;
-			} else if (news.equals("")) {
-				empty++;
-			} else {
-				System.out.printf("[+]\t%s\t%s\t%s\n", news[0].contains("Strong"), news[1].contains("Strong"), news[2].contains("Strong"));				
-			}
-			totalTime += runTime /* MilliSeconds */;
-		}
-		
-		System.out.printf("[+] Completed in %1$.2f seconds\n", (totalTime / 1000.00));
-		System.out.printf("[+] Each run completed in an average of %1$.2f seconds\n", ((totalTime / 1000.00) / testRuns));
-		System.out.printf("[+] %s errors caught\n", errors);
-		System.out.printf("[+] %s empty resonses\n", empty);
+		return score;
 	}
-	
+		
 	private static Map<String, Integer> getKeywordList() {
 		Map<String, Integer> keyWordList = new HashMap<String, Integer>(20);
 		keyWordList.put("strong", 10);
@@ -157,15 +127,15 @@ public class KeyWordExpert {
 
 	
 	public ArrayList<String> getMatchingKeywords(String[] text) {
+		Object[] keywordList = getKeywordList().keySet().toArray();
 		ArrayList<String> matchedKeywords = new ArrayList<String>();
-		
-		Map<String, Integer> keywordList = getKeywordList();
-		ArrayList<String> keywords = new ArrayList<String>();
+		String keyword;
 		
 		for (int i = 0; i < text.length; i++) {
-			for (int j = 0; j < keywordList.size(); j++) {
-				if (keywords.contains(text[i])) {
-					matchedKeywords.add(keywords.get(j));
+			for (int j = 0; j < keywordList.length; j++) {
+				keyword = keywordList[j].toString();
+				if (text[i].contains(keyword)) {
+					matchedKeywords.add(keyword);
 				}
 			}
 		}
@@ -180,14 +150,6 @@ public class KeyWordExpert {
 			}
 		}
 		return matchedKeywords;
-	}
-	
-	public double getScore(String symbol) {
-		try {
-			return getScore(getMatchingKeywords(getNews(symbol)));
-		} catch (Exception e) {
-			return 1000.0;
-		}
 	}
 	
 	private double getScore(ArrayList<String> matchedKeywords) {

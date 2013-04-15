@@ -20,7 +20,10 @@ public class Test_YahooFinance {
 			System.out.printf("[.] Sybmol: ");
 			stockSymbol = scanIn.nextLine();
 			
+			Timer.start();
 			stockInfo = YahooFinance.searchSymbol(stockSymbol);
+			Timer.stop();
+			System.out.printf(Timer.getFormattedRunTime());
 			
 			if (stockInfo != null) {
 				for (int n = 0; n < stockInfo.length; n++) {

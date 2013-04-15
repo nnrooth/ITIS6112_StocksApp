@@ -64,7 +64,7 @@ public class YahooFinance {
 			queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 			queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
 			WebData web1 = new WebData(queryUrl, timeout);
-			WebData web2 = new WebData(queryUrl, timeout);
+			WebData web2 = new WebData(queryUrl2, timeout);
 			(new Thread(web1)).start();
 			(new Thread(web2)).start();
 			while(Thread.activeCount() > 1){}

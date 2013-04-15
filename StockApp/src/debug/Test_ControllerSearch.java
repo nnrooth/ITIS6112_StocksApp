@@ -9,7 +9,7 @@ public class Test_ControllerSearch {
 		long startTime, endTime, runTime;
 		
 		startTime = System.currentTimeMillis();
-		Stock stock = Controller.getStock("able");
+		Stock stock = Controller.getStock("aapl");
 		endTime = System.currentTimeMillis();
 		
 		runTime = endTime - startTime;
