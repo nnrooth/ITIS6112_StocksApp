@@ -13,7 +13,7 @@ public class Test_DelphiLogic {
 		Stock stock; String stockSymbol;
 		String[] stockInfo;
 		Scanner scanIn = new Scanner(System.in);
-		boolean search = true; String newSearch;
+		boolean search = true;
 		
 		long startTime, endTime, runTime;
 		
@@ -46,12 +46,6 @@ public class Test_DelphiLogic {
 			runTime = (endTime - startTime) / 1000;
 			System.out.printf("[+] Completed in %s seconds\n", runTime);
 			
-			/*System.out.printf("[.] New Search [y, N]: ");
-			newSearch = scanIn.nextLine();
-			
-			if (!newSearch.toLowerCase().equals("y")) {
-				search = false;
-			}*/
 		}
 		
 		scanIn.close();

@@ -14,7 +14,7 @@ public class Test_ControllerSearch {
 		
 		runTime = endTime - startTime;
 		
-		System.out.printf("Score: %s\n", stock.getScore().doubleValue());
+		System.out.printf("Score: %s\n", stock.getScore());
 		System.out.printf("RunTime: %s seconds\n", (runTime / 1000));
 	}
 }

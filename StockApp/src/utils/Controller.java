@@ -1,7 +1,5 @@
 package utils;
 
-import java.math.BigDecimal;
-
 import delphi.FinalScore;
 import stocks.Stock;
 import stocks.YahooFinance;
@@ -31,7 +29,7 @@ public class Controller {
 		String[] stockInfo = stocks.YahooFinance.searchSymbol(symbol);
 		stock = new Stock(stockInfo);
 
-		BigDecimal finalScore = BigDecimal.valueOf(0.0);
+		double finalScore = 0.00;
 		
 		finalScore = FinalScore.getScore(stock);
 		stock.setScore(finalScore);

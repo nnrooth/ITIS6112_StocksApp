@@ -11,6 +11,9 @@ import utils.WebData;
 
 public class Top10Expert {
 
+	private static String[] top10List;
+	private static String[] bottom10List;
+	
 	public static double getScore(String symbol) {
 		double score = 0;
 		
@@ -27,13 +30,31 @@ public class Top10Expert {
 	}
 	
 	private static boolean isInTop10(String symbol) {
-		String[] top10List = getTop10Regex();
-		return Arrays.asList(top10List).contains(symbol);
+		String[] top10List;
+		boolean found;
+		
+		try {
+			top10List = getTop10Regex();
+			found = Arrays.asList(top10List).contains(symbol);
+		} catch (Exception e) {
+			found = false;
+		}
+		
+		return found;
 	}
 	
 	private static boolean isInBottom10(String symbol) {
-		String[] bottom10List = getBottom10Regex();
-		return Arrays.asList(bottom10List).contains(symbol);
+		String[] bottom10List;
+		boolean found;
+		
+		try {
+			bottom10List = getBottom10Regex();
+			found =  Arrays.asList(bottom10List).contains(symbol);
+		} catch (Exception e) {
+			found = false;
+		}
+		
+		return found;
 	}
 	
 	private static String getBottom10Listing() {
@@ -49,18 +70,20 @@ public class Top10Expert {
 	}
 	
 	public static String[] getBottom10Regex() {
-		String string = getBottom10Listing();
-		Pattern pattern = Pattern.compile("(\\>)(.*?)(\\<a\\>)");
-		pattern = Pattern.compile("(symbol\\=)([a-zA-Z]{1,4})");
-		Matcher matcher = pattern.matcher(string);
-		
-		List<String> listMatches = new ArrayList<String>();
-		
-		while(matcher.find()) {
-		    listMatches.add(matcher.group(2));
+		if (bottom10List == null) {
+			String string = getBottom10Listing();
+			Pattern pattern = Pattern.compile("(\\>)(.*?)(\\<a\\>)");
+			pattern = Pattern.compile("(symbol\\=)([a-zA-Z]{1,4})");
+			Matcher matcher = pattern.matcher(string);
+			
+			List<String> listMatches = new ArrayList<String>();
+			
+			while(matcher.find()) {
+			    listMatches.add(matcher.group(2));
+			}
+			
+			bottom10List = listMatches.toArray(new String[listMatches.size()]);
 		}
-		
-		String[] bottom10List = listMatches.toArray(new String[listMatches.size()]);
 		
 		return bottom10List;
 	}
@@ -78,18 +101,20 @@ public class Top10Expert {
 	}
 	
 	public static String[] getTop10Regex() {
-		String string = getTop10Listing();
-		Pattern pattern = Pattern.compile("(\\>)(.*?)(\\<a\\>)");
-		pattern = Pattern.compile("(symbol\\=)([a-zA-Z]{1,4})");
-		Matcher matcher = pattern.matcher(string);
-		
-		List<String> listMatches = new ArrayList<String>();
-		
-		while(matcher.find()) {
-		    listMatches.add(matcher.group(2));
+		if (top10List == null) {	
+			String string = getTop10Listing();
+			Pattern pattern = Pattern.compile("(\\>)(.*?)(\\<a\\>)");
+			pattern = Pattern.compile("(symbol\\=)([a-zA-Z]{1,4})");
+			Matcher matcher = pattern.matcher(string);
+			
+			List<String> listMatches = new ArrayList<String>();
+			
+			while(matcher.find()) {
+			    listMatches.add(matcher.group(2));
+			}
+			
+			top10List = listMatches.toArray(new String[listMatches.size()]);
 		}
-		
-		String[] top10List = listMatches.toArray(new String[listMatches.size()]);
 		
 		return top10List;
 	}

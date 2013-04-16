@@ -1,7 +1,5 @@
 package delphi;
 
-import java.math.BigDecimal;
-
 import stocks.Stock;
 
 public class FinalScore {
@@ -10,7 +8,7 @@ public class FinalScore {
 	private static final double EG_WEIGHT = 0.50;
 	private static final double PC_WEIGHT = 0.10;
 	
-	public static BigDecimal getScore(Stock stock) {
+	public static double getScore(Stock stock) {
 		String symbol = stock.getSymbol();
 		
 		double 	kwScore = 0, t10Score = 0, 
@@ -20,21 +18,30 @@ public class FinalScore {
 		
 		KeyWordExpert kwExpert = new KeyWordExpert();
 		kwScore = kwExpert.getScore(symbol);
-		stock.setKwScore(kwScore);
+		stock.setKwScore(round(kwScore));
 		
 		t10Score = Top10Expert.getScore(stock.getSymbol());
-		stock.setT10Score(t10Score);
+		stock.setT10Score(round(t10Score));
 		
 		egScore = EstimatedGrowthExpert.getScore(stock);
-		stock.setEgScore(egScore);
+		stock.setEgScore(round(egScore));
 		
-		pcScore = PreviousPriceExpert.getScore(stock);
-		stock.setPcScore(pcScore);
+		pcScore = PreviousCloseExpert.getScore(stock);
+		stock.setPcScore(round(pcScore));
 		
-		finalScore = Math.round(
+		finalScore = round(
 					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
 					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))));
 		
-		return BigDecimal.valueOf(finalScore);
+		return finalScore;
+	}
+	
+	private static double round(double a) {
+		double b = 0.00;
+		
+		if (a < 0.00) { b = Math.floor(a); }
+		if (a > 0.00) { b = Math.ceil(a); }
+		
+		return b;
 	}
 }

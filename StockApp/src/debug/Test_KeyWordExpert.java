@@ -8,7 +8,7 @@ import delphi.KeyWordExpert;
 public class Test_KeyWordExpert {
 	public static void main(String[] args) {
 		String[] news;
-		long startTime, endTime, runTime, totalTime, testRuns, errors, empty;
+		long startTime, endTime, runTime, totalTime, testRuns, errors;
 		
 		Random randy = new Random();
 		for (int n = 0; n < 25; n++) {
@@ -18,7 +18,7 @@ public class Test_KeyWordExpert {
 		String[] symbols = new String[] {"goog", "msft", "amzn", "csco", "aapl", "able", "nvda", "jpm", "lnkd", "uvxy"};
 		
 		testRuns = 2;
-		errors = 0; empty = 0;
+		errors = 0;
 		totalTime = 0;
 		
 		System.out.printf("[*] Starting %s test runs\n", testRuns);
@@ -34,8 +34,6 @@ public class Test_KeyWordExpert {
 			runTime = (endTime - startTime) /* MilliSeconds */;
 			if (news == null) {
 				errors++;
-			} else if (news.equals("")) {
-				empty++;
 			} else {
 				System.out.printf("[+]\t%s\t%s\t%s\n", news[0].contains("Strong"), news[1].contains("Strong"), news[2].contains("Strong"));				
 			}
@@ -45,6 +43,5 @@ public class Test_KeyWordExpert {
 		System.out.printf("[+] Completed in %1$.2f seconds\n", (totalTime / 1000.00));
 		System.out.printf("[+] Each run completed in an average of %1$.2f seconds\n", ((totalTime / 1000.00) / testRuns));
 		System.out.printf("[+] %s errors caught\n", errors);
-		System.out.printf("[+] %s empty resonses\n", empty);
 	}
 }

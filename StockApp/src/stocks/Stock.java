@@ -25,7 +25,7 @@ public class Stock {
 	private BigDecimal epseNQuarter; // Earnings per share estimate for next quarter
 	
 	private double kwScore, t10Score, egScore, pcScore; // kw - Keyword, t10 - top/bottom 10, eg - Estimated Growth, pc - Previous Close
-	private BigDecimal score; // Value derived from Delphi calculation. Range [-10:10]
+	private double score; // Value derived from Delphi calculation. Range [-10:10]
 		
 	/**
 	 * Null Constructor
@@ -43,7 +43,7 @@ public class Stock {
 		this.t10Score = 0.00;
 		this.egScore = 0.00;
 		this.pcScore = 0.00;
-		this.score = BigDecimal.valueOf(Double.valueOf(0));
+		this.score = 0.00;
 	}
 	
 	public Stock(String[] stockInfo) {
@@ -57,7 +57,7 @@ public class Stock {
 		setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setKwScore(0.00); setT10Score(0.00); setEgScore(0.00); setPcScore(0.00);
-		setScore(BigDecimal.valueOf(Double.valueOf(0)));
+		setScore(0.00);
 	}
 	
 	// Begin block of get/set methods
@@ -76,8 +76,8 @@ public class Stock {
 	public BigDecimal getPreviousClosingPrice() { return previousClosingPrice; }
 	public void setPreviousClosingPrice(BigDecimal previousClosingPrice) { this.previousClosingPrice = previousClosingPrice; }
 	
-	public BigDecimal getScore() { return score; }
-	public void setScore(BigDecimal score) { this.score = score; }
+	public double getScore() { return score; }
+	public void setScore(double score) { this.score = score; }
 	
 	public BigDecimal getEpseCYear() { return epseCYear; }
 	public void setEpseCYear(BigDecimal epseCYear) { this.epseCYear = epseCYear; }
