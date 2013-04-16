@@ -24,6 +24,9 @@ public class Stock {
 	private BigDecimal epseNYear; // Earnings per share estimate for next year
 	private BigDecimal epseNQuarter; // Earnings per share estimate for next quarter
 	
+	private double peRatio; // P/E Ratio
+	private double divYield; // Dividend Yield
+	
 	private double kwScore, t10Score, egScore, pcScore; // kw - Keyword, t10 - top/bottom 10, eg - Estimated Growth, pc - Previous Close
 	private double score; // Value derived from Delphi calculation. Range [-10:10]
 		
@@ -39,6 +42,8 @@ public class Stock {
 		this.epseCYear = null;
 		this.epseNYear = null;
 		this.epseNQuarter = null;
+		this.peRatio = 0.00;
+		this.divYield = 0.00;
 		this.kwScore = 0.00;
 		this.t10Score = 0.00;
 		this.egScore = 0.00;
@@ -56,6 +61,8 @@ public class Stock {
 		setEpseCYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setPeRatio(Double.valueOf(stockInfo[count++]));
+		setDivYield(Double.valueOf(stockInfo[count++]));
 		setKwScore(0.00); setT10Score(0.00); setEgScore(0.00); setPcScore(0.00);
 		setScore(0.00);
 	}
@@ -87,6 +94,12 @@ public class Stock {
 	
 	public BigDecimal getEpseNQuarter() { return epseNQuarter; }
 	public void setEpseNQuarter(BigDecimal epseNQuarter) { this.epseNQuarter = epseNQuarter; }
+	
+	public double getPeRatio() { return peRatio; }
+	public void setPeRatio(double peRatio) { this.peRatio = peRatio; }
+	
+	public double getDivYield() { return divYield; }
+	public void setDivYield(double divYield) { this.divYield = divYield; }
 	
 	public double getKwScore() { return kwScore; }
 	public void setKwScore(double kwScore) { this.kwScore = kwScore; }

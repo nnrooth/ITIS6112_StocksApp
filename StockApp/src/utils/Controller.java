@@ -1,39 +1,26 @@
 package utils;
 
+import java.net.MalformedURLException;
+
 import delphi.FinalScore;
 import stocks.Stock;
-import stocks.YahooFinance;
 
 public class Controller {
 	
-	public static Stock search(String symbol) {
-		Stock stock; String stockSymbol;
-		String[] stockInfo;
-		
-		stockSymbol = "";
-			
-		stockInfo = YahooFinance.searchSymbol(stockSymbol);
-		if (stockInfo != null) {
-			stock = new Stock(stockInfo);
-			stock.setScore(delphi.FinalScore.getScore(stock));
-		} else {
-			stock = new Stock();
-		}
-			
-		return stock;
-	}
-	
 	public static Stock getStock(String symbol) {
-		Stock stock;
-		
-		String[] stockInfo = stocks.YahooFinance.searchSymbol(symbol);
-		stock = new Stock(stockInfo);
-
+		Stock stock; String[] stockInfo;
 		double finalScore = 0.00;
 		
-		finalScore = FinalScore.getScore(stock);
-		stock.setScore(finalScore);
-		
+		try {
+			stockInfo = stocks.YahooFinance.searchSymbol(symbol);
+			stock = new Stock(stockInfo);
+			finalScore = FinalScore.getScore(stock);
+			stock.setScore(finalScore);
+		} catch (MalformedURLException | InterruptedException e) {
+			stock = null;
+			e.printStackTrace();
+		}
+
 		return stock;
 	}
 }

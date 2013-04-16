@@ -1,5 +1,6 @@
 package stocks;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -14,9 +15,9 @@ import utils.WebData;
 public class YahooFinance {
 
 	private static String queryBaseUrl = "http://finance.yahoo.com/d/quote?";
-	private static String queryParamsDefault = "sxl1pe7e8e9";
+	private static String queryParamsDefault = "sxl1pe7e8e9ry";
 	
-	public static String[] searchSymbol(String queryValue) {
+	public static String[] searchSymbol(String queryValue) throws MalformedURLException, InterruptedException {
 		return searchSymbol(queryValue, queryParamsDefault);
 	}
 	
@@ -45,7 +46,7 @@ public class YahooFinance {
 	 * | r - p/e ratio                             | *
 	 * +-------------------------------------------+ *
 	 * * * * * * * * * * * * * * * * * * * * * * * * */
-	public static String[] searchSymbol(String queryValue, String queryParams) {
+	public static String[] searchSymbol(String queryValue, String queryParams) throws MalformedURLException, InterruptedException {
 		URL queryUrl = null, queryUrl2 = null;
 		String xmlText; String[] splitText; String companyName;
 		ArrayList<String> stockInfo = null; String[] info = null;
@@ -60,45 +61,35 @@ public class YahooFinance {
 		String queryFValue2 = "f=" + "n"; // Query for company name
 		int timeout = 1500;
 		
-		try {
-			queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
-			queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
-			WebData web1 = new WebData(queryUrl, timeout);
-			WebData web2 = new WebData(queryUrl2, timeout);
-			
-			Thread[] threads = new Thread[2];
-			threads[0] = new Thread(web1);
-			threads[1] = new Thread(web2);
-			
-			for (Thread thread : threads) {
-				thread.start();
-			}
-			
-			for (Thread thread : threads) {
-				thread.join(1500);
-			}
-			
-			xmlText = web1.getResponse().replace("\"", "").trim();
-			
-			if (xmlText.contains("N/A")) {
-				return info;
-			}
-			
-			companyName = web2.getResponse().replace("\"",  "").trim();
-			splitText = xmlText.split(",");
-			stockInfo = new ArrayList<String>();
-			stockInfo.add(companyName);
-			for (int n = 0; n < splitText.length; n++) {
-				stockInfo.add(splitText[n].trim());
-			}
-			
-			info = new String[stockInfo.size()];
-		    info = stockInfo.toArray(info);
-		    
-		} catch (Exception e) {
-			info = null;
+		queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
+		queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
+		WebData web1 = new WebData(queryUrl, timeout);
+		WebData web2 = new WebData(queryUrl2, timeout);
+		
+		Thread[] threads = new Thread[2];
+		threads[0] = new Thread(web1);
+		threads[1] = new Thread(web2);
+		
+		for (Thread thread : threads) {
+			thread.start();
 		}
 		
+		for (Thread thread : threads) {
+			thread.join(1500);
+		}
+		
+		xmlText = web1.getResponse().replace("\"", "").trim();
+		companyName = web2.getResponse().replace("\"",  "").trim();
+		splitText = xmlText.split(",");
+		stockInfo = new ArrayList<String>();
+		stockInfo.add(companyName);
+		for (int n = 0; n < splitText.length; n++) {
+			stockInfo.add(splitText[n].trim());
+		}
+		
+		info = new String[stockInfo.size()];
+	    info = stockInfo.toArray(info);
+	    		
 		return info;
 	}
 	

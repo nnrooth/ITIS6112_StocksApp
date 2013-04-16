@@ -59,7 +59,6 @@ public class KeyWordExpert {
 		keyWordList.put("decline", -7);
 		keyWordList.put("decreasing", -4);
 		keyWordList.put("decrease", -4);
-		keyWordList.put("plummet", -4);
 		keyWordList.put("plummet", -7);
 		keyWordList.put("pessimism", -7);
 		keyWordList.put("don’t buy", -10);
@@ -68,14 +67,13 @@ public class KeyWordExpert {
 		keyWordList.put("failure", -3);
 		keyWordList.put("fluctuates", -2);
 		keyWordList.put("sell", -2);
-		keyWordList.put("shit", -10);
 		
 		return keyWordList;
 	}
 	
 	public String[] getNews(String symbol) throws IOException {
 		String[] text = null;
-		URL url; int timeout = 2500 /* MilliSeconds */;
+		URL url; int timeout = 1500 /* MilliSeconds */;
 		String response = null;
 		
 		url = new URL(String.format("https://www.google.com/finance/company_news?q=%s", symbol));
