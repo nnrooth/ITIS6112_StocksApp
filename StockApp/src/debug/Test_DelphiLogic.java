@@ -1,9 +1,7 @@
 package debug;
 
-import java.util.Random;
 import java.util.Scanner;
 
-import delphi.Top10Expert;
 import stocks.Stock;
 import stocks.YahooFinance;
 
@@ -33,7 +31,12 @@ public class Test_DelphiLogic {
 			}
 			
 			if (stock.getSymbol() != null) {
-				System.out.printf("[+] Score: %s\n", stock.getScore());
+				System.out.printf("[+] KW Score: %s\n", stock.getKwScore());
+				System.out.printf("[+] T10 Score: %s\n", stock.getT10Score());
+				System.out.printf("[+] EG Score: %s\n", stock.getEgScore());
+				System.out.printf("[+] PC Score: %s\n", stock.getPcScore());
+				
+				System.out.printf("[+] Final Score: %s\n", stock.getScore());
 				System.out.printf("[+] Current Price: %s\n", stock.getCurrentPrice());
 			} else {
 				System.out.printf("[-] No Results\n");
@@ -43,12 +46,12 @@ public class Test_DelphiLogic {
 			runTime = (endTime - startTime) / 1000;
 			System.out.printf("[+] Completed in %s seconds\n", runTime);
 			
-			System.out.printf("[.] New Search [y, N]: ");
+			/*System.out.printf("[.] New Search [y, N]: ");
 			newSearch = scanIn.nextLine();
 			
 			if (!newSearch.toLowerCase().equals("y")) {
 				search = false;
-			}
+			}*/
 		}
 		
 		scanIn.close();

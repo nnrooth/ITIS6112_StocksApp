@@ -24,8 +24,9 @@ public class Stock {
 	private BigDecimal epseNYear; // Earnings per share estimate for next year
 	private BigDecimal epseNQuarter; // Earnings per share estimate for next quarter
 	
+	private double kwScore, t10Score, egScore, pcScore; // kw - Keyword, t10 - top/bottom 10, eg - Estimated Growth, pc - Previous Close
 	private BigDecimal score; // Value derived from Delphi calculation. Range [-10:10]
-	
+		
 	/**
 	 * Null Constructor
 	 */
@@ -38,6 +39,10 @@ public class Stock {
 		this.epseCYear = null;
 		this.epseNYear = null;
 		this.epseNQuarter = null;
+		this.kwScore = 0.00;
+		this.t10Score = 0.00;
+		this.egScore = 0.00;
+		this.pcScore = 0.00;
 		this.score = BigDecimal.valueOf(Double.valueOf(0));
 	}
 	
@@ -51,6 +56,7 @@ public class Stock {
 		setEpseCYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
 		setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+		setKwScore(0.00); setT10Score(0.00); setEgScore(0.00); setPcScore(0.00);
 		setScore(BigDecimal.valueOf(Double.valueOf(0)));
 	}
 	
@@ -81,5 +87,17 @@ public class Stock {
 	
 	public BigDecimal getEpseNQuarter() { return epseNQuarter; }
 	public void setEpseNQuarter(BigDecimal epseNQuarter) { this.epseNQuarter = epseNQuarter; }
+	
+	public double getKwScore() { return kwScore; }
+	public void setKwScore(double kwScore) { this.kwScore = kwScore; }
+
+	public double getT10Score() { return t10Score; }
+	public void setT10Score(double t10Score) { this.t10Score = t10Score; }
+
+	public double getEgScore() { return egScore; }
+	public void setEgScore(double egScore) { this.egScore = egScore; }
+
+	public double getPcScore() { return pcScore; }
+	public void setPcScore(double pcScore) { this.pcScore = pcScore; }
 	// End block of get/set methods
 }

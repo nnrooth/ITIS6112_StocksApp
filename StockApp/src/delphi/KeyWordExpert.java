@@ -76,23 +76,24 @@ public class KeyWordExpert {
 	
 	public String[] getNews(String symbol) throws IOException {
 		String[] text = null;
-		URL url; int timeout = 2000 /* MilliSeconds */;
-		String response = null; int strike = 0; int strikes = 1;
+		URL url; int timeout = 2500 /* MilliSeconds */;
+		String response = null; // int strike = 0; int strikes = 1;
 		
-		while (response == null || strike++ < strikes) {
+		//while (response == null && strike++ < strikes) {
 			url = new URL(String.format("https://www.google.com/finance/company_news?q=%s", symbol));
 			WebData request = new WebData(url, timeout);
-			(new Thread(request)).start();
-			while(Thread.activeCount() > 1){}
+			Thread requestThread = new Thread(request);
+			requestThread.start();
+			while(requestThread.isAlive()) {}
 			response = request.getResponse();
-		}
+		//}
 		
 		Document d = Jsoup.parse(response);
 		Elements links = null; int linkCount;
 		
 		try {
 			links = d.getElementsByClass("name"); // XXX - Quick and dirty fix
-			linkCount = links.size(); 
+			linkCount = links.size();
 			text = new String[linkCount];
 		} catch (Exception e) {
 			return null;
@@ -104,12 +105,14 @@ public class KeyWordExpert {
 			url = new URL( link.substring( ( link.indexOf("&url=") + 5 ), link.indexOf("&cid=") ) );
 			requests[i] = new WebData(url, timeout);
 		}
-		
+		ArrayList<Thread> newsThreads = new ArrayList<Thread>(10);
 		for (int n = 0; n < requests.length; n++) {
-			(new Thread(requests[n])).start();
+			newsThreads.add(new Thread(requests[n]));
+			newsThreads.get(n).run();
+			try {
+				newsThreads.get(n).join();
+			} catch (InterruptedException e) {}
 		}
-		
-		while(Thread.activeCount() > 1){}
 		
 		for (int n = 0; n < requests.length; n++) {
 			response = requests[n].getResponse();
@@ -140,7 +143,7 @@ public class KeyWordExpert {
 			}
 		}
 
-		for (int i = 0; i < matchedKeywords.size()
+		/*for (int i = 0; i < matchedKeywords.size()
 				&& matchedKeywords.get(i) != null; i++) {
 			for (int j = i + 1; j < matchedKeywords.size()
 					&& matchedKeywords.get(j) != null; j++) {
@@ -148,7 +151,7 @@ public class KeyWordExpert {
 						matchedKeywords.get(j)))
 					matchedKeywords.remove(j);
 			}
-		}
+		}*/
 		return matchedKeywords;
 	}
 	

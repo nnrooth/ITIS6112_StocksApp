@@ -20,12 +20,16 @@ public class FinalScore {
 		
 		KeyWordExpert kwExpert = new KeyWordExpert();
 		kwScore = kwExpert.getScore(symbol);
+		stock.setKwScore(kwScore);
 		
 		t10Score = Top10Expert.getScore(stock.getSymbol());
+		stock.setT10Score(t10Score);
 		
 		egScore = EstimatedGrowthExpert.getScore(stock);
+		stock.setEgScore(egScore);
 		
 		pcScore = PreviousPriceExpert.getScore(stock);
+		stock.setPcScore(pcScore);
 		
 		finalScore = Math.round(
 					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +

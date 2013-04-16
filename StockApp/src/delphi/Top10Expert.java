@@ -37,10 +37,10 @@ public class Top10Expert {
 	}
 	
 	private static String getBottom10Listing() {
-		String response = ""; int timeout = 2500;
+		String response = "";
 		try {
 			URL url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&col=20");
-			WebData request = new WebData(url, timeout);
+			WebData request = new WebData(url);
 			(new Thread(request)).start();
 			while(Thread.activeCount() > 1){}
 			response = request.getResponse();
@@ -66,10 +66,10 @@ public class Top10Expert {
 	}
 	
 	private static String getTop10Listing() {
-		String response = ""; int timeout = 2500;
+		String response = "";
 		try {
 			URL url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=10&col=20&asc=1");
-			WebData request = new WebData(url, timeout);
+			WebData request = new WebData(url);
 			(new Thread(request)).start();
 			while(Thread.activeCount() > 1){}
 			response = request.getResponse();
