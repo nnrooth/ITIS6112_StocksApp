@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import stocks.Stock;
 
-public class PreviousPriceExpert {
+public class PreviousCloseExpert {
 	
 	/**
 	 * Accepts the current price, previous closing price, and the previous previous closing price
@@ -26,9 +26,10 @@ public class PreviousPriceExpert {
 		// percent change from yesterday's closing price
 		percentChange = (cp.doubleValue() - pp.doubleValue()) / (pp.doubleValue());
 		
-		if (percentChange >= 1) { score += 10; } else
-		if (percentChange <= -1) { score -= 10; } else
-		{ score = percentChange * 1000.00; }
+		score = percentChange * 100.00;
+		
+		if (score > 10) { score = 10; }
+		if (score < -10) { score = -10; }
 		
 		return score;
 	}
