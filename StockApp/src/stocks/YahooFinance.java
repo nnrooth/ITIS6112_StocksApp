@@ -60,12 +60,12 @@ public class YahooFinance {
 		String queryFValue = "f=" + queryParams;
 		String queryFValue2 = "f=" + "n"; // Query for company name
 		
-		int timeout = 2000; // TODO - Optimize for performance
+		int timeout = 1500; // TODO - Optimize for performance
 		
 		queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 		queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
-		WebData web1 = new WebData(queryUrl, timeout);
-		WebData web2 = new WebData(queryUrl2, timeout);
+		WebData web1 = new WebData(queryUrl);
+		WebData web2 = new WebData(queryUrl2);
 		
 		Thread[] threads = new Thread[2];
 		threads[0] = new Thread(web1);
@@ -76,7 +76,7 @@ public class YahooFinance {
 		}
 		
 		for (Thread thread : threads) {
-			thread.join(timeout + 50); // TODO Optomize for performance
+			thread.join(timeout); // TODO Optomize for performance
 		}
 		
 		xmlText = web1.getResponse().replace("\"", "").trim();

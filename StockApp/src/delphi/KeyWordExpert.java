@@ -81,15 +81,15 @@ public class KeyWordExpert {
 		
 		url = new URL(String.format("https://www.google.com/finance/company_news?q=%s", symbol));
 		
-		WebData request = new WebData(url, timeout); // TODO - Optimize for performance 
+		WebData request = new WebData(url); // TODO - Optimize for performance 
 		
 		Thread requestThread = new Thread(request);
 		requestThread.start();
+		
 		try {
-			
-			requestThread.join(timeout + 50); // TODO - Optimize for performance
-			
+			requestThread.join(timeout); // TODO - Optimize for performance
 		} catch (InterruptedException e) {}
+		
 		response = request.getResponse();
 		url = null; request = null; requestThread = null;
 		
@@ -109,7 +109,7 @@ public class KeyWordExpert {
 			link = links.get(i).getElementsByAttribute("href").attr("href").toString();
 			url = new URL( link.substring( ( link.indexOf("&url=") + 5 ), link.indexOf("&cid=") ) );
 			
-			requests[i] = new WebData(url, timeout); // TODO - Optimize for performance
+			requests[i] = new WebData(url);
 			
 		}
 		ArrayList<Thread> newsThreads = new ArrayList<Thread>(linkCount);
@@ -121,13 +121,13 @@ public class KeyWordExpert {
 			thread.run();
 		}
 		
-		for (Thread thread : newsThreads) {
+		/*for (Thread thread : newsThreads) {
 			try {
 				
-				thread.join(timeout + 50); // TODO - Optimize for performance
+				thread.join(0); // TODO - Optimize for performance
 				
 			} catch (InterruptedException e) {}
-		}
+		}*/
 		
 		for (int n = 0; n < requests.length; n++) {
 			response = requests[n].getResponse();

@@ -6,7 +6,7 @@ import utils.Controller;
 public class Test_ControllerSearch {
 
 	public static void main(String[] args) {
-		int testRuns = 1500; int errors = 0;
+		int testRuns = 20; int errors = 0;
 		Timer bigTimer = new Timer();
 		Timer littleTimer = new Timer();
 		String symbol;
@@ -16,7 +16,7 @@ public class Test_ControllerSearch {
 		for (int n = 0; n < testRuns; n++) {
 			Stock stock = null;
 			symbol = Randomizer.nextStock();
-			
+
 			System.out.printf("[*] Test run %s\t:\t%s\n", ( n + 1 ), symbol);
 			
 			littleTimer.start();
@@ -24,7 +24,7 @@ public class Test_ControllerSearch {
 				stock = Controller.getStock(symbol);
 			} catch (Exception e) {
 				errors++;
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			littleTimer.stop();
 			

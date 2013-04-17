@@ -23,7 +23,9 @@ public class Randomizer {
 					"nvda", "intc",
 					"amd",  "fb",
 					"dell", "rht",
-					"logi", "atvi"
+					"logi", "atvi",
+					"jpm",	"lnkd",
+					"uvxy", "amd"
 			};
 		}
 		
