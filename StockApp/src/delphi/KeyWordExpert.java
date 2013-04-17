@@ -73,15 +73,22 @@ public class KeyWordExpert {
 	
 	public String[] getNews(String symbol) throws IOException {
 		String[] text = null;
-		URL url; int timeout = 1500 /* MilliSeconds */;
+		URL url;
+		
+		int timeout = 1500 /* MilliSeconds */; // TODO Optimize for performance
+		
 		String response = null;
 		
 		url = new URL(String.format("https://www.google.com/finance/company_news?q=%s", symbol));
-		WebData request = new WebData(url, timeout);
+		
+		WebData request = new WebData(url, timeout); // TODO - Optimize for performance 
+		
 		Thread requestThread = new Thread(request);
 		requestThread.start();
 		try {
-			requestThread.join(timeout);
+			
+			requestThread.join(timeout + 50); // TODO - Optimize for performance
+			
 		} catch (InterruptedException e) {}
 		response = request.getResponse();
 		url = null; request = null; requestThread = null;
@@ -101,7 +108,9 @@ public class KeyWordExpert {
 		for (int i = 0; i < linkCount; i++) {
 			link = links.get(i).getElementsByAttribute("href").attr("href").toString();
 			url = new URL( link.substring( ( link.indexOf("&url=") + 5 ), link.indexOf("&cid=") ) );
-			requests[i] = new WebData(url, timeout);
+			
+			requests[i] = new WebData(url, timeout); // TODO - Optimize for performance
+			
 		}
 		ArrayList<Thread> newsThreads = new ArrayList<Thread>(linkCount);
 		for (WebData data : requests) {
@@ -114,7 +123,9 @@ public class KeyWordExpert {
 		
 		for (Thread thread : newsThreads) {
 			try {
-				thread.join(timeout);
+				
+				thread.join(timeout + 50); // TODO - Optimize for performance
+				
 			} catch (InterruptedException e) {}
 		}
 		
@@ -149,15 +160,6 @@ public class KeyWordExpert {
 			}
 		}
 
-		/*for (int i = 0; i < matchedKeywords.size()
-				&& matchedKeywords.get(i) != null; i++) {
-			for (int j = i + 1; j < matchedKeywords.size()
-					&& matchedKeywords.get(j) != null; j++) {
-				if (matchedKeywords.get(i).equalsIgnoreCase(
-						matchedKeywords.get(j)))
-					matchedKeywords.remove(j);
-			}
-		}*/
 		return matchedKeywords;
 	}
 	

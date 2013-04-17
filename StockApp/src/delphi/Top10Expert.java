@@ -13,6 +13,7 @@ public class Top10Expert {
 
 	private static String[] top10List;
 	private static String[] bottom10List;
+	private static int timeout = 2500; // TODO - Optimize for performance
 	
 	public static double getScore(String symbol) {
 		double score = 0;
@@ -61,9 +62,12 @@ public class Top10Expert {
 		String response = "";
 		try {
 			URL url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=1&col=20");
-			WebData request = new WebData(url);
-			(new Thread(request)).start();
-			while(Thread.activeCount() > 1){}
+			
+			WebData request = new WebData(url, timeout); // TODO Optimize for performance
+			
+			Thread thread = new Thread(request);
+			thread.run(); thread.join(timeout + 50); // TODO Optimize for performance
+			
 			response = request.getResponse();
 		} catch (Exception ignored1) {}
 		return response;
@@ -92,9 +96,12 @@ public class Top10Expert {
 		String response = "";
 		try {
 			URL url = new URL("http://investing.money.msn.com/investments/stockscouter-top-rated-stocks?sco=10&col=20&asc=1");
-			WebData request = new WebData(url);
-			(new Thread(request)).start();
-			while(Thread.activeCount() > 1){}
+			
+			WebData request = new WebData(url, timeout); // TODO Optimize for performance
+			
+			Thread thread = new Thread(request);
+			thread.run(); thread.join(timeout + 50); // TODO Optimize for performance
+			
 			response = request.getResponse();
 		} catch (Exception ignored1) {}
 		return response;

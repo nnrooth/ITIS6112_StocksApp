@@ -59,7 +59,8 @@ public class YahooFinance {
 		String querySValue = "s=" + queryValue;
 		String queryFValue = "f=" + queryParams;
 		String queryFValue2 = "f=" + "n"; // Query for company name
-		int timeout = 1500;
+		
+		int timeout = 2000; // TODO - Optimize for performance
 		
 		queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 		queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
@@ -75,7 +76,7 @@ public class YahooFinance {
 		}
 		
 		for (Thread thread : threads) {
-			thread.join(1500);
+			thread.join(timeout + 50); // TODO Optomize for performance
 		}
 		
 		xmlText = web1.getResponse().replace("\"", "").trim();
@@ -89,7 +90,13 @@ public class YahooFinance {
 		
 		info = new String[stockInfo.size()];
 	    info = stockInfo.toArray(info);
-	    		
+	    
+	    for (int n = 0; n < info.length; n++) {
+	    	if (info[n].equals("N/A")) {
+	    		info[n] = "0.00";
+	    	}
+	    }
+	    
 		return info;
 	}
 	

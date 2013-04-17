@@ -1,20 +1,20 @@
 package debug;
 
 public class Timer {
-	private static boolean started;
+	private boolean started;
 	
-	private static long startTime;
-	private static long stopTime;
+	private long startTime;
+	private long stopTime;
 		
 	public Timer() {
 		reset();
 	}
 		
-	public static boolean isStarted() {
+	public boolean isStarted() {
 		return started;
 	}
 	
-	public static long getRunTime() {
+	public long getRunTime() {
 		if (!started) {
 			return (stopTime - startTime);
 		} else {
@@ -22,36 +22,36 @@ public class Timer {
 		}
 	}
 	
-	public static String getFormattedRunTime() {
+	public String getFormattedRunTime() {
 		long millis = (getRunTime() % 1000);
 		long seconds = (getRunTime() / 1000);
 		
 		return String.format("[+] Runtime: %s secs %s millis\n", seconds, millis);
 	}
 	
-	public static long getStartTime() {
+	public long getStartTime() {
 		return startTime;
 	}
 	
-	public static long getStopTime() {
+	public long getStopTime() {
 		return stopTime;
 	}
 	
-	public static void start() {
+	public void start() {
 		if (!started) {
 			startTime = System.currentTimeMillis();
 			started = true;
 		}
 	}
 	
-	public static void stop() {
+	public void stop() {
 		if (started) {
 			stopTime = System.currentTimeMillis();
 			started = false;
 		}
 	}
 	
-	public static void reset() {
+	public void reset() {
 		started = false;
 		startTime = 0;
 		stopTime = 0;

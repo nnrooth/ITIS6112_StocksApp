@@ -6,22 +6,27 @@ import utils.Controller;
 public class Test_ControllerSearch {
 
 	public static void main(String[] args) {
-		int testRuns = 10; int errors = 0;
+		int testRuns = 1500; int errors = 0;
+		Timer bigTimer = new Timer();
+		Timer littleTimer = new Timer();
+		String symbol;
 		
 		System.out.printf("[*] Performing %s test runs\n\n", testRuns);
+		bigTimer.start();
 		for (int n = 0; n < testRuns; n++) {
 			Stock stock = null;
+			symbol = Randomizer.nextStock();
 			
-			System.out.printf("[*] Test run %s\n", ( n + 1 ));
+			System.out.printf("[*] Test run %s\t:\t%s\n", ( n + 1 ), symbol);
 			
-			Timer.start();
+			littleTimer.start();
 			try {
-				stock = Controller.getStock(Randomizer.nextStock());
+				stock = Controller.getStock(symbol);
 			} catch (Exception e) {
 				errors++;
 				e.printStackTrace();
 			}
-			Timer.stop();
+			littleTimer.stop();
 			
 			if (stock != null) {
 				System.out.printf("[+] KW Score: %s\n", stock.getKwScore());
@@ -35,8 +40,13 @@ public class Test_ControllerSearch {
 				System.out.printf("[-] No Results\n");
 			}
 					
-			System.out.printf("%s\n", Timer.getFormattedRunTime());
+			System.out.printf("%s\n", littleTimer.getFormattedRunTime());
 		}
+		bigTimer.stop();
 		System.out.printf("[+] %s errors\n", errors);
+		long totalMillis = bigTimer.getRunTime();
+		long runTimeMillis = totalMillis % 1000;
+		long runTimeSecs = totalMillis / 1000;
+		System.out.printf("[+] Average runtime of %s seconds %s millis\n", (runTimeSecs / testRuns), (runTimeMillis / testRuns));
 	}
 }
