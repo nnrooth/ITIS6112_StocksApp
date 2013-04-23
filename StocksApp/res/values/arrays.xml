@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stock_names">
+        <item>Accenture Plc.</item>
+		<item>American Financial Group Inc.</item>
+		<item>Apple Computer, Inc.</item>
+		<item>Adobe Systems Incorporated</item>
+		<item>ADC Telecommunications, Inc.</item>
+		<item>Adelphia Communications Corporation</item>
+		<item>Adaptec, Inc.</item>
+		<item>Altera Corporation</item>
+		<item>Applied Materials, Inc.</item>
+		<item>Applied Micro Circuits Corporation</item>
+		<item>Amgen Inc.</item>
+		<item>Amazon.com Inc.</item>
+		<item>American Power Conversion Corporation</item>
+		<item>Apollo Group, Inc.</item>
+		<item>At Home Corporation</item>
+		<item>Atmel Corporation</item>
+		<item>Bank Of America Corporation</item>
+		<item>BB&amp;T Corporation</item>
+		<item>BlackBerry</item>
+		<item>Biogen Inc.</item>
+		<item>BMC Software Inc.</item>
+		<item>Biomet Inc.</item>
+		<item>BroadVision Inc.</item>
+		<item>Concord EFS Inc.</item>
+		<item>Chiron Corporation</item>
+		<item>CIENA Corporation</item>
+		<item>Comcast Corporation</item>
+		<item>CMGI Inc.</item>
+		<item>Comverse Technology Inc.</item>
+		<item>CNET Networks Inc.</item>
+		<item>Conexant Systems Inc.</item>
+		<item>3Com Corporation</item>
+		<item>Costco Wholesale Corporation</item>
+		<item>Compuware Corporation</item>
+		<item>Cisco Systems Inc.</item>
+		<item>Cintas Corporation</item>
+		<item>Citrix Systems Inc.</item>
+		<item>Dell Computer Corporation</item>
+		<item>EchoStar Communications Corporation</item>
+		<item>eBay Inc.</item>
+		<item>LM Ericsson Telephone Company</item>
+		<item>Electronic Arts Inc.</item>
+		<item>Fiserv Inc.</item>
+		<item>Global Crossing Ltd</item>
+		<item>Genzyme General</item>
+		<item>Google Inc.</item>
+		<item>Gemstar International Group Limited</item>
+		<item>Immunex Corporation</item>
+		<item>Intel Corporation</item>
+		<item>Intuit Inc.</item>
+		<item>i2 Technologies Inc.</item>
+		<item>JDS Uniphase Corporation</item>
+		<item>KLA Tencor Corporation</item>
+		<item>Lycos Inc.</item>
+		<item>Legato Systems Inc.</item>
+		<item>Linear Technology Corporation</item>
+		<item>Level 3 Communications Inc.</item>
+		<item>Microchip Technology Incorporated</item>
+		<item>McLeodUSA Incorporated</item>
+		<item>MedImmune Inc.</item>
+		<item>Metromedia Fiber Network Inc.</item>
+		<item>Herman Miller Inc.</item>
+		<item>Molex Incorporated</item>
+		<item>Microsoft Corporation</item>
+		<item>Maxim Integrated Products Inc.</item>
+		<item>NetApp Inc.</item>
+		<item>Network Associates Inc.</item>
+		<item>Novell Inc.</item>
+		<item>Network Solutions Inc.</item>
+		<item>Network Appliance Inc.</item>
+		<item>NTL Incorporated</item>
+		<item>Northwest Airlines Corporation</item>
+		<item>NEXTLINK Communications Inc.</item>
+		<item>Nextel Communications Inc.</item>
+		<item>Oracle Corporation</item>
+		<item>Paychex Inc.</item>
+		<item>PACCAR Inc.</item>
+		<item>PacifiCare Health Systems, Inc.</item>
+		<item>PMC Sierra Inc.</item>
+		<item>Parametric Technology Corporation</item>
+		<item>PeopleSoft Inc.</item>
+		<item>QUALCOMM Incorporated</item>
+		<item>QLogic Corporation</item>
+		<item>Quintiles Transnational Corp</item>.
+		<item>RF Micro Devices Inc.</item>
+		<item>RealNetworks Inc.</item>
+		<item>Sanmina Corporation</item>
+		<item>Starbucks Corporation</item>
+		<item>SDL Inc.</item>
+		<item>Siebel Systems Inc.</item>
+		<item>Sigma-Aldrich Corporation</item>
+		<item>Synopsys Inc.</item>
+		<item>Staples Inc.</item>
+		<item>PanAmSat Corporation</item>
+		<item>Smurfit-Stone Container Corporation</item>
+		<item>Sun Microsystems, Inc.</item>
+		<item>Tellabs Inc.</item>
+		<item>USA Networks, Inc.</item>
+		<item>VISX Incorporated</item>
+		<item>VERITAS Software Corporation</item>
+		<item>VoiceStream Wireless Corporation</item>
+		<item>Vitesse Semiconductor Corporation</item>
+		<item>MCI WORLDCOM, Inc.</item>
+		<item>Xilinx Inc.</item>
+		<item>Yahoo! Inc.</item>
+    </string-array>
+    
+</resources>
