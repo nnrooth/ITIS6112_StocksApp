@@ -78,6 +78,7 @@ public class MainActivity extends Activity {
 		});
 	}
 
+	// Returns an array of company name's matching the word parameter
 	private String[] getAutoSuggest(String word) {
 		ArrayList<String> suggestions = new ArrayList<String>();
 		String[] results;
@@ -86,7 +87,6 @@ public class MainActivity extends Activity {
 		for (int n = 0; n < stock_names.length; n++) {
 			if (stock_names[n].toLowerCase(Locale.US).startsWith(word.toLowerCase(Locale.US))) {
 				suggestions.add(stock_names[n]);
-				Log.i("Suggestions", stock_names[n]);
 			}
 		}
 		
@@ -95,33 +95,34 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void search() {
-		//final EditText input = new EditText(this);
 		final AutoCompleteTextView actv = new AutoCompleteTextView(this);
 		new AlertDialog.Builder(this)
 				.setTitle("Search")
-				.setMessage(
-						R.string.searchCaption)
-				.setView(actv).setOnKeyListener(new DialogInterface.OnKeyListener() {
+				.setMessage(R.string.searchCaption)
+				.setView(actv)
+				.setOnKeyListener(new DialogInterface.OnKeyListener() {
 					
-					String typeWord = "";
-					
-					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-						if (KeyEvent.ACTION_UP == event.getAction()) {
-							typeWord = actv.getText().toString();
-							Log.i("TypeWord", typeWord);
-						}
-						
-						String[] stockNames;
-						if (typeWord.length() > -1) {
-							stockNames = getAutoSuggest(typeWord);
-							Log.i("StockNames", String.format("%s", stockNames.length));
-							
-							ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, stockNames);
-							actv.setAdapter(adapter);
-						}
-						
-						return false;
+		String typeWord = "";
+		
+		@Override
+		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+			String[] stockNames = null;
+			if (KeyEvent.ACTION_UP == event.getAction()) {
+				typeWord = actv.getText().toString();
+				Log.i("TypeWord", typeWord); // Log user input as info
+				
+				stockNames = getAutoSuggest(typeWord);
+				Log.i("StockNames", String.format("%s", stockNames.length)); // Log length of matched stock name array
+				
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						MainActivity.this,
+						android.R.layout.simple_dropdown_item_1line,
+						stockNames
+					);
+				actv.setAdapter(adapter);
+			}
+			
+			return false;
 					}
 				})
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
