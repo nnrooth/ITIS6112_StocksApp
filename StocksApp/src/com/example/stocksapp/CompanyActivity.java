@@ -1,16 +1,14 @@
 package com.example.stocksapp;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import stocks.Stock;
-import utils.TestLogger;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
