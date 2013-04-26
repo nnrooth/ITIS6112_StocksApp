@@ -1,12 +1,15 @@
 package utils;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
-import delphi.FinalScore;
+import android.util.Log;
+
 import stocks.Stock;
+import delphi.FinalScore;
 
 /**
  * Used to fetch a Stock object based on the symbol parameter.
@@ -38,6 +41,9 @@ public class Controller {
 			}
 		}
 
+//		Log logger = new Log();
+//		logger.logger(stock.getName());
+		
 		return stock;
 	}
 	

@@ -1,11 +1,17 @@
 package com.example.stocksapp;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import stocks.Stock;
+import utils.TestLogger;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -34,6 +40,18 @@ public class CompanyActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.tvCompanyName);
 		int score;
 		stock = utils.Controller.getStock(companyName);
+		
+		String FILENAME = "log.test";
+		String stockName = stock.getName();
+		try {
+			FileOutputStream out = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			out.write(("|" + stockName).getBytes());
+			out.close();
+			Log.i("Log File", "All is Clear");
+		} catch (Exception e) {
+			Log.e("Log File", "Error Writing");
+		}
+
 		score = (int) stock.getScore();
 		// Log.d("demo", ""+score);
 		tv.setText(Integer.toString(score));
