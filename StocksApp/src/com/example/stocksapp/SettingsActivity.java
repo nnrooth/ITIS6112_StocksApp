@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 public class SettingsActivity extends Activity {
-	public static final String PREFS_NAME = "MyPrefsFile";
+	public static final String PREFS_NAME = "MySettingsFile";
 	CharSequence[] experts = { "Google Finance", "Yahoo Finance", "Expert 3",
 			"Expert 4", "Expert 5" };
 	ArrayList<String> selectedExperts = new ArrayList<String>();
@@ -217,7 +217,6 @@ public class SettingsActivity extends Activity {
 									selectedExperts.get(i));
 						}
 						editor.commit();
-
 					}
 				})
 				.setNegativeButton("Cancel",
@@ -226,8 +225,10 @@ public class SettingsActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								// TODO Auto-generated method stub
-
+								selectedExperts = new ArrayList<String>();
+								for(int i=0; i<experts.length; i++){
+									selectedExperts.add(experts[i].toString());
+								}
 							}
 						}).show();
 	}

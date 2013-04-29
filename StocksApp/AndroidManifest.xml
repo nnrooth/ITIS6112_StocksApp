@@ -44,6 +44,14 @@
             android:name="com.example.stocksapp.CompareActivity"
             android:label="@string/title_activity_compare" >
         </activity>
+        <activity
+            android:name="com.example.stocksapp.NewsActivity"
+            android:label="@string/title_activity_news" >
+        </activity>
+        <activity
+            android:name="com.example.stocksapp.BuySellLinksActivity"
+            android:label="@string/title_activity_buy_sell_links" >
+        </activity>
     </application>
 
 </manifest>

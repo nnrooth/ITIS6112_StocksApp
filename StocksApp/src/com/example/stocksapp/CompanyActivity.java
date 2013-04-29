@@ -1,15 +1,12 @@
 package com.example.stocksapp;
 
-import java.io.FileOutputStream;
-
 import stocks.Stock;
+import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -24,6 +21,8 @@ public class CompanyActivity extends Activity {
 	Intent intent;
 	String companyName;
 	Stock stock;
+	String[] scorecardItems = { "Item1: 1", "Item2: 2", "Item3: 3" };
+	public static final String PREFS_NAME = "MyHistoryFile";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +32,14 @@ public class CompanyActivity extends Activity {
 		tabHost.setup();
 
 		companyName = getIntent().getExtras().getString("Company");
+		saveToHistory();
 		TextView tvCompany = (TextView) findViewById(R.id.textView1);
 		tvCompany.setText(companyName);
 		TextView tv = (TextView) findViewById(R.id.tvCompanyName);
 		int score;
 		stock = utils.Controller.getStock(companyName);
-		
-		String FILENAME = "log.test";
-		String stockName = stock.getName();
-		try {
-			FileOutputStream out = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-			out.write(("|" + stockName).getBytes());
-			out.close();
-			Log.i("Log File", "All is Clear");
-		} catch (Exception e) {
-			Log.e("Log File", "Error Writing");
-		}
-
 		score = (int) stock.getScore();
-		// Log.d("demo", ""+score);
+
 		tv.setText(Integer.toString(score));
 
 		TabSpec predictionSpec = tabHost.newTabSpec("Prediction");
@@ -74,19 +62,18 @@ public class CompanyActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				intent = new Intent(getBaseContext(), MainActivity.class);
-				finish();
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
-
 			}
 		});
-		
+
 		Button btnSettings = (Button) findViewById(R.id.button2);
 		btnSettings.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				intent = new Intent(getBaseContext(), SettingsActivity.class);
-				startActivity(intent);				
+				startActivity(intent);
 			}
 		});
 
@@ -99,20 +86,94 @@ public class CompanyActivity extends Activity {
 			}
 		});
 
+		Button btnNews = (Button) findViewById(R.id.button3);
+		btnNews.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				intent = new Intent(getBaseContext(), NewsActivity.class);
+				intent.putExtra("Company", companyName);
+				startActivity(intent);
+			}
+		});
+
+		Button btnBuy = (Button) findViewById(R.id.button5);
+		btnBuy.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				intent = new Intent(getBaseContext(),
+						BuySellLinksActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		Button btnScorecard = (Button) findViewById(R.id.button6);
+		btnScorecard.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				viewScorecard();
+			}
+		});
+
 	}
-	
+
+	public void saveToHistory() {
+		SharedPreferences historyFile = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = historyFile.edit();
+		int size = historyFile.getInt("History_Number", -1);
+		if (size == -1) {
+			editor.putInt("History_Number", 1);
+			editor.putString("History_0", companyName);
+			editor.commit();
+		} else {
+			int flag = 0;
+			for (int i = 0; i < size; i++) {
+				if (companyName.equals(historyFile.getString("History_" + i,
+						null))) {
+					flag = 1;
+				}
+			}
+			if (flag == 0) {
+				size++;
+				editor.putInt("History_Number", size);
+				editor.putString("History_" + (size - 2), companyName);
+				editor.commit();
+			}
+		}
+	}
+
+	public void viewScorecard() {
+		new AlertDialog.Builder(this)
+				.setTitle("Scorecard")
+				.setItems(scorecardItems, null)
+				.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+
+							}
+						}).show();
+	}
+
 	protected void search() {
 		final EditText input = new EditText(this);
 		final AutoCompleteTextView actv = new AutoCompleteTextView(this);
 		new AlertDialog.Builder(this)
 				.setTitle("Compare with " + companyName)
 				.setMessage(R.string.searchCaption)
-				.setView(actv).setOnKeyListener(new DialogInterface.OnKeyListener() {
-					
+				.setView(actv)
+				.setOnKeyListener(new DialogInterface.OnKeyListener() {
+
 					@Override
-					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+					public boolean onKey(DialogInterface dialog, int keyCode,
+							KeyEvent event) {
 						// TODO Auto-generated method stub
-						
+
 						return false;
 					}
 				})
@@ -122,11 +183,11 @@ public class CompanyActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						// searchResults();
 						// Removing the screen with search suggestions
-						String company2 = input.getText().toString();
-						intent = new Intent(getBaseContext(), CompareActivity.class);
+						String company2 = actv.getText().toString();
+						intent = new Intent(getBaseContext(),
+								CompareActivity.class);
 						intent.putExtra("Company1", companyName);
 						intent.putExtra("Company2", company2);
-						finish();
 						startActivity(intent);
 					}
 				})

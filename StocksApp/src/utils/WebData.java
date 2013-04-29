@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class WebData implements Runnable {
 
-	private static final int DEFAULT_TIMEOUT = 1500 /* MilliSeconds */; 
+	private static final int DEFAULT_TIMEOUT = 3000 /* MilliSeconds */; 
 	
 	String response;
 	private URL url;

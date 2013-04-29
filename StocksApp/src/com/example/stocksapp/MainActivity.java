@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -18,9 +19,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	Intent intent;
+	public static final String PREFS_NAME = "MyHistoryFile";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +46,12 @@ public class MainActivity extends Activity {
 				if (position == 0) {
 					intent = new Intent(getBaseContext(),
 							TopOrBottom10Activity.class);
-					finish();
 					startActivity(intent);
 				} else if (position == 1) {
 					intent = new Intent(getBaseContext(),
 							TopPickoftheDayActivity.class);
-					finish();
 					startActivity(intent);
 				} else if (position == 2) {
-					// builderSearch.show();
 					search();
 				} else if (position == 3) {
 					categories();
@@ -60,7 +60,16 @@ public class MainActivity extends Activity {
 							SettingsActivity.class);
 					startActivity(intent);
 				} else if (position == 5) {
-					history();
+					SharedPreferences historyFile = getSharedPreferences(
+							PREFS_NAME, 0);
+					int size = historyFile.getInt("History_Number", -1);
+					if (size == -1) {
+						Toast.makeText(MainActivity.this,
+								"No history available!", Toast.LENGTH_SHORT)
+								.show();
+					} else {
+						history();
+					}
 				}
 
 			}
@@ -73,7 +82,6 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				finish();
 				System.exit(0);
-
 			}
 		});
 	}
@@ -82,18 +90,20 @@ public class MainActivity extends Activity {
 	private String[] getAutoSuggest(String word) {
 		ArrayList<String> suggestions = new ArrayList<String>();
 		String[] results;
-		String[] stock_names = getResources().getStringArray(R.array.stock_names);
-		
+		String[] stock_names = getResources().getStringArray(
+				R.array.stock_names);
+
 		for (int n = 0; n < stock_names.length; n++) {
-			if (stock_names[n].toLowerCase(Locale.US).startsWith(word.toLowerCase(Locale.US))) {
+			if (stock_names[n].toLowerCase(Locale.US).startsWith(
+					word.toLowerCase(Locale.US))) {
 				suggestions.add(stock_names[n]);
 			}
 		}
-		
+
 		results = suggestions.toArray(new String[suggestions.size()]);
 		return results;
 	}
-	
+
 	protected void search() {
 		final AutoCompleteTextView actv = new AutoCompleteTextView(this);
 		new AlertDialog.Builder(this)
@@ -101,46 +111,48 @@ public class MainActivity extends Activity {
 				.setMessage(R.string.searchCaption)
 				.setView(actv)
 				.setOnKeyListener(new DialogInterface.OnKeyListener() {
-					
-		String typeWord = "";
-		
-		@Override
-		public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-			String[] stockNames = null;
-			if (KeyEvent.ACTION_UP == event.getAction()) {
-				typeWord = actv.getText().toString();
-				Log.i("TypeWord", typeWord); // Log user input as info
-				
-				stockNames = getAutoSuggest(typeWord);
-				Log.i("StockNames", String.format("%s", stockNames.length)); // Log length of matched stock name array
-				
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-						MainActivity.this,
-						android.R.layout.simple_dropdown_item_1line,
-						stockNames
-					);
-				actv.setAdapter(adapter);
-			}
-			
-			return false;
+
+					String typeWord = "";
+
+					@Override
+					public boolean onKey(DialogInterface dialog, int keyCode,
+							KeyEvent event) {
+						String[] stockNames = null;
+						if (KeyEvent.ACTION_UP == event.getAction()) {
+							typeWord = actv.getText().toString();
+							Log.i("TypeWord", typeWord); // Log user input as
+															// info
+
+							stockNames = getAutoSuggest(typeWord);
+							Log.i("StockNames",
+									String.format("%s", stockNames.length)); // Log
+																				// length
+																				// of
+																				// matched
+																				// stock
+																				// name
+																				// array
+
+							ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+									MainActivity.this,
+									android.R.layout.simple_dropdown_item_1line,
+									stockNames);
+							actv.setAdapter(adapter);
+						}
+
+						return false;
 					}
 				})
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-//						searchResults();
-						//Removing the screen with search suggestions
+						// searchResults();
+						// Removing the screen with search suggestions
 						String companyName = actv.getText().toString();
 						intent = new Intent(getBaseContext(),
 								CompanyActivity.class);
-						
-						
-						
-						
 						intent.putExtra("Company", companyName);
-						
-						finish();
 						startActivity(intent);
 					}
 				})
@@ -183,7 +195,8 @@ public class MainActivity extends Activity {
 	}
 
 	protected void categories() {
-		final String[] categories = { "Small Cap", "Mid Cap", "Energy", "Power", "Banking" };
+		final String[] categories = { "Small Cap", "Mid Cap", "Energy",
+				"Power", "Banking" };
 		new AlertDialog.Builder(this)
 				.setTitle("Categories")
 				.setItems(categories, new DialogInterface.OnClickListener() {
@@ -232,17 +245,34 @@ public class MainActivity extends Activity {
 	}
 
 	protected void history() {
-		final String[] searchValues = { "Microsoft", "Google", "Yahoo" };
+		SharedPreferences historyFile = getSharedPreferences(PREFS_NAME, 0);
+		int size = historyFile.getInt("History_Number", -1);
+		final String[] historyValues = new String[size];
+		for (int i = 0; i < size; i++) {
+			historyValues[i] = historyFile.getString("History_" + i, null);
+		}
+
 		new AlertDialog.Builder(this)
 				.setTitle("Search Results")
-				.setItems(searchValues, new DialogInterface.OnClickListener() {
+				.setItems(historyValues, new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						intent = new Intent(getBaseContext(),
 								CompanyActivity.class);
-						intent.putExtra("Company", searchValues[which]);
+						intent.putExtra("Company", historyValues[which]);
 						startActivity(intent);
+					}
+				})
+				.setPositiveButton("Clear History", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences historyFile = getSharedPreferences(
+								PREFS_NAME, 0);
+						SharedPreferences.Editor editor = historyFile.edit();
+						editor.clear();
+						editor.commit();
 					}
 				})
 				.setNegativeButton("Cancel",

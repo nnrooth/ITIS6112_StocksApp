@@ -29,5 +29,11 @@
     <string name="title_activity_compare">CompareActivity</string>
     <string name="restore">Restore Defaults</string>
     <string name="searchCaption">Please Enter Stock Symbol</string>
+    <string name="title_activity_news">NewsActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_buy_sell_links">BuySellLinksActivity</string>
+    <string name="add">Add New Link</string>
+    <string name="remove">Remove Link</string>
+    <string name="scorecard">View Scorecard</string>
 
 </resources>

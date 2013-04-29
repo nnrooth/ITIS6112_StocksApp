@@ -14,7 +14,8 @@ public class TopPickoftheDayActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_pickofthe_day);
 		
-		final String companyName = "";
+		//update the company name with the top stock of the day
+		final String companyName = "Msft";
 		
 		Button btnHome = (Button)findViewById(R.id.button1);
 		btnHome.setOnClickListener(new View.OnClickListener() {
@@ -22,9 +23,8 @@ public class TopPickoftheDayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				intent = new Intent(getBaseContext(), MainActivity.class);
-				finish();
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
-				
 			}
 		});
 		
@@ -35,9 +35,7 @@ public class TopPickoftheDayActivity extends Activity {
 			public void onClick(View v) {
 				intent = new Intent(getBaseContext(), CompanyActivity.class);
 				intent.putExtra("Company", companyName);
-				finish();
 				startActivity(intent);
-				
 			}
 		});
 		
