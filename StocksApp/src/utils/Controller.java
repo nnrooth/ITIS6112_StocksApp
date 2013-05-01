@@ -6,7 +6,9 @@ import java.util.Hashtable;
 import java.util.Random;
 
 import delphi.FinalScore;
+import delphi.Top10Expert;
 import stocks.Stock;
+import stocks.YahooFinance;
 
 /**
  * Used to fetch a Stock object based on the symbol parameter.
@@ -17,6 +19,13 @@ import stocks.Stock;
  *
  */
 public class Controller {
+	
+	public static String getComanyName(String symbol) {
+		String companyName = YahooFinance.getCompanyName(symbol);
+		
+		return companyName;
+		
+	}
 	
 	public static Stock getStock(String symbol) {
 		Stock stock; String[] stockInfo;
@@ -75,6 +84,16 @@ public class Controller {
 				stock = null;
 			}
 			return stock;
+		}
+		
+		public static String[] getTop10() {
+			String[] top10 = Top10Expert.getTop10();
+			return top10;
+		}
+		
+		public static String[] getBottom10() {
+			String[] bottom10 = Top10Expert.getBottom10();
+			return bottom10;
 		}
 	}
 }

@@ -27,22 +27,22 @@ public class TopOrBottom10Activity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_or_bottom10);
 
-		TabHost tabHost = (TabHost) findViewById(R.id.tabHost1);
-		tabHost.setup();
-
-		TabSpec priceSpec = tabHost.newTabSpec("Price");
-		priceSpec.setIndicator("Price");
-		priceSpec.setContent(R.id.tab1);
-		TabSpec marketSpec = tabHost.newTabSpec("Market Cap");
-		marketSpec.setIndicator("Market Cap");
-		marketSpec.setContent(R.id.tab2);
-		TabSpec volumeSpec = tabHost.newTabSpec("Volume");
-		volumeSpec.setIndicator("Volume");
-		volumeSpec.setContent(R.id.tab3);
-
-		tabHost.addTab(priceSpec);
-		tabHost.addTab(marketSpec);
-		tabHost.addTab(volumeSpec);
+//		TabHost tabHost = (TabHost) findViewById(R.id.tabHost1);
+//		tabHost.setup();
+//
+//		TabSpec priceSpec = tabHost.newTabSpec("Price");
+//		priceSpec.setIndicator("Price");
+//		priceSpec.setContent(R.id.tab1);
+//		TabSpec marketSpec = tabHost.newTabSpec("Market Cap");
+//		marketSpec.setIndicator("Market Cap");
+//		marketSpec.setContent(R.id.tab2);
+//		TabSpec volumeSpec = tabHost.newTabSpec("Volume");
+//		volumeSpec.setIndicator("Volume");
+//		volumeSpec.setContent(R.id.tab3);
+//
+//		tabHost.addTab(priceSpec);
+//		tabHost.addTab(marketSpec);
+//		tabHost.addTab(volumeSpec);
 
 		new AsyncGetToporBottom().execute();
 		

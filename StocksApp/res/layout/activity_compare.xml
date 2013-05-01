@@ -130,6 +130,15 @@
                         android:layout_marginTop="32dp"
                         android:text="@string/companyName"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
+                    
+                    <Button
+                        android:id="@+id/button6"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="150dp"
+                        android:text="@string/scorecard" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -190,36 +199,27 @@
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
-
-                    <RadioGroup
-                        android:id="@+id/rgPast"
-                        android:layout_width="match_parent"
+					
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="3" >
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="55dp"
+                        android:layout_marginTop="111dp"
+                        android:text="@string/previousDayClosure" />
 
-                        <RadioButton
-                            android:id="@+id/radio3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="@string/oneMonth" />
-
-                        <RadioButton
-                            android:id="@+id/radio4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/sixMonths" />
-
-                        <RadioButton
-                            android:id="@+id/radio5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/oneYear" />
-                    </RadioGroup>
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/textView7"
+                        android:layout_alignBottom="@+id/textView7"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="48dp"
+                        android:text="@string/zero" />
+                    
                 </RelativeLayout>
             </FrameLayout>
         </LinearLayout>

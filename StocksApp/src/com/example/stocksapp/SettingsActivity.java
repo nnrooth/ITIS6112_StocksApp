@@ -21,9 +21,7 @@ public class SettingsActivity extends Activity {
 			"Expert 4", "Expert 5" };
 	ArrayList<String> selectedExperts = new ArrayList<String>();
 	String[] currenyItems = { "Dollar", "Pound", "Euro", "Rupee", "Peso" };
-	String[] displayItems = { "Prediction", "Current Price", "Past Prices" };
 	String currency = "";
-	String display = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +30,6 @@ public class SettingsActivity extends Activity {
 
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		currency = settings.getString("Currency", null);
-		display = settings.getString("Display", null);
 		int size = settings.getInt("Experts_Number", -1);
 		if (size == -1) {
 			restoreDefaults();
@@ -42,8 +39,8 @@ public class SettingsActivity extends Activity {
 			}
 		}
 		ListView myListView = (ListView) findViewById(R.id.listView1);
-		String[] menuItems = { "Currency Settings", "Default Display",
-				"Select Experts" };
+		String[] menuItems = { "Currency Settings",
+				"Select Experts", "About" };
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				menuItems);
@@ -57,9 +54,9 @@ public class SettingsActivity extends Activity {
 				if (position == 0) {
 					currencySettings();
 				} else if (position == 1) {
-					defaultDisplay();
-				} else if (position == 2) {
 					selectExperts();
+				} else if (position == 2) {
+					about();
 				}
 
 			}
@@ -84,6 +81,19 @@ public class SettingsActivity extends Activity {
 			}
 		});
 
+	}
+
+	protected void about() {
+		new AlertDialog.Builder(this).setTitle("About")
+		.setMessage("The information goes here!")
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		}).show();
 	}
 
 	protected void currencySettings() {
@@ -131,49 +141,6 @@ public class SettingsActivity extends Activity {
 		selectedExperts.add("Google Finance");
 		selectedExperts.add("Yahoo Finance");
 		currency = "Dollar";
-		display = "Prediction";
-	}
-
-	protected void defaultDisplay() {
-		int location = 0;
-		for(int i=0; i<displayItems.length; i++){
-			if(display.equals(displayItems[i])){
-				location = i;
-			}
-		}
-		new AlertDialog.Builder(this)
-				.setTitle("Default Display")
-				.setSingleChoiceItems(displayItems, location,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								display = displayItems[which].toString();
-
-							}
-						})
-				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						
-						SharedPreferences settings = getSharedPreferences(
-								PREFS_NAME, 0);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putString("Display", display);
-						editor.commit();
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
-						}).show();
 	}
 
 	protected void selectExperts() {

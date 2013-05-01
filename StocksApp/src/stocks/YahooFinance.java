@@ -101,9 +101,27 @@ public class YahooFinance {
 	}
 	
 	/**
-	 * Possible custom query method???
+	 * Gets companies name based on queryValue parameter
+	 * 
+	 * @param queryValue
+	 * @return
 	 */
-	public static String[] customQuery(String queryValue, String queryParams) {
-		return null;
+	public static String getCompanyName(String symbol) {
+		String companyName = null;
+		String querySValue = "s=" + symbol;
+		String queryFValue = "f=" + "n"; // Query for company name
+		WebData web = null;
+		Thread thread = null;
+		try {
+			URL queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
+			web = new WebData(queryUrl);
+			thread = new Thread(web);
+			thread.start();
+			companyName = web.getResponse().replace("\"",  "").trim();
+		} catch (MalformedURLException e) {
+			companyName = "";
+		}
+		
+		return companyName;
 	}
 }
