@@ -66,7 +66,7 @@ public class Top10Expert {
 			WebData request = new WebData(url);
 			
 			Thread thread = new Thread(request);
-			thread.run(); thread.join(timeout); // TODO Optimize for performance
+			thread.start(); thread.join(timeout); // TODO Optimize for performance
 			
 			response = request.getResponse();
 		} catch (Exception ignored1) {}
@@ -100,7 +100,7 @@ public class Top10Expert {
 			WebData request = new WebData(url);
 			
 			Thread thread = new Thread(request);
-			thread.run(); thread.join(timeout); // TODO Optimize for performance
+			thread.start(); thread.join(timeout); // TODO Optimize for performance
 			
 			response = request.getResponse();
 		} catch (Exception ignored1) {}
