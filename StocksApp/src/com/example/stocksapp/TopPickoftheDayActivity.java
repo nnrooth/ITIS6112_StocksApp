@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 public class TopPickoftheDayActivity extends Activity {
 	Intent intent;
-	String companyName = "Msft";
+	String companyName = utils.Controller.getTop10()[0];
 	Stock stock;
 
 	@Override
