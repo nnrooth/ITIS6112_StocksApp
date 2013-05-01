@@ -58,7 +58,7 @@ public class TopPickoftheDayActivity extends Activity {
 
 		@Override
 		protected String doInBackground(Void... arg0) {
-			String[] values = delphi.Top10Expert.getTop10Regex();
+			String[] values = utils.Controller.getTop10();
 			Log.d("demo", "1");
 //			companyName= values[0];
 //			Log.d("demo", companyName);
