@@ -2,10 +2,10 @@ package com.example.stocksapp;
 
 import java.util.ArrayList;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,8 +16,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 
 public class TopOrBottom10Activity extends Activity {
 	Intent intent;
@@ -78,11 +76,11 @@ public class TopOrBottom10Activity extends Activity {
 			RadioButton rbTop = (RadioButton) findViewById(R.id.radio0);
 
 			if (findViewById(id) == rbTop) {
-				String[] values = delphi.Top10Expert.getTop10Regex();
+				String[] values = utils.Controller.getTop10();
 				return values;
 				
 			} else {				
-				String[] values = delphi.Top10Expert.getBottom10Regex();
+				String[] values = utils.Controller.getBottom10();
 				return values;
 			}
 		}

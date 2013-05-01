@@ -20,6 +20,16 @@ import stocks.YahooFinance;
  */
 public class Controller {
 	
+	public static String[] getTop10() {
+		String[] top10 = Top10Expert.getTop10();
+		return top10;
+	}
+	
+	public static String[] getBottom10() {
+		String[] bottom10 = Top10Expert.getBottom10();
+		return bottom10;
+	}
+	
 	public static String getComanyName(String symbol) {
 		String companyName = YahooFinance.getCompanyName(symbol);
 		
@@ -84,16 +94,6 @@ public class Controller {
 				stock = null;
 			}
 			return stock;
-		}
-		
-		public static String[] getTop10() {
-			String[] top10 = Top10Expert.getTop10();
-			return top10;
-		}
-		
-		public static String[] getBottom10() {
-			String[] bottom10 = Top10Expert.getBottom10();
-			return bottom10;
 		}
 	}
 }
