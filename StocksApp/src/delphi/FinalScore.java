@@ -3,9 +3,9 @@ package delphi;
 import stocks.Stock;
 
 public class FinalScore {
-	private static final double KW_WEIGHT = 0.30;
+	private static final double KW_WEIGHT = 0.50;
 	private static final double T10_WEIGHT = 0.10;
-	private static final double EG_WEIGHT = 0.50;
+	private static final double EG_WEIGHT = 0.30;
 	private static final double PC_WEIGHT = 0.10;
 	
 	public static double getScore(Stock stock) {

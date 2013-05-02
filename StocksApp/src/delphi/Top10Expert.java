@@ -13,7 +13,7 @@ public class Top10Expert {
 
 	private static String[] top10List;
 	private static String[] bottom10List;
-	private static int timeout = 1500; // TODO - Optimize for performance
+	private static int timeout = 3500; // TODO - Optimize for performance
 	
 	public static double getScore(String symbol) {
 		double score = 0;
@@ -23,9 +23,8 @@ public class Top10Expert {
 			return score;
 		}
 		
-		if (isInTop10(symbol)) { score += 10; } else
-		if (isInBottom10(symbol)) { score -= 10; }
-		
+		if (isInTop10(symbol.toUpperCase())) { score += 10; } else
+		if (isInBottom10(symbol.toUpperCase())) { score -= 10; }
 		
 		return score;
 	}
@@ -82,8 +81,8 @@ public class Top10Expert {
 			
 			List<String> listMatches = new ArrayList<String>();
 			
-			while(matcher.find() && listMatches.size()<10) {
-			    listMatches.add(matcher.group(2));
+			while(matcher.find() /*&& listMatches.size()<10*/) {
+			    listMatches.add(matcher.group(2).toUpperCase());
 			}
 			
 			bottom10List = listMatches.toArray(new String[listMatches.size()]);
@@ -116,8 +115,8 @@ public class Top10Expert {
 			
 			List<String> listMatches = new ArrayList<String>();
 			
-			while(matcher.find() && listMatches.size()<10) {
-			    listMatches.add(matcher.group(2));
+			while(matcher.find() /*&& listMatches.size()<10*/) {
+			    listMatches.add(matcher.group(2).toUpperCase());
 			}
 			
 			top10List = listMatches.toArray(new String[listMatches.size()]);

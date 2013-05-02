@@ -5,10 +5,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
-import delphi.FinalScore;
-import delphi.Top10Expert;
 import stocks.Stock;
 import stocks.YahooFinance;
+import delphi.FinalScore;
+import delphi.Top10Expert;
 
 /**
  * Used to fetch a Stock object based on the symbol parameter.
@@ -21,12 +21,12 @@ import stocks.YahooFinance;
 public class Controller {
 	
 	public static String[] getTop10() {
-		String[] top10 = Top10Expert.getTop10();
+		String[] top10 = Top10Expert.getTop10Regex();
 		return top10;
 	}
 	
 	public static String[] getBottom10() {
-		String[] bottom10 = Top10Expert.getBottom10();
+		String[] bottom10 = Top10Expert.getBottom10Regex();
 		return bottom10;
 	}
 	
@@ -61,7 +61,7 @@ public class Controller {
 	}
 	
 	private static class HistoryStack {
-		private static final int STACK_SIZE = 5;
+		private static final int STACK_SIZE = 15;
 		private static Hashtable<String, Stock> stack = new Hashtable<String, Stock>(STACK_SIZE);
 		private static Random rand = new Random();
 		

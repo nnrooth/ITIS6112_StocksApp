@@ -2,8 +2,6 @@ package delphi;
 
 import java.math.BigDecimal;
 
-import android.util.Log;
-
 import stocks.Stock;
 
 public class EstimatedGrowthExpert {
@@ -16,7 +14,6 @@ public class EstimatedGrowthExpert {
 	 * @return An average score based on all EPSEs
 	 */
 	public static double getScore(Stock stock) {
-		Log.d("EG Score", "EG Scoring Started");
 		double egScore = 0.00, change;
 		
 		// BigDecimal currentPrice, BigDecimal[] epse
