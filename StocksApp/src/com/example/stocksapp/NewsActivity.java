@@ -30,6 +30,7 @@ public class NewsActivity extends Activity {
 	ArrayList<String> news_link;
 	String companyName;
 	ProgressDialog progress;
+	String fullName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,8 +42,9 @@ public class NewsActivity extends Activity {
 		progress.show();
 		
 		companyName = getIntent().getExtras().getString("Company");
+		fullName = getIntent().getExtras().getString("FullName");
 		TextView tvCompany = (TextView)findViewById(R.id.textView1);
-		tvCompany.setText(companyName);
+		tvCompany.setText(fullName);
 		
 		new AsyncGetNews().execute();
 

@@ -92,34 +92,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
-                    <RadioGroup
-                        android:id="@+id/rgShortOrLongTerm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2" >
-
-                        <RadioButton
-                            android:id="@+id/radio0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:text="@string/shortTerm" />
-
-                        <RadioButton
-                            android:id="@+id/radio1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/longTerm" />
-                    </RadioGroup>
+                    
 
                     <TextView
                         android:id="@+id/tvCompanyName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/rgShortOrLongTerm"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="30dp"
                         android:text="@string/companyName"

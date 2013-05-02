@@ -4,12 +4,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import stocks.Stock;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
@@ -30,6 +34,7 @@ public class CompanyActivity extends Activity {
 	String[] scorecardItems = new String[4];
 	public static final String PREFS_NAME = "MyHistoryFile";
 	int score;
+	ProgressDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +43,30 @@ public class CompanyActivity extends Activity {
 		TabHost tabHost = (TabHost) findViewById(R.id.tabHost1);
 		tabHost.setup();
 
+		dialog = new ProgressDialog(this);
+		dialog.setMessage("Loading...");
+		dialog.setCancelable(false);
+		dialog.show();
+
 		companyName = getIntent().getExtras().getString("Company");
 		saveToHistory();
-		TextView tvCompany = (TextView) findViewById(R.id.textView1);
-		tvCompany.setText(companyName);
+		
 
 		stockDetails();
+		if (stock != null) {
+			new Timer().schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							TextView tv = (TextView) findViewById(R.id.textView2);
+							tv.setText(stock.updatePrice(companyName) + "");
+						}
+					});
+				}
+			}, 0, 5000);
+		}
 
 		TabSpec predictionSpec = tabHost.newTabSpec("Prediction");
 		predictionSpec.setIndicator("Prediction");
@@ -96,6 +119,7 @@ public class CompanyActivity extends Activity {
 			public void onClick(View v) {
 				intent = new Intent(getBaseContext(), NewsActivity.class);
 				intent.putExtra("Company", companyName);
+				intent.putExtra("FullName", stock.getName());
 				startActivity(intent);
 			}
 		});
@@ -128,38 +152,48 @@ public class CompanyActivity extends Activity {
 	}
 
 	public void stockDetails() {
-		TextView tv = (TextView) findViewById(R.id.tvCompanyName);
-		stock = utils.Controller.getStock(companyName);
-		score = (int) stock.getScore();
-		tv.setText(randomPhrase(score));
-		BigDecimal current = stock.getCurrentPrice();
-		BigDecimal previous = stock.getPreviousClosingPrice();
-		BigDecimal change = current.subtract(previous);
-		Double chg = Double.valueOf(change.doubleValue());
-		BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(previous, 2,
-				RoundingMode.CEILING);
-		Double pc = Double.valueOf(percent.doubleValue());
-		TextView tvCurrent = (TextView) findViewById(R.id.textView2);
-		tvCurrent.setText("" + current);
-		TextView tvPrevious1 = (TextView) findViewById(R.id.textView6);
-		tvPrevious1.setText("" + previous);
-		TextView tvPrevious2 = (TextView) findViewById(R.id.textView8);
-		tvPrevious2.setText("" + previous);
-		TextView tvChange = (TextView) findViewById(R.id.textView3);
-		if (chg > 0) {
-			tvChange.setText("+" + change);
-			tvChange.setTextColor(Color.GREEN);
-		} else {
-			tvChange.setText("" + change);
-			tvChange.setTextColor(Color.RED);
-		}
-		TextView tvPercent = (TextView) findViewById(R.id.textView4);
-		if (pc > 0) {
-			tvPercent.setText("+" + percent + "%");
-			tvPercent.setTextColor(Color.GREEN);
-		} else {
-			tvPercent.setText("" + percent + "%");
-			tvPercent.setTextColor(Color.RED);
+		try {
+			TextView tv = (TextView) findViewById(R.id.tvCompanyName);
+			stock = utils.Controller.getStock(companyName);
+			TextView tvCompany = (TextView) findViewById(R.id.textView1);
+			tvCompany.setText(stock.getName());
+			score = (int) stock.getScore();
+			tv.setText(randomPhrase(score));
+			BigDecimal current = stock.getCurrentPrice();
+			BigDecimal previous = stock.getPreviousClosingPrice();
+			BigDecimal change = current.subtract(previous);
+			Double chg = Double.valueOf(change.doubleValue());
+			BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(previous,
+					2, RoundingMode.CEILING);
+			Double pc = Double.valueOf(percent.doubleValue());
+			TextView tvCurrent = (TextView) findViewById(R.id.textView2);
+			tvCurrent.setText("" + current);
+			TextView tvPrevious1 = (TextView) findViewById(R.id.textView6);
+			tvPrevious1.setText("" + previous);
+			TextView tvPrevious2 = (TextView) findViewById(R.id.textView8);
+			tvPrevious2.setText("" + previous);
+			TextView tvChange = (TextView) findViewById(R.id.textView3);
+			if (chg >= 0) {
+				tvChange.setText("+" + change);
+				tvChange.setTextColor(Color.rgb(0, 120, 0));
+			} else {
+				tvChange.setText("" + change);
+				tvChange.setTextColor(Color.RED);
+			}
+			TextView tvPercent = (TextView) findViewById(R.id.textView4);
+			if (pc >= 0) {
+				tvPercent.setText("+" + percent + "%");
+				tvPercent.setTextColor(Color.rgb(0, 120, 0));
+			} else {
+				tvPercent.setText("" + percent + "%");
+				tvPercent.setTextColor(Color.RED);
+			}
+			dialog.dismiss();
+		} catch (Exception e) {
+			Toast.makeText(CompanyActivity.this,
+					"No information retrieved. Try again!", Toast.LENGTH_SHORT)
+					.show();
+			finish();
 		}
 	}
 
@@ -236,7 +270,7 @@ public class CompanyActivity extends Activity {
 			if (flag == 0) {
 				size++;
 				editor.putInt("History_Number", size);
-				editor.putString("History_" + (size - 2), companyName);
+				editor.putString("History_" + (size - 1), companyName);
 				editor.commit();
 			}
 		}

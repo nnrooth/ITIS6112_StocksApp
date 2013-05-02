@@ -6,6 +6,7 @@ import java.util.Locale;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,11 +25,14 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 	Intent intent;
 	public static final String PREFS_NAME = "MyHistoryFile";
+	ProgressDialog pDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		pDialog = new ProgressDialog(this);
 
 		ListView myListView = (ListView) findViewById(R.id.listView1);
 		String[] menuItems = { "Top/Bottom 10", "Top Pick of the Day",
@@ -74,6 +78,7 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		
 
 		Button btnExit = (Button) findViewById(R.id.btnExit);
 		btnExit.setOnClickListener(new View.OnClickListener() {
@@ -149,11 +154,22 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						// searchResults();
 						// Removing the screen with search suggestions
+
+//						pDialog.setMessage("Loading...");
+//						pDialog.setCancelable(false);
+//						pDialog.show();
 						String companyName = actv.getText().toString();
-						intent = new Intent(getBaseContext(),
-								CompanyActivity.class);
-						intent.putExtra("Company", companyName);
-						startActivity(intent);
+						try {
+							intent = new Intent(getBaseContext(),
+									CompanyActivity.class);
+							intent.putExtra("Company", companyName);
+							startActivity(intent);
+						} catch (Exception e) {
+							Toast.makeText(MainActivity.this,
+									"No information retrieved. Try again!",
+									Toast.LENGTH_SHORT).show();
+						}
+						
 					}
 				})
 				.setNegativeButton("Cancel",
@@ -166,6 +182,8 @@ public class MainActivity extends Activity {
 
 							}
 						}).show();
+		
+		
 	}
 
 	protected void searchResults() {
@@ -264,17 +282,20 @@ public class MainActivity extends Activity {
 						startActivity(intent);
 					}
 				})
-				.setPositiveButton("Clear History", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences historyFile = getSharedPreferences(
-								PREFS_NAME, 0);
-						SharedPreferences.Editor editor = historyFile.edit();
-						editor.clear();
-						editor.commit();
-					}
-				})
+				.setPositiveButton("Clear History",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								SharedPreferences historyFile = getSharedPreferences(
+										PREFS_NAME, 0);
+								SharedPreferences.Editor editor = historyFile
+										.edit();
+								editor.clear();
+								editor.commit();
+							}
+						})
 				.setNegativeButton("Cancel",
 						new DialogInterface.OnClickListener() {
 

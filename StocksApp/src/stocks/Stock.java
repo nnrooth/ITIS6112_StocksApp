@@ -1,6 +1,9 @@
 package stocks;
 
 import java.math.BigDecimal;
+import java.net.URL;
+
+import utils.WebData;
 
 /**
  * This class represents a stock object.
@@ -112,5 +115,26 @@ public class Stock {
 
 	public double getPcScore() { return pcScore; }
 	public void setPcScore(double pcScore) { this.pcScore = pcScore; }
+	
+	public BigDecimal updatePrice(String symbol) {
+		BigDecimal currentPrice = null;
+		String queryBaseUrl = "http://finance.yahoo.com/d/quote?";
+		String querySValue = "s=" + symbol;
+		String queryFValue = "f=" + "l1"; // Query for company name
+		WebData web = null;
+		Thread thread = null;
+		try {
+		URL queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
+		web = new WebData(queryUrl);
+		thread = new Thread(web);
+		thread.start();
+		currentPrice = BigDecimal.valueOf(Double.valueOf(web.getResponse().replace("\"",  "").trim()));
+		setCurrentPrice(currentPrice);
+		} catch (Exception e) {
+		currentPrice = getCurrentPrice();
+		}
+		 
+		return currentPrice;
+		}
 	// End block of get/set methods
 }
