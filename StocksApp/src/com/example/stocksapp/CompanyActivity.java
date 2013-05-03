@@ -61,7 +61,7 @@ public class CompanyActivity extends Activity {
 					runOnUiThread(new Runnable() {
 						public void run() {
 							TextView tv = (TextView) findViewById(R.id.textView2);
-							tv.setText(stock.updatePrice(companyName) + "");
+							tv.setText(stock.updatePrice() + "");
 						}
 					});
 				}

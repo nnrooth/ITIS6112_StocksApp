@@ -5,34 +5,38 @@ import java.math.BigDecimal;
 import stocks.Stock;
 
 public class EstimatedGrowthExpert {
-	
+
 	/**
-	 * Calculates the Estimate Growth Score based on EPSEstimates
+	 * Calculates the Estimate Growth Score based on EPSEstimates.
+	 * I have decided that this isn't the best method for rating a stock,
+	 * but 
 	 * 
-	 * @param currentPrice Price of the stock ATM
-	 * @param epse Order : current year, next year, next quarter
+	 * @param currentPrice
+	 *            Price of the stock ATM
+	 * @param epse
+	 *            Order : current year, next year, next quarter
 	 * @return An average score based on all EPSEs
 	 */
 	public static double getScore(Stock stock) {
 		double egScore = 0.00, change;
-		
+
 		// BigDecimal currentPrice, BigDecimal[] epse
 		BigDecimal currentPrice = stock.getCurrentPrice();
-		BigDecimal[] epse = new BigDecimal[] {
-				stock.getEpseCYear(),
-				stock.getEpseNYear(),
-				stock.getEpseNQuarter()
-		};
-		
-		if (currentPrice == null || epse == null) {}
-			// Checking for null values
-		else if (epse[0] == null || epse[1] == null || epse[2] == null) {}
-			// More null value checks
+		BigDecimal[] epse = new BigDecimal[] { stock.getEpseCYear(),
+				stock.getEpseNYear(), stock.getEpseNQuarter() };
+
+		if (currentPrice == null || epse == null) {
+		}
+		// Checking for null values
+		else if (epse[0] == null || epse[1] == null || epse[2] == null) {
+		}
+		// More null value checks
 		else {
-			
+
 			for (int n = 0; n < epse.length; n++) {
-				if (epse[n] == null) { change = 0.00; }
-				else {			
+				if (epse[n] == null) {
+					change = 0.00;
+				} else {
 					change = epse[n].doubleValue() / currentPrice.doubleValue();
 				}
 				
@@ -51,7 +55,7 @@ public class EstimatedGrowthExpert {
 				
 			}
 		}
-		
+
 		egScore = egScore / 3.00;
 		return (egScore);
 	}

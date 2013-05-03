@@ -32,28 +32,15 @@ public class Stock {
 	
 	private double kwScore, t10Score, egScore, pcScore; // kw - Keyword, t10 - top/bottom 10, eg - Estimated Growth, pc - Previous Close
 	private double score; // Value derived from Delphi calculation. Range [-10:10]
+	
+	private String[] pastPrices; // Added for larger range of past prices. ~25 stored
 		
 	/**
-	 * Null Constructor
+	 * Custom constructor. I use this to automatically distribute the
+	 * results from a search using the YahooFinance API
+	 * 
+	 * @param stockInfo Parsed and sorted respones from YahooFinance
 	 */
-	public Stock() {
-		this.name = null;
-		this.symbol = null;
-		this.exchange = null;
-		this.currentPrice = null;
-		this.previousClosingPrice = null;
-		this.epseCYear = null;
-		this.epseNYear = null;
-		this.epseNQuarter = null;
-		this.peRatio = 0.00;
-		this.divYield = 0.00;
-		this.kwScore = 0.00;
-		this.t10Score = 0.00;
-		this.egScore = 0.00;
-		this.pcScore = 0.00;
-		this.score = 0.00;
-	}
-	
 	public Stock(String[] stockInfo) {
 		int count = 0;
 		setName(stockInfo[count++]);
@@ -115,14 +102,29 @@ public class Stock {
 
 	public double getPcScore() { return pcScore; }
 	public void setPcScore(double pcScore) { this.pcScore = pcScore; }
+
+	public String[] getPastPrices() { return pastPrices; }
+	public void setPastPrices(String[] pastPrices) { this.pastPrices = pastPrices; }
 	
-	public BigDecimal updatePrice(String symbol) {
-		BigDecimal currentPrice = null;
+	// End block of get/set methods
+	
+	/**
+	 * This method simply fetches the most recent price from YahooFinance,
+	 * stores it, and returns it to the caller.
+	 * 
+	 * Keep in mind that this "updated" price is still on a 30min delay 
+	 * 
+	 * @return The updated price
+	 */
+	public BigDecimal updatePrice() {
+		BigDecimal currentPrice = null; // BigDecimal for currency handling
 		String queryBaseUrl = "http://finance.yahoo.com/d/quote?";
 		String querySValue = "s=" + symbol;
 		String queryFValue = "f=" + "l1"; // Query for company name
 		WebData web = null;
 		Thread thread = null;
+		
+		// Attempt to fetch an updated price
 		try {
 		URL queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 		web = new WebData(queryUrl);
@@ -131,10 +133,11 @@ public class Stock {
 		currentPrice = BigDecimal.valueOf(Double.valueOf(web.getResponse().replace("\"",  "").trim()));
 		setCurrentPrice(currentPrice);
 		} catch (Exception e) {
-		currentPrice = getCurrentPrice();
+			// An error... return the previously fetched price
+			currentPrice = getCurrentPrice();
 		}
-		 
+		
+		// Return "updated" price to the caller
 		return currentPrice;
-		}
-	// End block of get/set methods
+	}
 }
