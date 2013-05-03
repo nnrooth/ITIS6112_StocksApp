@@ -3,9 +3,10 @@ package delphi;
 import stocks.Stock;
 
 public class FinalScore {
+	// TODO - Final weight adjustment
 	private static final double KW_WEIGHT = 0.50;
-	private static final double T10_WEIGHT = 0.10;
-	private static final double EG_WEIGHT = 0.30;
+	private static final double T10_WEIGHT = 0.50;
+	private static final double EG_WEIGHT = 0.50;
 	private static final double PC_WEIGHT = 0.10;
 
 	public static double getScore(Stock stock) {
@@ -27,20 +28,38 @@ public class FinalScore {
 
 		pcScore = PreviousCloseExpert.getScore(stock);
 		stock.setPcScore(round(pcScore));
+				
+		finalScore = round(((
+			(kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
+			(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT)
+		)));
 		
-		finalScore = round(
-					(((kwScore * KW_WEIGHT) + (t10Score * T10_WEIGHT) +
-					(egScore * EG_WEIGHT) + (pcScore * PC_WEIGHT))));
+		if (finalScore > 10.0) { finalScore = 10.0; }
+		
+		else
+			
+		if (finalScore < -10.0) { finalScore = -10.0; }
 		
 		return finalScore;
 	}
 
-	private static double round(double a) {
-		double b = 0.00;
+	/**
+	 * This method provides a more aggressive rounding functionality
+	 * than that provided by Math.round. 
+	 * Negative values are rounded to the floor value
+	 * (e.g. round(-0.01) = -1.0).
+	 * Positive values are rounded to the ceiling value
+	 * (e.g. round(0.01) = 1.0)
+	 * 
+	 * @param initialValue Value to be rounded
+	 * @return The rounded value
+	 */
+	private static double round(double initialValue) {
+		double roundedValue = 0.00;
 		
-		if (a < 0.00) { b = Math.floor(a); }
-		if (a > 0.00) { b = Math.ceil(a); }
+		if (initialValue < 0.00) { roundedValue = Math.floor(initialValue); }
+		if (initialValue > 0.00) { roundedValue = Math.ceil(initialValue); }
 		
-		return b;
+		return roundedValue;
 	}
 }
