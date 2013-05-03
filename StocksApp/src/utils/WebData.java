@@ -6,11 +6,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.util.Log;
+
 public class WebData implements Runnable {
 
+	private static final String TAG = "WebData";
+	
 	// TODO If web requests are timing out, increase this value
 	// Too many 0 values is most likely caused by timeouts
-	private static final int DEFAULT_TIMEOUT = 3500 /* MilliSeconds */;
+	private static final int DEFAULT_TIMEOUT = 5000 /* MilliSeconds */;
 
 	String response; // This holds the response from our web request
 	private URL url; // This is the address of the web resource we request
@@ -82,17 +86,16 @@ public class WebData implements Runnable {
 					httpConnect.getInputStream()
 				));
 		} catch (Exception e) {
+			Log.e(TAG, "Internets All Used Up", e);
 			// Looks like the internets are all used up
 		}
 
 		// Read the response and store in a StringBuilder object
-		builder = new StringBuilder(); // TODO - Keep StringBuilder?
-		String response = "";
+		builder = new StringBuilder();
 		try {
 			// Begin reading and storing the response
 			while ((line = buffy.readLine()) != null) { // <- FIXME - Buffy here
-				//builder.append(line + "\n");
-				response += line;
+				builder.append(line + "\n");
 			}
 		} catch (IOException e) {
 			try {
@@ -100,16 +103,14 @@ public class WebData implements Runnable {
 				 * skip those characters and attempt to recover
 				 */
 				while ((line = buffy.readLine()) != null) { // <- FIXME - Buffy here
-					/* 	StringBuilder is only necessary if
-						we want to read the response */
-					
-					//builder.append(line + "\n");
-					response += line;
+					builder.append(line + "\n");
 				}
 			} catch (IOException e1) {
+				Log.e(TAG, "Error reading response", e);
 				// Final attempt to recover, just ignore and dump all retrieved data
 			}
 		}
-		return response; //builder.toString();
+		
+		return builder.toString();
 	}
 }

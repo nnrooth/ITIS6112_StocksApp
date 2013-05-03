@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import utils.WebData;
+import android.util.Log;
 
 public class Top10Expert {
 
@@ -73,11 +74,11 @@ public class Top10Expert {
 			WebData request = new WebData(url);
 
 			Thread thread = new Thread(request);
-			thread.start();
-			thread.join(timeout); // TODO Optimize for performance
-
+			thread.start(); thread.join(timeout); // TODO Optimize for performance
+			
 			response = request.getResponse();
 		} catch (Exception ignored1) {
+			Log.e("Bottom10", ignored1.getMessage());
 		}
 		return response;
 	}
@@ -87,20 +88,15 @@ public class Top10Expert {
 			String string = getBottom10Listing();
 			Pattern pattern = Pattern.compile("(\\>)(.*?)(\\<a\\>)");
 			pattern = Pattern.compile("(symbol\\=)([a-zA-Z]{1,4})");
-			try {
-				Matcher matcher = pattern.matcher(string);
-
-				List<String> listMatches = new ArrayList<String>();
-
-				// TODO - Uncomment to score using only bottom 10 otherwise uses bottom 50
-				while (matcher.find() /* && listMatches.size()<10 */) {
-					listMatches.add(matcher.group(2));
-				}
-
-				bottom10List = listMatches.toArray(new String[listMatches.size()]);
-			} catch (Exception e) {
-				bottom10List = getBottom10();
+			Matcher matcher = pattern.matcher(string);
+			
+			List<String> listMatches = new ArrayList<String>();
+			
+			while(matcher.find() /*&& listMatches.size()<10*/) {
+			    listMatches.add(matcher.group(2).toUpperCase());
 			}
+			
+			bottom10List = listMatches.toArray(new String[listMatches.size()]);
 		}
 
 		return bottom10List;
@@ -117,11 +113,11 @@ public class Top10Expert {
 			WebData request = new WebData(url);
 
 			Thread thread = new Thread(request);
-			thread.start();
-			thread.join(timeout); // TODO Optimize for performance
-
+			thread.start(); thread.join(timeout); // TODO Optimize for performance
+			
 			response = request.getResponse();
 		} catch (Exception ignored1) {
+			Log.e("Top10", ignored1.getMessage());
 		}
 		return response;
 	}
@@ -131,26 +127,22 @@ public class Top10Expert {
 			String string = getTop10Listing();
 			Pattern pattern = Pattern.compile("(\\>)(.*?)(\\<a\\>)");
 			pattern = Pattern.compile("(symbol\\=)([a-zA-Z]{1,4})");
-			try {
-				Matcher matcher = pattern.matcher(string);
-
-				List<String> listMatches = new ArrayList<String>();
-
-				// TODO - Uncomment to score using only top 10 otherwise uses top 50
-				while (matcher.find() /* && listMatches.size()<10 */) {
-					listMatches.add(matcher.group(2));
-				}
-
-				top10List = listMatches.toArray(new String[listMatches.size()]);
-			} catch (Exception e) {
-				top10List = getTop10();
+			Matcher matcher = pattern.matcher(string);
+			
+			List<String> listMatches = new ArrayList<String>();
+			
+			while(matcher.find() /*&& listMatches.size()<10*/) {
+			    listMatches.add(matcher.group(2).toUpperCase());
 			}
+			
+			top10List = listMatches.toArray(new String[listMatches.size()]);
 		}
 
 		return top10List;
 	}
 
 	public static String[] getTop10() {
+		Log.i("Top10", "Defaulted to hard list");
 		String[] top10List = {
 				"GAZ", "GRID", "FAN", "CORN", "MUNI",
 				"BIL", "WOOD", "CUT", "KOL", "JO"
@@ -159,6 +151,7 @@ public class Top10Expert {
 	}
 
 	public static String[] getBottom10() {
+		Log.i("Bottom10", "Defaulted to hard list");
 		String[] bottom10List = {
 				"EAT", "DNA", "MOO", "BID", "HOG",
 				"BUNZ", "LUV", "FB", "SEXY", "TAN"

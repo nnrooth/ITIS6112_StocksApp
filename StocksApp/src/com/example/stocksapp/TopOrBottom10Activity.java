@@ -88,13 +88,7 @@ public class TopOrBottom10Activity extends Activity {
 		@Override
 		protected void onPostExecute(String[] values) {
 			final ArrayList<String> list = new ArrayList<String>();
-			
-			// Attempt to keep app from crashing due to incomplete list
-			int displayCount = 10;
-			if (values.length < 10)
-				displayCount = values.length;
-			
-			for(int i=0; i<displayCount; i++){
+			for(int i=0; i<values.length; i++){
 				list.add(values[i]);
 			}
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(TopOrBottom10Activity.this,
