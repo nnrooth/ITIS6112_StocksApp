@@ -1,9 +1,18 @@
+
+
 package delphi;
 
 import stocks.Stock;
-
+/**
+ * @Author: Team 3+4
+ * @Description: This class is used to calculate the Final Grade based on all the different inputs gathered.
+ * The Final Grade is calculated based on the Keyword Score, Estimated Growth Score, Top/Bottom 10 score,
+ * and Percentage Change since the previous closing score. The differenct scores are then given different 
+ * weightage and the Final Score is calculated.
+ * 
+ */
 public class FinalScore {
-	// TODO - Final weight adjustment
+	// Final weight adjustment
 	private static final double KW_WEIGHT = 0.50;
 	private static final double T10_WEIGHT = 0.50;
 	private static final double EG_WEIGHT = 0.50;

@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">StocksApp</string>
-    <string name="app_tag">Pretty_Pony</string>
     <string name="action_settings">Settings</string>
     <string name="exit">Exit</string>
     <string name="title_activity_top_or_bottom10">TopOrBottom10Activity</string>
@@ -19,18 +18,12 @@
     <string name="settings">Settings</string>
     <string name="news">News</string>
     <string name="compare">Compare</string>
-    <string name="shortTerm">Short Term</string>
-    <string name="longTerm">Long Term</string>
-    <string name="oneMonth">30 Days</string>
-    <string name="sixMonths">180 Days</string>
-    <string name="oneYear">365 Days</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="appSettings">Application Settings</string>
     <string name="title_activity_compare">CompareActivity</string>
     <string name="restore">Restore Defaults</string>
     <string name="searchCaption">Please Enter Stock Symbol</string>
     <string name="title_activity_news">NewsActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_buy_sell_links">BuySellLinksActivity</string>
     <string name="add">Add New Link</string>
     <string name="remove">Remove Link</string>

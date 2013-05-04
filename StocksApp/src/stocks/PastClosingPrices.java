@@ -22,10 +22,11 @@ public class PastClosingPrices {
 	 * @throws MalformedURLException Error thrown if URL give is invalid
 	 * @throws InterruptedException Error thrown if fetch thread is interrupted prematurely
 	 */
-	public static String[] fetch(String symbol) throws MalformedURLException,
-			InterruptedException {
+	public static String[] fetch(String symbol) 
+			throws MalformedURLException, InterruptedException {
+		
 		String[] pastPrices = null;
-		String response;
+		String response; long timeout = 2500;
 
 		// This is the url for yahoo finances previous closing price search
 		String queryUrl = String.format("http://finance.yahoo.com/q/hp?s=%s",
@@ -37,7 +38,7 @@ public class PastClosingPrices {
 
 		// Start the thread, and join it with the parent thread
 		thread.start();
-		thread.join();
+		thread.join(timeout);
 		// This is a quick an dirty way to ensure the results are fetched before
 		// We attempt to access them.
 		

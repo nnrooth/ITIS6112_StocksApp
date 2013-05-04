@@ -9,7 +9,10 @@ import utils.WebData;
  * This class represents a stock object.
  * Stock attributes:
  * 	name, symbol, exchange, currentPrice, previousClosingPrice,
- * 	epseCYear, epseNYear, epseNQuarter, score
+ * 	epseCYear, epseNYear, epseNQuarter, score, pastPrices
+ * 
+ * Note on the use of BigDecimal. Due to some peculiarities of
+ * the double type, prices are handled by BigDecimal types
  * 
  * @author NNRooth
  *
@@ -39,7 +42,7 @@ public class Stock {
 	 * Custom constructor. I use this to automatically distribute the
 	 * results from a search using the YahooFinance API
 	 * 
-	 * @param stockInfo Parsed and sorted respones from YahooFinance
+	 * @param stockInfo Parsed and sorted response from YahooFinance
 	 */
 	public Stock(String[] stockInfo) {
 		int count = 0;

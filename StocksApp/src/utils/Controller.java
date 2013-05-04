@@ -3,6 +3,7 @@ package utils;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Random;
 
 import stocks.Stock;
@@ -20,6 +21,12 @@ import delphi.Top10Expert;
  */
 public class Controller {
 
+	/**
+	 * @Name getTop10()
+	 * @Input null
+	 * @return type String[]
+	 * @description Returns the top10 list of stocks
+	 */
 	public static String[] getTop10() {
 		String[] top10 = Top10Expert.getTop10Regex();
 
@@ -30,7 +37,13 @@ public class Controller {
 			
 		return top10;
 	}
-
+	
+	/**
+	 * @Name getBottom10()
+	 * @Input null
+	 * @return type String[]
+	 * @description Returns the Bottom 10 list of stocks
+	 */
 	public static String[] getBottom10() {
 		String[] bottom10 = Top10Expert.getBottom10Regex();
 
@@ -41,6 +54,12 @@ public class Controller {
 		return bottom10;
 	}
 
+	/**
+	 * @Name getCompanyName()
+	 * @Input String
+	 * @return type String
+	 * @description Returns company name of the stock.
+	 */
 	public static String getComanyName(String symbol) {
 		String companyName = YahooFinance.getCompanyName(symbol);
 
@@ -48,8 +67,14 @@ public class Controller {
 
 	}
 
+	/**
+	 * @Name getStock()
+	 * @Input String
+	 * @return type Stock
+	 * @description Returns stock object for the given input stock name.
+	 */
 	public static Stock getStock(String symbol) {
-		symbol = symbol.toUpperCase();
+		symbol = symbol.toUpperCase(Locale.US);
 		Stock stock;
 		String[] stockInfo;
 		double finalScore = 0.00;
@@ -74,12 +99,26 @@ public class Controller {
 		return stock;
 	}
 
+	/**
+	 * @Name HistoryStack()
+	 * @Input 
+	 * @return type 
+	 * @description This method is used to store the History of the Past 25 stocks that are searched so that 
+	 * fetching the same stock info in future would fasten the process of displaying stock info to the user.
+	 */
 	private static class HistoryStack {
 		private static final int STACK_SIZE = 25;
 		private static Hashtable<String, Stock> stack = new Hashtable<String, Stock>(
 				STACK_SIZE);
 		private static Random rand = new Random();
 
+		/**
+		 * @Name push()
+		 * @Input Stock
+		 * @return type 
+		 * @description This method pushes the stock object onto the stack for faster retrieval of the 
+		 * same stock in future. 
+		 */
 		public static void push(Stock stock) {
 			String symbol = stock.getSymbol();
 			int delKey;
@@ -101,6 +140,13 @@ public class Controller {
 			}
 		}
 
+
+		/**
+		 * @Name fetch()
+		 * @Input String
+		 * @return type Stock 
+		 * @description This method is used to check and fetch the Stock object from the stack.
+		 */
 		public static Stock fetch(String symbol) {
 			Stock stock;
 			if (stack.containsKey(symbol)) {

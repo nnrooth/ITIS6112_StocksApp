@@ -12,10 +12,21 @@ import org.jsoup.select.Elements;
 
 import utils.WebData;
 
+/**
+ * @Author: Team 3+4
+ * @Description: This class is used to grade the keywords that are extracted from the internet. 
+ * These keywords have a pre-defined score and the average is returned to h=the calling function.
+ * 
+ */
 public class KeyWordExpert {
 
-	// TODO Timeout is working, but needs to be refined for better speeds.
 
+	/*
+	 * @Name getScore
+	 * @Input Paramters String
+	 * @return type double
+	 * @@description returns the Keyword score
+	 */
 	public double getScore(String symbol) {
 		double score = 0.00;
 		try {
@@ -30,54 +41,16 @@ public class KeyWordExpert {
 	}
 
 	/**
-	 * Use this list for 10/-10 scores only
-	 */
-	@SuppressWarnings("unused")
-	private static Map<String, Integer> getKeywordListV2() {
-		Map<String, Integer> keyWordList = new HashMap<String, Integer>(20);
-		keyWordList.put("very strong", 10);
-		keyWordList.put("attractive target", 10);
-		keyWordList.put("positive momentum", 10);
-		keyWordList.put("gain", 10);
-		keyWordList.put("rise", 10);
-		keyWordList.put("rising", 10);
-		keyWordList.put("strength", 10);
-		keyWordList.put("relatively strong", 10);
-		keyWordList.put("boost", 10);
-		keyWordList.put("optimism", 10);
-		keyWordList.put("potential boost", 10);
-		keyWordList.put("bolster", 10);
-		keyWordList.put("safe", 10);
-		keyWordList.put("durable", 10);
-		keyWordList.put("profit", 10);
-		keyWordList.put("profitable", 10);
-		keyWordList.put("high", 10);
-		keyWordList.put("increase", 10);
-		keyWordList.put("speculation", 10);
-		keyWordList.put("successful", 10);
-		keyWordList.put("reap", 10);
-		keyWordList.put("harmful", -10); 
-		keyWordList.put("complaints", -10);
-		keyWordList.put("lawsuit", -10);
-		keyWordList.put("declining", -10);
-		keyWordList.put("decline", -10);
-		keyWordList.put("decreasing", -10);
-		keyWordList.put("decrease", -10);
-		keyWordList.put("plummet", -10);
-		keyWordList.put("pessimism", -10);
-		keyWordList.put("don’t buy", -10);
-		keyWordList.put("low", -10);
-		keyWordList.put("fall", -10);
-		keyWordList.put("failure", -10);
-		keyWordList.put("fluctuates", -10);
-		keyWordList.put("sell", -10);
-		
-		return keyWordList;
-	}
-	
-	/**
 	 * Use this list for original keyword weights
 	 */
+	/**
+	 * @Name getKeywordList
+	 * @Input null
+	 * @return type Map<String, Integer>
+	 * @@description Provides a Map with the pre-defined keyword score. This map is used to compare the keywords 
+	 * extracted from the internet.
+	 */
+	
 	private static Map<String, Integer> getKeywordList() {
 		Map<String, Integer> keyWordList = new HashMap<String, Integer>(20);
 		keyWordList.put("very strong", 10);
@@ -101,7 +74,7 @@ public class KeyWordExpert {
 		keyWordList.put("speculation", 2);
 		keyWordList.put("successful", 5);
 		keyWordList.put("reap", 7);
-		keyWordList.put("harmful", -5); 
+		keyWordList.put("harmful", -5);
 		keyWordList.put("complaints", -2);
 		keyWordList.put("lawsuit", -3);
 		keyWordList.put("declining", -3);
@@ -116,31 +89,39 @@ public class KeyWordExpert {
 		keyWordList.put("failure", -3);
 		keyWordList.put("fluctuates", -2);
 		keyWordList.put("sell", -2);
-		
+
 		return keyWordList;
 	}
 
+	/**
+	 * @Name getNews()
+	 * @Input String
+	 * @return type String[]
+	 * @@description Extracts the news from the in internet related to the symbol provided as imput.
+	 * The news is in the String[] format.
+	 */
+	
 	public String[] getNews(String symbol) throws IOException {
 		String[] text = null;
 		URL url;
-		
-		int timeout = 1500 /* MilliSeconds */; // TODO Optimize for performance
-		
+
+		int timeout = 1500 /* MilliSeconds */;
+
 		String response = null;
 
 		url = new URL(String.format(
 				"https://www.google.com/finance/company_news?q=%s", symbol));
 
-		WebData request = new WebData(url); // TODO - Optimize for performance
+		WebData request = new WebData(url);
 
 		Thread requestThread = new Thread(request);
 		requestThread.start();
 
 		try {
-			requestThread.join(timeout / 2); // TODO - Optimize for performance
+			requestThread.join(timeout / 2);
 		} catch (InterruptedException e) {
 		}
-		
+
 		response = request.getResponse();
 		url = null;
 		request = null;
@@ -151,7 +132,7 @@ public class KeyWordExpert {
 		int linkCount;
 
 		try {
-			links = d.getElementsByClass("name"); // XXX - Quick and dirty fix
+			links = d.getElementsByClass("name");
 			linkCount = links.size();
 			text = new String[linkCount];
 		} catch (Exception e) {
@@ -173,19 +154,20 @@ public class KeyWordExpert {
 		for (WebData data : requests) {
 			newsThreads.add(new Thread(data));
 		}
-		
+
 		for (Thread thread : newsThreads) {
 			thread.start();
 		}
-		
+
 		for (Thread thread : newsThreads) {
 			try {
-				
-				thread.join(timeout); // TODO - Optimize for performance
-				
-			} catch (InterruptedException e) {}
+
+				thread.join(timeout);
+
+			} catch (InterruptedException e) {
+			}
 		}
-		
+
 		for (int n = 0; n < requests.length; n++) {
 			response = requests[n].getResponse();
 			try {
@@ -202,10 +184,16 @@ public class KeyWordExpert {
 		return text;
 	}
 
+	/**
+	 * @Name getMatchingKeywords()
+	 * @Input String[]
+	 * @return type ArrayList<String>
+	 * @@description Extracts the keywords from the news related to the symbol provided.
+	 */
+	
 	public ArrayList<String> getMatchingKeywords(String[] text) {
 		Object[] keywordList;
-		
-		// TODO - Decide on final keyword weights. List v2 uses 10/-10
+
 		// This is only used for matching so changes here have no affect.
 		keywordList = getKeywordList().keySet().toArray();
 		// keywordList = getKeywordListV2().keySet().toArray();
@@ -224,11 +212,17 @@ public class KeyWordExpert {
 		return matchedKeywords;
 	}
 
+	/**
+	 * @Name getScore()
+	 * @Input ArrayList<String>
+	 * @return type double
+	 * @@description Calculates the score for all the keywords matched.
+	 */
+	
 	private double getScore(ArrayList<String> matchedKeywords) {
 
 		Map<String, Integer> keywordList;
-		
-		// TODO - Decide on final keyword weights. List v2 uses 10/-10
+
 		// Change here to use different scoring methods
 		keywordList = getKeywordList();
 		// keywordList = getKeywordListV2();

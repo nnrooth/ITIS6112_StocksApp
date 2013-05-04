@@ -1,9 +1,14 @@
+
 package delphi;
 
 import java.math.BigDecimal;
 
 import stocks.Stock;
-
+/**
+ * @Author: Team 3+4
+ * @Description: This class calculates the Percentage Change of previous closing of the given stock.
+ * 
+ */
 public class PreviousCloseExpert {
 
 	/**

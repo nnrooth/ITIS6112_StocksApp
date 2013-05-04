@@ -1,30 +1,40 @@
+
 package delphi;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import utils.WebData;
 import android.util.Log;
-
+/**
+ * @Author: Team 3+4
+ * @Description: This class is used to get the Top Bottom 10 scores. The Top Bottom 10 list is extracted 
+ * from the internet and provided to this class. This class then checks if the selected stock is present
+ * in the extracted list and returns the score accordingly.
+ * 
+ */
 public class Top10Expert {
 
 	private static String[] top10List;
 	private static String[] bottom10List;
 	private static int timeout = 5000; // TODO - Optimize for performance
 
+	
+	/**
+	 * @Name getScore()
+	 * @Input String
+	 * @return type double
+	 * @@description Calculates the score for Top Bottom 10 value
+	 */
+	
 	public static double getScore(String symbol) {
 		double score = 0;
-
-		// Use regex to validate query
-		if (!symbol.matches("[a-zA-Z]{1,4}")) {
-			return score;
-		} else {
-			symbol = symbol.toUpperCase();
-		}
+		symbol = symbol.toUpperCase(Locale.US);
 
 		if (isInTop10(symbol)) {
 			score += 10;
@@ -35,6 +45,14 @@ public class Top10Expert {
 		return score;
 	}
 
+	/**
+	 * @Name isInTop10()
+	 * @Input String
+	 * @return type boolean
+	 * @@description Checks if the input symbol is present in Top 10 list and returns true if it exists.
+	 * 
+	 */
+	
 	private static boolean isInTop10(String symbol) {
 		String[] top10List;
 		boolean found;
@@ -49,6 +67,14 @@ public class Top10Expert {
 		return found;
 	}
 
+
+	/**
+	 * @Name isINBottom10()
+	 * @Input String
+	 * @return type boolean
+	 * @@description Checks if the input symbol is present in Bottom 10 list and returns true if it exists.
+	 * 
+	 */
 	private static boolean isInBottom10(String symbol) {
 		String[] bottom10List;
 		boolean found;
@@ -63,6 +89,13 @@ public class Top10Expert {
 		return found;
 	}
 
+
+	/**
+	 * @Name getBottom10Listing()
+	 * @Input null
+	 * @return type String
+	 * @@description Gets the List of Bottom 10 stocks from the internet.
+	 */
 	private static String getBottom10Listing() {
 		String response = "";
 		try {
@@ -83,6 +116,12 @@ public class Top10Expert {
 		return response;
 	}
 
+	/**
+	 * @Name getBottom10Regex()
+	 * @Input null
+	 * @return type String[]
+	 * @@description Gets the List of Bottom 10 stocks from the internet.
+	 */
 	public static String[] getBottom10Regex() {
 		if (bottom10List == null) {
 			String string = getBottom10Listing();
@@ -93,7 +132,7 @@ public class Top10Expert {
 			List<String> listMatches = new ArrayList<String>();
 			
 			while(matcher.find() /*&& listMatches.size()<10*/) {
-			    listMatches.add(matcher.group(2).toUpperCase());
+			    listMatches.add(matcher.group(2).toUpperCase(Locale.US));
 			}
 			
 			bottom10List = listMatches.toArray(new String[listMatches.size()]);
@@ -102,6 +141,12 @@ public class Top10Expert {
 		return bottom10List;
 	}
 
+	/**
+	 * @Name getTop10Listing()
+	 * @Input null
+	 * @return type String
+	 * @@description Gets the List of Top 10 stocks from the internet.
+	 */
 	private static String getTop10Listing() {
 		String response = "";
 		try {
@@ -122,6 +167,12 @@ public class Top10Expert {
 		return response;
 	}
 
+	/**
+	 * @Name getTop10Regex()
+	 * @Input 
+	 * @return type String[]
+	 * @@description Gets the List of Top 10 stocks from the internet.
+	 */
 	public static String[] getTop10Regex() {
 		if (top10List == null) {
 			String string = getTop10Listing();
@@ -132,7 +183,7 @@ public class Top10Expert {
 			List<String> listMatches = new ArrayList<String>();
 			
 			while(matcher.find() /*&& listMatches.size()<10*/) {
-			    listMatches.add(matcher.group(2).toUpperCase());
+			    listMatches.add(matcher.group(2).toUpperCase(Locale.US));
 			}
 			
 			top10List = listMatches.toArray(new String[listMatches.size()]);
@@ -141,6 +192,12 @@ public class Top10Expert {
 		return top10List;
 	}
 
+	/**
+	 * @Name getTop10()
+	 * @Input null
+	 * @return type String[]
+	 * @@description Hardcoded values for the Top!0 list. This method is not currently being used.
+	 */
 	public static String[] getTop10() {
 		Log.i("Top10", "Defaulted to hard list");
 		String[] top10List = {
@@ -150,6 +207,12 @@ public class Top10Expert {
 		return top10List;
 	}
 
+	/**
+	 * @Name getBottom10()
+	 * @Input null
+	 * @return type String[]
+	 * @@description Hardcoded values for the Bottom10 list. This method is not currently being used.
+	 */
 	public static String[] getBottom10() {
 		Log.i("Bottom10", "Defaulted to hard list");
 		String[] bottom10List = {

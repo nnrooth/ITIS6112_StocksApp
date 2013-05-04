@@ -3,7 +3,11 @@ package delphi;
 import java.math.BigDecimal;
 
 import stocks.Stock;
-
+/**
+ * @Author: Team 3+4
+ * @Description: This class is used to get the Estimated Growth Score of a stock.
+ * 
+ */
 public class EstimatedGrowthExpert {
 
 	/**

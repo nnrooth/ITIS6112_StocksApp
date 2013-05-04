@@ -7,7 +7,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.util.Log;
-
+/**
+ * This class is used to fetch data from the internet. All the web related queried are fired in this class.
+ * 
+ * 
+ * @author NNRooth
+ * 
+ */
 public class WebData implements Runnable {
 
 	private static final String TAG = "WebData";
@@ -21,11 +27,25 @@ public class WebData implements Runnable {
 	private int timeout;	/* 	This is the maximum time to wait for a response
 								before closing the connection */
 
+	/**
+	 * @Name WebData()
+	 * @Input URL
+	 * @return type null
+	 * @description Sets the url parameter of this class with the url passed to this method
+	 */
 	public WebData(URL url) {
 		this.url = url;
 		this.timeout = DEFAULT_TIMEOUT;
 	}
 
+	/**
+	 * @Name WebData()
+	 * @Input URL,int
+	 * @return type null
+	 * @description Sets the url parameter  and the timeout parameter of this class with the url 
+	 * and timeout value passed to this method
+	 */
+	
 	public WebData(URL url, int timeout) {
 		this.url = url;
 		this.timeout = timeout;
@@ -49,12 +69,12 @@ public class WebData implements Runnable {
 		this.response = response;
 	}
 
-	// TODO - I doubt this method is used. Remove it?
+	
 	public URL getUrl() {
 		return url;
 	}
 
-	// TODO - I doubt this method is used. Remove it?
+	
 	public int getTimeout() {
 		return timeout;
 	}
@@ -64,12 +84,11 @@ public class WebData implements Runnable {
 	}
 
 	private String makeRequest(URL url, int timeout) {
-		// FIXME - Rename these variables to whatever is deemed appropriate
+		
 		HttpURLConnection httpConnect = null;
-		BufferedReader buffy = null; // <- Change
-		String line = null; // <- Keep
-		StringBuilder builder = null; // <- Change? Keep?
-
+		BufferedReader buffRead = null; 
+		String line = null; //
+		StringBuilder builder = null; 
 		try {
 			/* Create a new connection object */
 			httpConnect = (HttpURLConnection) url.openConnection();
@@ -81,7 +100,7 @@ public class WebData implements Runnable {
 			httpConnect.connect(); // Establish the connection
 			
 			/* Read from the connection as a buffered reader */			
-			buffy = new BufferedReader( // <- TODO Buffy Here
+			buffRead = new BufferedReader( 
 					new InputStreamReader(
 					httpConnect.getInputStream()
 				));
@@ -94,7 +113,7 @@ public class WebData implements Runnable {
 		builder = new StringBuilder();
 		try {
 			// Begin reading and storing the response
-			while ((line = buffy.readLine()) != null) { // <- FIXME - Buffy here
+			while ((line = buffRead.readLine()) != null) { 
 				builder.append(line + "\n");
 			}
 		} catch (IOException e) {
@@ -102,7 +121,7 @@ public class WebData implements Runnable {
 				/* Some characters cause read to throw an error,
 				 * skip those characters and attempt to recover
 				 */
-				while ((line = buffy.readLine()) != null) { // <- FIXME - Buffy here
+				while ((line = buffRead.readLine()) != null) { 
 					builder.append(line + "\n");
 				}
 			} catch (IOException e1) {
