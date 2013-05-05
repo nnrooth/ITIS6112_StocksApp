@@ -17,11 +17,11 @@ import android.widget.ListView;
 
 public class SettingsActivity extends Activity {
 	public static final String PREFS_NAME = "MySettingsFile";
-	CharSequence[] experts = { "Google Finance", "Yahoo Finance", "Expert 3",
-			"Expert 4", "Expert 5" };
 	ArrayList<String> selectedExperts = new ArrayList<String>();
-	String[] currenyItems = { "Dollar", "Pound", "Euro", "Rupee", "Peso" };
+	String[] currenyItems = { "Dollar", "Pound", "Euro", "Rupee" };
+	String[] currencyCodes = { "USD", "GBP", "EUR", "INR" };
 	String currency = "";
+	String currencyCode = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +30,12 @@ public class SettingsActivity extends Activity {
 
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		currency = settings.getString("Currency", null);
-		int size = settings.getInt("Experts_Number", -1);
-		if (size == -1) {
+		currencyCode = settings.getString("CurrencyCode", null);
+		if (currency == null) {
 			restoreDefaults();
-		} else {
-			for (int i = 0; i < size; i++) {
-				selectedExperts.add(settings.getString("Expert_" + i, null));
-			}
 		}
 		ListView myListView = (ListView) findViewById(R.id.listView1);
-		String[] menuItems = { "Currency Settings",
-				"Select Experts", "About" };
+		String[] menuItems = { "Currency Settings", "About" };
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, android.R.id.text1,
 				menuItems);
@@ -54,8 +49,6 @@ public class SettingsActivity extends Activity {
 				if (position == 0) {
 					currencySettings();
 				} else if (position == 1) {
-					selectExperts();
-				} else if (position == 2) {
 					about();
 				}
 
@@ -70,36 +63,51 @@ public class SettingsActivity extends Activity {
 				finish();
 			}
 		});
-		
+
 		Button btnRestore = (Button) findViewById(R.id.button2);
 		btnRestore.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				restoreDefaults();
-				
+
 			}
 		});
 
 	}
 
 	protected void about() {
-		new AlertDialog.Builder(this).setTitle("About")
-		.setMessage("The information goes here!")
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-		}).show();
+		new AlertDialog.Builder(this)
+				.setTitle("About")
+				.setMessage(
+						"This application is purely for home/personal use. The Stock Market Prediction application uses the well-proven Delphi Logic to predict the future of stocks. The Delphi Logic used in this application is based on News Articles related to the company, the Past Stock prices, the estimated growth of the company as well as the Top and Bottom List of stocks. We expect this application to be used by the user as a guide in predicting stocks. Any loss or profit incurred as a result of using this application, is not to be blamed on the application developers."
+								+ "\n\n"
+								+ "Stock Market Prediction application has been developed as a part of Software System Design and Implementaion course-project."
+								+ "\n\n"
+								+ "Developers:-"
+								+ "\n"
+								+ "Nathaneal Rooth"
+								+ "\n"
+								+ "Nikitha Gottam"
+								+ "\n"
+								+ "Vishnu Payyavula"
+								+ "\n"
+								+ "Apoorva Katti" + "\n" + "Sachin Hadalgi")
+				.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// TODO Auto-generated method stub
+
+							}
+						}).show();
 	}
 
 	protected void currencySettings() {
 		int location = 0;
-		for(int i=0; i<currenyItems.length; i++){
-			if(currency.equals(currenyItems[i])){
+		for (int i = 0; i < currenyItems.length; i++) {
+			if (currency.equals(currenyItems[i])) {
 				location = i;
 			}
 		}
@@ -109,9 +117,10 @@ public class SettingsActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
+							public void onClick(DialogInterface dialog,
+									int which) {
 								currency = currenyItems[which].toString();
-
+								currencyCode = currencyCodes[which];
 							}
 						})
 				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -122,6 +131,7 @@ public class SettingsActivity extends Activity {
 								PREFS_NAME, 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putString("Currency", currency);
+						editor.putString("CurrencyCode", currencyCode);
 						editor.commit();
 					}
 				})
@@ -138,66 +148,13 @@ public class SettingsActivity extends Activity {
 	}
 
 	protected void restoreDefaults() {
-		selectedExperts.add("Google Finance");
-		selectedExperts.add("Yahoo Finance");
 		currency = "Dollar";
-	}
-
-	protected void selectExperts() {
-		boolean[] checkedItems = new boolean[5];
-		for (int i = 0; i < 5; i++) {
-			checkedItems[i] = false;
-			for (int j = 0; j < selectedExperts.size(); j++) {
-				if (experts[i].equals(selectedExperts.get(j))) {
-					checkedItems[i] = true;
-				}
-			}
-		}
-		new AlertDialog.Builder(this)
-				.setTitle("Select Experts")
-				.setMultiChoiceItems(experts, checkedItems,
-						new DialogInterface.OnMultiChoiceClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which, boolean isChecked) {
-								if (isChecked) {
-									selectedExperts.add(experts[which]
-											.toString());
-								} else {
-									selectedExperts.remove(experts[which]
-											.toString());
-								}
-
-							}
-						})
-				.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						SharedPreferences settings = getSharedPreferences(
-								PREFS_NAME, 0);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putInt("Experts_Number", selectedExperts.size());
-						for (int i = 0; i < selectedExperts.size(); i++) {
-							editor.putString("Expert_" + i,
-									selectedExperts.get(i));
-						}
-						editor.commit();
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								selectedExperts = new ArrayList<String>();
-								for(int i=0; i<experts.length; i++){
-									selectedExperts.add(experts[i].toString());
-								}
-							}
-						}).show();
+		currencyCode = "USD";
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("Currency", currency);
+		editor.putString("CurrencyCode", "USD");
+		editor.commit();
 	}
 
 	@Override

@@ -2,12 +2,17 @@ package com.example.stocksapp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import stocks.PastClosingPrices;
 import stocks.Stock;
+import utils.CurrencyConverter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,8 +25,10 @@ import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
@@ -32,9 +39,11 @@ public class CompanyActivity extends Activity {
 	String companyName;
 	Stock stock;
 	String[] scorecardItems = new String[4];
-	public static final String PREFS_NAME = "MyHistoryFile";
+	public static final String PREFS_NAME_HISTORY = "MyHistoryFile";
+	public static final String PREFS_NAME_SETTINGS = "MySettingsFile";
 	int score;
 	ProgressDialog dialog;
+	BigDecimal rate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,6 @@ public class CompanyActivity extends Activity {
 
 		companyName = getIntent().getExtras().getString("Company");
 		saveToHistory();
-		
 
 		stockDetails();
 		if (stock != null) {
@@ -152,49 +160,11 @@ public class CompanyActivity extends Activity {
 	}
 
 	public void stockDetails() {
-		try {
-			TextView tv = (TextView) findViewById(R.id.tvCompanyName);
-			stock = utils.Controller.getStock(companyName);
-			TextView tvCompany = (TextView) findViewById(R.id.textView1);
-			tvCompany.setText(stock.getName());
-			score = (int) stock.getScore();
-			tv.setText(randomPhrase(score));
-			BigDecimal current = stock.getCurrentPrice();
-			BigDecimal previous = stock.getPreviousClosingPrice();
-			BigDecimal change = current.subtract(previous);
-			Double chg = Double.valueOf(change.doubleValue());
-			BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(previous,
-					2, RoundingMode.CEILING);
-			Double pc = Double.valueOf(percent.doubleValue());
-			TextView tvCurrent = (TextView) findViewById(R.id.textView2);
-			tvCurrent.setText("" + current);
-			TextView tvPrevious1 = (TextView) findViewById(R.id.textView6);
-			tvPrevious1.setText("" + previous);
-			TextView tvPrevious2 = (TextView) findViewById(R.id.textView8);
-			tvPrevious2.setText("" + previous);
-			TextView tvChange = (TextView) findViewById(R.id.textView3);
-			if (chg >= 0) {
-				tvChange.setText("+" + change);
-				tvChange.setTextColor(Color.rgb(0, 120, 0));
-			} else {
-				tvChange.setText("" + change);
-				tvChange.setTextColor(Color.RED);
-			}
-			TextView tvPercent = (TextView) findViewById(R.id.textView4);
-			if (pc >= 0) {
-				tvPercent.setText("+" + percent + "%");
-				tvPercent.setTextColor(Color.rgb(0, 120, 0));
-			} else {
-				tvPercent.setText("" + percent + "%");
-				tvPercent.setTextColor(Color.RED);
-			}
-			dialog.dismiss();
-		} catch (Exception e) {
-			Toast.makeText(CompanyActivity.this,
-					"No information retrieved. Try again!", Toast.LENGTH_SHORT)
-					.show();
-			finish();
-		}
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME_SETTINGS,
+				0);
+		String currencyCode = settings.getString("CurrencyCode", null);
+		new AsyncGetCurrencyRate().execute(currencyCode);
+
 	}
 
 	@SuppressLint("UseSparseArrays")
@@ -252,7 +222,8 @@ public class CompanyActivity extends Activity {
 	}
 
 	public void saveToHistory() {
-		SharedPreferences historyFile = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences historyFile = getSharedPreferences(
+				PREFS_NAME_HISTORY, 0);
 		SharedPreferences.Editor editor = historyFile.edit();
 		int size = historyFile.getInt("History_Number", -1);
 		if (size == -1) {
@@ -359,6 +330,107 @@ public class CompanyActivity extends Activity {
 
 							}
 						}).show();
+	}
+
+	public class AsyncPastPrices extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... arg0) {
+			String[] pastPrices = null;
+			try {
+				pastPrices = PastClosingPrices.fetch(companyName);
+
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return pastPrices;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+			ListView lv = (ListView) findViewById(R.id.listView1);
+			ArrayList<String> pastPrices = new ArrayList<String>();
+			for (int i = 0; i < result.length; i++) {
+				pastPrices.add(result[i]);
+			}
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+					CompanyActivity.this, android.R.layout.simple_list_item_1,
+					android.R.id.text1, pastPrices);
+			lv.setAdapter(adapter);
+			super.onPostExecute(result);
+		}
+
+	}
+
+	public class AsyncGetCurrencyRate extends
+			AsyncTask<String, Void, BigDecimal> {
+
+		@Override
+		protected BigDecimal doInBackground(String... params) {
+			BigDecimal currencyRate = CurrencyConverter
+					.getCurrentRate(params[0]);
+			;
+			rate = currencyRate;
+			return currencyRate;
+		}
+
+		@Override
+		protected void onPostExecute(BigDecimal result) {
+			try {
+
+				TextView tv = (TextView) findViewById(R.id.tvCompanyName);
+				stock = utils.Controller.getStock(companyName);
+				TextView tvCompany = (TextView) findViewById(R.id.textView1);
+				tvCompany.setText(stock.getName());
+				score = (int) stock.getScore();
+				tv.setText(randomPhrase(score));
+				BigDecimal current = stock.getCurrentPrice();
+				current = current.multiply(rate);
+				BigDecimal previous = stock.getPreviousClosingPrice();
+				previous = previous.multiply(rate);
+				BigDecimal change = current.subtract(previous);
+				Double chg = Double.valueOf(change.doubleValue());
+				BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(
+						previous, 2, RoundingMode.CEILING);
+				Double pc = Double.valueOf(percent.doubleValue());
+				TextView tvCurrent = (TextView) findViewById(R.id.textView2);
+				tvCurrent.setText("" + current);
+				TextView tvPrevious1 = (TextView) findViewById(R.id.textView6);
+				tvPrevious1.setText("" + previous);
+				// TextView tvPrevious2 = (TextView)
+				// findViewById(R.id.textView8);
+				// tvPrevious2.setText("" + previous);
+				new AsyncPastPrices().execute();
+				TextView tvChange = (TextView) findViewById(R.id.textView3);
+				if (chg >= 0) {
+					tvChange.setText("+" + change);
+					tvChange.setTextColor(Color.rgb(0, 120, 0));
+				} else {
+					tvChange.setText("" + change);
+					tvChange.setTextColor(Color.RED);
+				}
+				TextView tvPercent = (TextView) findViewById(R.id.textView4);
+				if (pc >= 0) {
+					tvPercent.setText("+" + percent + "%");
+					tvPercent.setTextColor(Color.rgb(0, 120, 0));
+				} else {
+					tvPercent.setText("" + percent + "%");
+					tvPercent.setTextColor(Color.RED);
+				}
+				dialog.dismiss();
+			} catch (Exception e) {
+				Toast.makeText(CompanyActivity.this,
+						"No information retrieved. Try again!",
+						Toast.LENGTH_SHORT).show();
+				finish();
+			}
+			super.onPostExecute(result);
+		}
+
 	}
 
 	@Override

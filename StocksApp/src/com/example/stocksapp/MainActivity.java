@@ -3,6 +3,8 @@ package com.example.stocksapp;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import categoriesAndTicker.Stock;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -213,8 +215,13 @@ public class MainActivity extends Activity {
 	}
 
 	protected void categories() {
-		final String[] categories = { "Small Cap", "Mid Cap", "Energy",
-				"Power", "Banking" };
+		final String[] oldCategories = Stock.getCategories();
+		final String[] categories = new String[oldCategories.length];
+		for(int i=0; i<oldCategories.length; i++){
+			String line = oldCategories[i];
+			String[] tokens = line.split(",");
+			categories[i] = tokens[1];
+		}
 		new AlertDialog.Builder(this)
 				.setTitle("Categories")
 				.setItems(categories, new DialogInterface.OnClickListener() {
@@ -237,16 +244,24 @@ public class MainActivity extends Activity {
 	}
 
 	protected void categoryResults(String category) {
-		final String[] searchValues = { "Microsoft", "Google", "Yahoo" };
+		final String[] searchValues = Stock.getStocksForCategories(category);
+		final String[] companies = new String[searchValues.length];
+		final String[] stocks = new String[searchValues.length];
+		for(int i=0; i<searchValues.length; i++){
+			String line = searchValues[i];
+			String[] tokens = line.split(",");
+			companies[i] = tokens[1];
+			stocks[i] = tokens[0];
+		}
 		new AlertDialog.Builder(this)
 				.setTitle("Search Results")
-				.setItems(searchValues, new DialogInterface.OnClickListener() {
+				.setItems(companies, new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						intent = new Intent(getBaseContext(),
 								CompanyActivity.class);
-						intent.putExtra("Company", searchValues[which]);
+						intent.putExtra("Company", stocks[which]);
 						startActivity(intent);
 					}
 				})
