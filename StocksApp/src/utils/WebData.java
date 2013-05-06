@@ -3,8 +3,8 @@ package utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import android.util.Log;
 /**
@@ -14,15 +14,14 @@ import android.util.Log;
  * @author NNRooth
  * 
  */
-public class WebData implements Runnable {
+public class WebData {
 
 	private static final String TAG = "WebData";
 	
 	// TODO If web requests are timing out, increase this value
 	// Too many 0 values is most likely caused by timeouts
-	private static final int DEFAULT_TIMEOUT = 5000 /* MilliSeconds */;
+	private static final int DEFAULT_TIMEOUT = 2500 /* MilliSeconds */;
 
-	String response; // This holds the response from our web request
 	private URL url; // This is the address of the web resource we request
 	private int timeout;	/* 	This is the maximum time to wait for a response
 								before closing the connection */
@@ -51,58 +50,25 @@ public class WebData implements Runnable {
 		this.timeout = timeout;
 	}
 
-	/**
-	 * This method is used to retrieve the response for our http request
-	 * 
-	 * @return Full unadulterated response, minus headers
-	 */
-	public String getResponse() {
-		return response;
-	}
-
-	/**
-	 * Used internally to set the response object
-	 * 
-	 * @param response The response to store
-	 */
-	private void setResponse(String response) {
-		this.response = response;
-	}
-
-	
-	public URL getUrl() {
-		return url;
-	}
-
-	
-	public int getTimeout() {
-		return timeout;
-	}
-
-	public void run() {
-		setResponse(makeRequest(getUrl(), getTimeout()));
-	}
-
-	private String makeRequest(URL url, int timeout) {
-		
-		HttpURLConnection httpConnect = null;
+	public String makeRequest() {
+		URLConnection urlConnect = null;
 		BufferedReader buffRead = null; 
-		String line = null; //
-		StringBuilder builder = null; 
+		String line = null;
+		StringBuilder builder = null;
+		String response = null;
+		Log.d(TAG, "Making Connection: " + url);
 		try {
 			/* Create a new connection object */
-			httpConnect = (HttpURLConnection) url.openConnection();
-			/* Send query using url encoding */
-			httpConnect.setRequestMethod("GET");
-			httpConnect.setDoOutput(true); // Allow reading http response
+			urlConnect = url.openConnection();
 			/* This is where the connection timeout is set */
-			httpConnect.setReadTimeout(timeout);
-			httpConnect.connect(); // Establish the connection
+			urlConnect.setDoInput(true);
+			urlConnect.setConnectTimeout(timeout);
+//			urlConnect.setReadTimeout(timeout);
 			
 			/* Read from the connection as a buffered reader */			
-			buffRead = new BufferedReader( 
+			buffRead = new BufferedReader(
 					new InputStreamReader(
-					httpConnect.getInputStream()
+					urlConnect.getInputStream()
 				));
 		} catch (Exception e) {
 			Log.e(TAG, "Internets All Used Up", e);
@@ -117,19 +83,12 @@ public class WebData implements Runnable {
 				builder.append(line + "\n");
 			}
 		} catch (IOException e) {
-			try {
-				/* Some characters cause read to throw an error,
-				 * skip those characters and attempt to recover
-				 */
-				while ((line = buffRead.readLine()) != null) { 
-					builder.append(line + "\n");
-				}
-			} catch (IOException e1) {
-				Log.e(TAG, "Error reading response", e);
-				// Final attempt to recover, just ignore and dump all retrieved data
-			}
+			Log.e(TAG, "Error reading response", e);
+			// Final attempt to recover, just ignore and dump all retrieved data
 		}
 		
-		return builder.toString();
+		response = builder.toString();
+		Log.d(TAG, "Returning Response");
+		return response;
 	}
 }

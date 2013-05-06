@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import stocks.PastClosingPrices;
 import stocks.Stock;
 import utils.CurrencyConverter;
-import android.os.AsyncTask;
+import utils.AsyncTaskEx;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -332,7 +332,7 @@ public class CompanyActivity extends Activity {
 						}).show();
 	}
 
-	public class AsyncPastPrices extends AsyncTask<Void, Void, String[]> {
+	public class AsyncPastPrices extends AsyncTaskEx<Void, Void, String[]> {
 
 		@Override
 		protected String[] doInBackground(Void... arg0) {
@@ -367,7 +367,7 @@ public class CompanyActivity extends Activity {
 	}
 
 	public class AsyncGetCurrencyRate extends
-			AsyncTask<String, Void, BigDecimal> {
+			AsyncTaskEx<String, Void, BigDecimal> {
 
 		@Override
 		protected BigDecimal doInBackground(String... params) {
@@ -375,6 +375,7 @@ public class CompanyActivity extends Activity {
 					.getCurrentRate(params[0]);
 			;
 			rate = currencyRate;
+			stock = utils.Controller.getStock(companyName);
 			return currencyRate;
 		}
 
@@ -383,7 +384,7 @@ public class CompanyActivity extends Activity {
 			try {
 
 				TextView tv = (TextView) findViewById(R.id.tvCompanyName);
-				stock = utils.Controller.getStock(companyName);
+				
 				TextView tvCompany = (TextView) findViewById(R.id.textView1);
 				tvCompany.setText(stock.getName());
 				score = (int) stock.getScore();

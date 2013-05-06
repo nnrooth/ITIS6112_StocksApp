@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import stocks.Stock;
-import android.os.AsyncTask;
+import utils.AsyncTaskEx;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -54,7 +54,7 @@ public class TopPickoftheDayActivity extends Activity {
 
 	}
 	
-	public class AsyncCompanyName extends AsyncTask<Void, Void, String>{
+	public class AsyncCompanyName extends AsyncTaskEx<Void, Void, String>{
 
 		@Override
 		protected String doInBackground(Void... arg0) {

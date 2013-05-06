@@ -29,6 +29,8 @@ public class FinalScore {
 		kwScore = new KeyWordExpert().getScore(symbol);
 		stock.setKwScore(round(kwScore));
 
+		stock.setKwScore(0.00);
+		
 		t10Score = Top10Expert.getScore(stock.getSymbol());
 		stock.setT10Score(round(t10Score));
 

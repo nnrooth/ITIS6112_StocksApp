@@ -8,6 +8,7 @@ import java.util.Random;
 
 import stocks.Stock;
 import stocks.YahooFinance;
+import android.util.Log;
 import delphi.FinalScore;
 import delphi.Top10Expert;
 
@@ -20,7 +21,9 @@ import delphi.Top10Expert;
  * 
  */
 public class Controller {
-
+	
+	private final static String TAG = "Controller";
+	
 	/**
 	 * @Name getTop10()
 	 * @Input null
@@ -83,15 +86,21 @@ public class Controller {
 			stock = HistoryStack.fetch(symbol);
 		} else {
 			try {
+				Log.d(TAG, "Querying Yahoo");
 				stockInfo = stocks.YahooFinance.searchSymbol(symbol);
 				stock = new Stock(stockInfo);
+				Log.d(TAG, "Fetching Past Prices");
 				stock.setPastPrices(stocks.PastClosingPrices.fetch(symbol));
+				Log.d(TAG, "Scoring Stock");
 				finalScore = FinalScore.getScore(stock);
 				stock.setScore(finalScore);
+				Log.d(TAG, "Placing in Stack");
 				HistoryStack.push(stock);
 			} catch (MalformedURLException e) {
+				Log.e(TAG, "Error with URL", e);
 				stock = null;
 			} catch (InterruptedException e) {
+				Log.e(TAG, "Interruption!!!", e);
 				stock = null;
 			}
 		}

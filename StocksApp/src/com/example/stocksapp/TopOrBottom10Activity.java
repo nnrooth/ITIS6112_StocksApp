@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
+import utils.AsyncTaskEx;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -66,7 +66,7 @@ public class TopOrBottom10Activity extends Activity {
 		});
 	}
 	
-	public class AsyncGetToporBottom extends AsyncTask<Void, Void, String[]>{
+	public class AsyncGetToporBottom extends AsyncTaskEx<Void, Void, String[]>{
 
 		@Override
 		protected String[] doInBackground(Void... params) {

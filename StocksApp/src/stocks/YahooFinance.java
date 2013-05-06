@@ -65,27 +65,13 @@ public class YahooFinance {
 		String queryFValue = "f=" + queryParams;
 		String queryFValue2 = "f=" + "n"; // Query for company name
 
-		int timeout = 1500; // TODO - Optimize for performance
-
 		queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 		queryUrl2 = new URL(queryBaseUrl + querySValue + "&" + queryFValue2);
 		WebData web1 = new WebData(queryUrl);
 		WebData web2 = new WebData(queryUrl2);
 
-		Thread[] threads = new Thread[2];
-		threads[0] = new Thread(web1);
-		threads[1] = new Thread(web2);
-
-		for (Thread thread : threads) {
-			thread.start();
-		}
-
-		for (Thread thread : threads) {
-			thread.join(timeout); // TODO Optomize for performance
-		}
-
-		xmlText = web1.getResponse().replace("\"", "").trim();
-		companyName = web2.getResponse().replace("\"", "").trim();
+		xmlText = web1.makeRequest().replace("\"", "").trim();
+		companyName = web2.makeRequest().replace("\"", "").trim();
 		splitText = xmlText.split(",");
 		stockInfo = new ArrayList<String>();
 		stockInfo.add(companyName);
@@ -116,14 +102,11 @@ public class YahooFinance {
 		String querySValue = "s=" + symbol;
 		String queryFValue = "f=" + "n"; // Query for company name
 		WebData web = null;
-		Thread thread = null;
 		try {
 			URL queryUrl = new URL(queryBaseUrl + querySValue + "&"
 					+ queryFValue);
 			web = new WebData(queryUrl);
-			thread = new Thread(web);
-			thread.start();
-			companyName = web.getResponse().replace("\"", "").trim();
+			companyName = web.makeRequest().replace("\"", "").trim();
 		} catch (MalformedURLException e) {
 			companyName = "";
 		}

@@ -125,15 +125,12 @@ public class Stock {
 		String querySValue = "s=" + symbol;
 		String queryFValue = "f=" + "l1"; // Query for company name
 		WebData web = null;
-		Thread thread = null;
 		
 		// Attempt to fetch an updated price
 		try {
 		URL queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
 		web = new WebData(queryUrl);
-		thread = new Thread(web);
-		thread.start();
-		currentPrice = BigDecimal.valueOf(Double.valueOf(web.getResponse().replace("\"",  "").trim()));
+		currentPrice = BigDecimal.valueOf(Double.valueOf(web.makeRequest().replace("\"",  "").trim()));
 		setCurrentPrice(currentPrice);
 		} catch (Exception e) {
 			// An error... return the previously fetched price

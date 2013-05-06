@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import android.net.Uri;
-import android.os.AsyncTask;
+import utils.AsyncTaskEx;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -99,7 +99,7 @@ public class NewsActivity extends Activity {
 //		}
 //	}
 	
-	public class AsyncGetNews extends AsyncTask<Void, Void, Void>{
+	public class AsyncGetNews extends AsyncTaskEx<Void, Void, Void>{
 
 		@Override
 		protected Void doInBackground(Void... arg0) {

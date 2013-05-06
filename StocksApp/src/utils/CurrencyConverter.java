@@ -1,30 +1,47 @@
 package utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class CurrencyConverter {
+	
+	private static String currencyCode = "USD";
+	private static BigDecimal rate = new BigDecimal(1.00);
+	private static String symbol = "$";
+	
 	public static BigDecimal getCurrentRate(String code) {
-		BigDecimal rate=null;
-		try {
-			URL convert = new URL(
-					"http://currencies.apps.grandtrunk.net/getrate/2013-05-01/usd/"
-							+ code);
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					convert.openStream()));
-			String answer = in.readLine();
-			in.close();
-			rate = new BigDecimal(answer);
-			System.out.println(rate);			
-		} catch (MalformedURLException mue) {
-			System.exit(1);
-		} catch (IOException ioe) {
-			System.exit(1);
-		}
+		updateCurrency(code);
 		return rate;
+	}
+	
+	public static String getSymbol() {
+		return symbol;
+	}
+	
+	public static void updateCurrency(String code) {
+		if (currencyCode != code) {
+			String response;
+			try {			
+				URL url = new URL(
+						"http://currencies.apps.grandtrunk.net/getrate/2013-05-01/usd/"
+								+ code);
+				
+				WebData data = new WebData(url);
+				response = data.makeRequest();
+				rate = new BigDecimal(response);
+				
+				currencyCode = code;
+				
+				if (code == "USD") {
+					symbol = "$";
+				} else if (code == "GBP") {
+					symbol = "£";
+				} else if (code == "EUR") {
+					symbol = "€";
+				} else if (code == "INR") {
+					symbol = "र";
+				}
+			} catch (Exception e) {}
+		}
 	}
 }

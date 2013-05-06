@@ -105,27 +105,15 @@ public class KeyWordExpert {
 		String[] text = null;
 		URL url;
 
-		int timeout = 1500 /* MilliSeconds */;
-
 		String response = null;
 
 		url = new URL(String.format(
 				"https://www.google.com/finance/company_news?q=%s", symbol));
 
 		WebData request = new WebData(url);
-
-		Thread requestThread = new Thread(request);
-		requestThread.start();
-
-		try {
-			requestThread.join(timeout / 2);
-		} catch (InterruptedException e) {
-		}
-
-		response = request.getResponse();
+		response = request.makeRequest();
 		url = null;
 		request = null;
-		requestThread = null;
 
 		Document d = Jsoup.parse(response);
 		Elements links = null;
@@ -148,28 +136,10 @@ public class KeyWordExpert {
 					link.indexOf("&cid=")));
 
 			requests[i] = new WebData(url);
-
-		}
-		ArrayList<Thread> newsThreads = new ArrayList<Thread>(linkCount);
-		for (WebData data : requests) {
-			newsThreads.add(new Thread(data));
-		}
-
-		for (Thread thread : newsThreads) {
-			thread.start();
-		}
-
-		for (Thread thread : newsThreads) {
-			try {
-
-				thread.join(timeout);
-
-			} catch (InterruptedException e) {
-			}
 		}
 
 		for (int n = 0; n < requests.length; n++) {
-			response = requests[n].getResponse();
+			response = requests[n].makeRequest();
 			try {
 				Document story = Jsoup.parse(response);
 				Elements paragraphs = story.select("p");

@@ -22,7 +22,6 @@ public class Top10Expert {
 
 	private static String[] top10List;
 	private static String[] bottom10List;
-	private static int timeout = 5000; // TODO - Optimize for performance
 
 	
 	/**
@@ -104,12 +103,8 @@ public class Top10Expert {
 				"stockscouter-top-rated-stocks?sco=1&col=6&asc=1"
 			);
 
-			WebData request = new WebData(url);
-
-			Thread thread = new Thread(request);
-			thread.start(); thread.join(timeout); // TODO Optimize for performance
-			
-			response = request.getResponse();
+			WebData request = new WebData(url);			
+			response = request.makeRequest();
 		} catch (Exception ignored1) {
 			Log.e("Bottom10", ignored1.getMessage());
 		}
@@ -156,13 +151,9 @@ public class Top10Expert {
 			);
 
 			WebData request = new WebData(url);
-
-			Thread thread = new Thread(request);
-			thread.start(); thread.join(timeout); // TODO Optimize for performance
-			
-			response = request.getResponse();
-		} catch (Exception ignored1) {
-			Log.e("Top10", ignored1.getMessage());
+			response = request.makeRequest();
+		} catch (Exception e) {
+			Log.e("Top10", e.getMessage());
 		}
 		return response;
 	}
