@@ -92,6 +92,8 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
+                
+                
 
                 <RelativeLayout
                     android:id="@+id/tab1"
@@ -174,29 +176,19 @@
                 <RelativeLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-					
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="55dp"
-                        android:layout_marginTop="111dp"
-                        android:text="@string/previousDayClosure" />
+                    android:layout_height="272dp" >
 
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
+                    <ListView
+                        android:id="@+id/listView1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/textView7"
-                        android:layout_alignBottom="@+id/textView7"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="48dp"
-                        android:text="@string/zero" />
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true" >
+
+                    </ListView>
                     
-                </RelativeLayout>
+                </RelativeLayout>                
             </FrameLayout>
         </LinearLayout>
     </TabHost>

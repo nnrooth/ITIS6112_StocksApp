@@ -15,6 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+/**
+ * Displays Settings page.
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class SettingsActivity extends Activity {
 	public static final String PREFS_NAME = "MySettingsFile";
 	ArrayList<String> selectedExperts = new ArrayList<String>();
@@ -97,10 +103,7 @@ public class SettingsActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								// TODO Auto-generated method stub
-
-							}
+							public void onClick(DialogInterface arg0, int arg1) {}
 						}).show();
 	}
 
@@ -140,10 +143,7 @@ public class SettingsActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
 

@@ -10,7 +10,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import utils.WebData;
-
+/**
+ * Fetches the previous closing prices for a specific stock
+ * 
+ * @author Team 3+4
+ *
+ */
 public class PastClosingPrices {
 
 	/**
@@ -24,8 +29,9 @@ public class PastClosingPrices {
 	 */
 	public static String[] fetch(String symbol) 
 			throws MalformedURLException, InterruptedException {
-		String response = null;
+		
 		String[] pastPrices = null;
+		String response; long timeout = 2500;
 
 		// This is the url for yahoo finances previous closing price search
 		String queryUrl = String.format("http://finance.yahoo.com/q/hp?s=%s",
@@ -33,14 +39,18 @@ public class PastClosingPrices {
 		URL url = new URL(queryUrl);
 
 		WebData data = new WebData(url);
+		Thread thread = new Thread(data);
 
-		response = data.makeRequest();
+		// Start the thread, and join its parent thread
+		thread.start();
+		thread.join(timeout);
+		
+		response = data.getResponse();
 
 		List<String> listMatches = new ArrayList<String>();
 		Document doc = Jsoup.parse(response);
 		String parsedResponse = "";
-//		Elements values = doc.getElementsByClass("yfnc_tabledata1");
-		Elements values = doc.getElementsByAttributeValue("class", "yfnc_tabledata1");
+		Elements values = doc.getElementsByClass("yfnc_tabledata1");
 		
 		/*
 		 * Parse all past prices on first page of results.

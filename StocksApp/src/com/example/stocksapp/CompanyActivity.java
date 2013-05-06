@@ -1,19 +1,22 @@
 package com.example.stocksapp;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import stocks.PastClosingPrices;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import stocks.Stock;
 import utils.CurrencyConverter;
-import utils.AsyncTaskEx;
-import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,6 +25,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -30,10 +36,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
+import categoriesAndTicker.Ticker;
 
+/**
+ * Displays the details for a particular stock.
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class CompanyActivity extends Activity {
 	Intent intent;
 	String companyName;
@@ -44,7 +57,53 @@ public class CompanyActivity extends Activity {
 	int score;
 	ProgressDialog dialog;
 	BigDecimal rate;
+	String symbol;
 
+	Timer updateTimer;
+		
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		// Kill updateTimer
+		if (updateTimer != null) {
+			updateTimer.cancel();
+			updateTimer.purge();
+		}
+		updateTimer = null;
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		// Start updateTimer
+		if (updateTimer == null) {
+			updateTimer = new Timer();
+			updateTimer.schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							if (stock != null) {
+								TextView tv = (TextView) findViewById(R.id.textView2);
+								BigDecimal update = stock.updatePrice();
+								// Check for currency settings change
+								stockDetails();
+								update = update.multiply(rate);
+								update = update.divide(BigDecimal.valueOf(1.00), 2, RoundingMode.CEILING);
+								
+								tv.setText(symbol + update);
+								Log.d("PriceUpdate", "Updated: " + update);
+							}
+						}
+					});
+				}
+			}, 0, 5000);
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,22 +118,7 @@ public class CompanyActivity extends Activity {
 
 		companyName = getIntent().getExtras().getString("Company");
 		saveToHistory();
-
 		stockDetails();
-		if (stock != null) {
-			new Timer().schedule(new TimerTask() {
-
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() {
-						public void run() {
-							TextView tv = (TextView) findViewById(R.id.textView2);
-							tv.setText(stock.updatePrice() + "");
-						}
-					});
-				}
-			}, 0, 5000);
-		}
 
 		TabSpec predictionSpec = tabHost.newTabSpec("Prediction");
 		predictionSpec.setIndicator("Prediction");
@@ -98,6 +142,7 @@ public class CompanyActivity extends Activity {
 				intent = new Intent(getBaseContext(), MainActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
+				finish();
 			}
 		});
 
@@ -156,7 +201,6 @@ public class CompanyActivity extends Activity {
 				viewScorecard(score);
 			}
 		});
-
 	}
 
 	public void stockDetails() {
@@ -182,7 +226,7 @@ public class CompanyActivity extends Activity {
 		map1.put(7, "Business benefits are very high");
 		map1.put(8, "Its time to buy!");
 		map1.put(9, "Must Buy.");
-		map1.put(10, "Very good choice. Go got it.");
+		map1.put(10, "Very good choice. Go get it.");
 
 		HashMap<Integer, String> map2 = new HashMap<Integer, String>();
 		map2.put(1, "Seeming good. Should wait and watch.");
@@ -256,26 +300,61 @@ public class CompanyActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
+	
+	// Returns an array of company name's matching the word parameter
+		private String[] getAutoSuggest(String word) {
+			ArrayList<String> suggestions = new ArrayList<String>();
+			String[] results;
+			String[] stock_names = getResources().getStringArray(
+					R.array.stock_names);
+
+			for (int n = 0; n < stock_names.length; n++) {
+				if (stock_names[n].toLowerCase(Locale.US).startsWith(
+						word.toLowerCase(Locale.US))) {
+					suggestions.add(stock_names[n]);
+				}
+			}
+
+			results = suggestions.toArray(new String[suggestions.size()]);
+			return results;
+		}
 
 	protected void search() {
-		// final EditText input = new EditText(this);
 		final AutoCompleteTextView actv = new AutoCompleteTextView(this);
 		new AlertDialog.Builder(this)
 				.setTitle("Compare with " + companyName)
 				.setMessage(R.string.searchCaption)
 				.setView(actv)
 				.setOnKeyListener(new DialogInterface.OnKeyListener() {
-
+					String typeWord = "";
 					@Override
 					public boolean onKey(DialogInterface dialog, int keyCode,
 							KeyEvent event) {
-						// TODO Auto-generated method stub
+						String[] stockNames = null;
+						if (KeyEvent.ACTION_UP == event.getAction()) {
+							typeWord = actv.getText().toString();
+							Log.i("TypeWord", typeWord); // Log user input as
+															// info
+
+							stockNames = getAutoSuggest(typeWord);
+							Log.i("StockNames",
+									String.format("%s", stockNames.length)); // Log
+																				// length
+																				// of
+																				// matched
+																				// stock
+																				// name
+																				// array
+
+							ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+									CompanyActivity.this,
+									android.R.layout.simple_dropdown_item_1line,
+									stockNames);
+							actv.setAdapter(adapter);
+						}
 
 						return false;
 					}
@@ -284,9 +363,8 @@ public class CompanyActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// searchResults();
-						// Removing the screen with search suggestions
-						String company2 = actv.getText().toString();
+						String companyName = actv.getText().toString();
+						String company2 = Ticker.stockTickerTickerStock(companyName);
 						intent = new Intent(getBaseContext(),
 								CompareActivity.class);
 						intent.putExtra("Company1", companyName);
@@ -299,54 +377,46 @@ public class CompanyActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
 
-	protected void searchResults() {
-		final String[] searchValues = { "Microsoft", "Google", "Yahoo" };
-		new AlertDialog.Builder(this)
-				.setTitle("Search Results")
-				.setItems(searchValues, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						intent = new Intent(getBaseContext(),
-								CompanyActivity.class);
-						intent.putExtra("Company", searchValues[which]);
-						startActivity(intent);
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
-						}).show();
-	}
-
-	public class AsyncPastPrices extends AsyncTaskEx<Void, Void, String[]> {
+	public class AsyncPastPrices extends AsyncTask<Void, Void, String[]> {
 
 		@Override
 		protected String[] doInBackground(Void... arg0) {
 			String[] pastPrices = null;
+			List<String> listMatches = new ArrayList<String>();
+			String queryUrl = String.format("http://finance.yahoo.com/q/hp?s=%s",
+					companyName);
+			Document doc;
 			try {
-				pastPrices = PastClosingPrices.fetch(companyName);
+				doc = Jsoup.connect(queryUrl).get();
+				String parsedResponse = "";
+				Elements values = doc.getElementsByAttributeValue("class", "yfnc_tabledata1");
+				
+				/*
+				 * Parse all past prices on first page of results.
+				 * The amount of avaialble historical prices is rather large,
+				 * but we only need the last 25 or so. 
+				 */
+				for (int n = 0; n < values.size() - 4; n += 7) {
+					parsedResponse = values.get(n).toString();
+					parsedResponse = parsedResponse.substring(
+							parsedResponse.indexOf(">") + 1,
+							parsedResponse.indexOf("</td>"));
+					listMatches.add(parsedResponse);
 
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+					parsedResponse = values.get(n + 4).toString();
+					parsedResponse = parsedResponse.substring(
+							parsedResponse.indexOf(">") + 1,
+							parsedResponse.indexOf("</td>"));
+					listMatches.add(parsedResponse);
+				}
+
+				// Convert the List of Strings into an array
+				pastPrices = listMatches.toArray(new String[listMatches.size()]);
+			} catch (IOException e) {}
 			return pastPrices;
 		}
 
@@ -354,28 +424,31 @@ public class CompanyActivity extends Activity {
 		protected void onPostExecute(String[] result) {
 			ListView lv = (ListView) findViewById(R.id.listView1);
 			ArrayList<String> pastPrices = new ArrayList<String>();
-			for (int i = 0; i < result.length; i++) {
-				pastPrices.add(result[i]);
+			for (int i = 0; i < result.length; i+=2) {
+				BigDecimal past = BigDecimal.valueOf(Double.parseDouble(result[i+1]));
+				past = past.multiply(rate);
+				past = past.divide(BigDecimal.valueOf(1.00), 2, RoundingMode.CEILING);
+				pastPrices.add(result[i]+"    "+symbol +past);
 			}
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 					CompanyActivity.this, android.R.layout.simple_list_item_1,
 					android.R.id.text1, pastPrices);
 			lv.setAdapter(adapter);
 			super.onPostExecute(result);
+			dialog.dismiss();
 		}
 
 	}
 
 	public class AsyncGetCurrencyRate extends
-			AsyncTaskEx<String, Void, BigDecimal> {
+			AsyncTask<String, Void, BigDecimal> {
 
 		@Override
 		protected BigDecimal doInBackground(String... params) {
 			BigDecimal currencyRate = CurrencyConverter
 					.getCurrentRate(params[0]);
-			;
 			rate = currencyRate;
-			stock = utils.Controller.getStock(companyName);
+			symbol = CurrencyConverter.getSymbol();
 			return currencyRate;
 		}
 
@@ -384,27 +457,33 @@ public class CompanyActivity extends Activity {
 			try {
 
 				TextView tv = (TextView) findViewById(R.id.tvCompanyName);
+				// Update stock info only if null
+				if (stock == null) {
+					stock = utils.Controller.getStock(companyName);
+					Log.d("PriceUpdate", "Stock is no longer null");
 				
-				TextView tvCompany = (TextView) findViewById(R.id.textView1);
-				tvCompany.setText(stock.getName());
-				score = (int) stock.getScore();
-				tv.setText(randomPhrase(score));
+					TextView tvCompany = (TextView) findViewById(R.id.textView1);
+					tvCompany.setText(stock.getName());
+					score = (int) stock.getScore();
+					tv.setText(randomPhrase(score));
+				}
+				
 				BigDecimal current = stock.getCurrentPrice();
 				current = current.multiply(rate);
+				current = current.divide(BigDecimal.valueOf(1.00), 2, RoundingMode.CEILING);
 				BigDecimal previous = stock.getPreviousClosingPrice();
 				previous = previous.multiply(rate);
+				previous = previous.divide(BigDecimal.valueOf(1.00), 2, RoundingMode.CEILING);
 				BigDecimal change = current.subtract(previous);
 				Double chg = Double.valueOf(change.doubleValue());
 				BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(
-						previous, 2, RoundingMode.CEILING);
+					previous, 2, RoundingMode.CEILING);
 				Double pc = Double.valueOf(percent.doubleValue());
 				TextView tvCurrent = (TextView) findViewById(R.id.textView2);
-				tvCurrent.setText("" + current);
+				tvCurrent.setText(symbol + current);
 				TextView tvPrevious1 = (TextView) findViewById(R.id.textView6);
-				tvPrevious1.setText("" + previous);
-				// TextView tvPrevious2 = (TextView)
-				// findViewById(R.id.textView8);
-				// tvPrevious2.setText("" + previous);
+				tvPrevious1.setText(symbol + previous);
+			
 				new AsyncPastPrices().execute();
 				TextView tvChange = (TextView) findViewById(R.id.textView3);
 				if (chg >= 0) {
@@ -422,7 +501,6 @@ public class CompanyActivity extends Activity {
 					tvPercent.setText("" + percent + "%");
 					tvPercent.setTextColor(Color.RED);
 				}
-				dialog.dismiss();
 			} catch (Exception e) {
 				Toast.makeText(CompanyActivity.this,
 						"No information retrieved. Try again!",

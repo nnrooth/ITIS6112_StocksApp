@@ -8,7 +8,6 @@ import java.util.Random;
 
 import stocks.Stock;
 import stocks.YahooFinance;
-import android.util.Log;
 import delphi.FinalScore;
 import delphi.Top10Expert;
 
@@ -17,13 +16,11 @@ import delphi.Top10Expert;
  * is check for pattern resembling stock tickers Stock returns null for errors
  * and for invalid stock symbols
  * 
- * @author NNRooth
+ * @author Team 3+4
  * 
  */
 public class Controller {
-	
-	private final static String TAG = "Controller";
-	
+
 	/**
 	 * @Name getTop10()
 	 * @Input null
@@ -86,21 +83,15 @@ public class Controller {
 			stock = HistoryStack.fetch(symbol);
 		} else {
 			try {
-				Log.d(TAG, "Querying Yahoo");
 				stockInfo = stocks.YahooFinance.searchSymbol(symbol);
 				stock = new Stock(stockInfo);
-				Log.d(TAG, "Fetching Past Prices");
 				stock.setPastPrices(stocks.PastClosingPrices.fetch(symbol));
-				Log.d(TAG, "Scoring Stock");
 				finalScore = FinalScore.getScore(stock);
 				stock.setScore(finalScore);
-				Log.d(TAG, "Placing in Stack");
 				HistoryStack.push(stock);
 			} catch (MalformedURLException e) {
-				Log.e(TAG, "Error with URL", e);
 				stock = null;
 			} catch (InterruptedException e) {
-				Log.e(TAG, "Interruption!!!", e);
 				stock = null;
 			}
 		}
@@ -116,7 +107,7 @@ public class Controller {
 	 * fetching the same stock info in future would fasten the process of displaying stock info to the user.
 	 */
 	private static class HistoryStack {
-		private static final int STACK_SIZE = 25;
+		private static final int STACK_SIZE = 15;
 		private static Hashtable<String, Stock> stack = new Hashtable<String, Stock>(
 				STACK_SIZE);
 		private static Random rand = new Random();

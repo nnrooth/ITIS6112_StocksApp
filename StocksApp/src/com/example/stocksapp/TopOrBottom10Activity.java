@@ -3,8 +3,9 @@ package com.example.stocksapp;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import utils.AsyncTaskEx;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -17,31 +18,26 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+/**
+ * Displays the Top10 or Bottom10 list of stocks
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class TopOrBottom10Activity extends Activity {
 	Intent intent;
+	ProgressDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_or_bottom10);
-
-//		TabHost tabHost = (TabHost) findViewById(R.id.tabHost1);
-//		tabHost.setup();
-//
-//		TabSpec priceSpec = tabHost.newTabSpec("Price");
-//		priceSpec.setIndicator("Price");
-//		priceSpec.setContent(R.id.tab1);
-//		TabSpec marketSpec = tabHost.newTabSpec("Market Cap");
-//		marketSpec.setIndicator("Market Cap");
-//		marketSpec.setContent(R.id.tab2);
-//		TabSpec volumeSpec = tabHost.newTabSpec("Volume");
-//		volumeSpec.setIndicator("Volume");
-//		volumeSpec.setContent(R.id.tab3);
-//
-//		tabHost.addTab(priceSpec);
-//		tabHost.addTab(marketSpec);
-//		tabHost.addTab(volumeSpec);
-
+		
+		dialog = new ProgressDialog(this);
+		dialog.setMessage("Loading..");
+		dialog.setCancelable(false);
+		dialog.show();
+		
 		new AsyncGetToporBottom().execute();
 		
 		RadioGroup rg = (RadioGroup) findViewById(R.id.rgTopOrBottom);
@@ -49,6 +45,7 @@ public class TopOrBottom10Activity extends Activity {
 			
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				dialog.show();
 				new AsyncGetToporBottom().execute();
 				
 			}
@@ -66,7 +63,7 @@ public class TopOrBottom10Activity extends Activity {
 		});
 	}
 	
-	public class AsyncGetToporBottom extends AsyncTaskEx<Void, Void, String[]>{
+	public class AsyncGetToporBottom extends AsyncTask<Void, Void, String[]>{
 
 		@Override
 		protected String[] doInBackground(Void... params) {
@@ -88,7 +85,7 @@ public class TopOrBottom10Activity extends Activity {
 		@Override
 		protected void onPostExecute(String[] values) {
 			final ArrayList<String> list = new ArrayList<String>();
-			for(int i=0; i<values.length; i++){
+			for(int i=0; i<10; i++){
 				list.add(values[i]);
 			}
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(TopOrBottom10Activity.this,
@@ -107,6 +104,7 @@ public class TopOrBottom10Activity extends Activity {
 					startActivity(intent);
 				}
 			});
+			dialog.dismiss();
 			super.onPostExecute(values);
 		}
 		

@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import stocks.Stock;
-import utils.AsyncTaskEx;
+import utils.CurrencyConverter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
@@ -15,15 +17,33 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Displays the Top Stock of the day
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class TopPickoftheDayActivity extends Activity {
+	private static final String TAG = "TopPick";
+	
 	Intent intent;
 	String companyName = utils.Controller.getTop10()[0];
 	Stock stock;
+	public BigDecimal rate;
+	public String symbol;
+	ProgressDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_pickofthe_day);
+		
+		dialog = new ProgressDialog(this);
+		dialog.setCancelable(false);
+		Log.d(TAG, "Loading");
+		dialog.setMessage("Loading...");
+		Log.d(TAG, "Loaded");
+		dialog.show();
 
 		// update the company name with the top stock of the day
 		new AsyncCompanyName().execute();
@@ -54,20 +74,18 @@ public class TopPickoftheDayActivity extends Activity {
 
 	}
 	
-	public class AsyncCompanyName extends AsyncTaskEx<Void, Void, String>{
+	public class AsyncCompanyName extends AsyncTask<Void, Void, String>{
 
 		@Override
 		protected String doInBackground(Void... arg0) {
 			String[] values = utils.Controller.getTop10();
-			Log.d("demo", "1");
-//			companyName= values[0];
-//			Log.d("demo", companyName);
+			Log.d(TAG, "1");
 			return values[0];
 		}
 		
 		@Override
 		protected void onPostExecute(String result) {
-			Log.d("demo", result);
+			Log.d(TAG, result);
 			companyName = result;
 			TextView tvCompany = (TextView) findViewById(R.id.textView2);
 			tvCompany.setText(companyName);
@@ -79,33 +97,58 @@ public class TopPickoftheDayActivity extends Activity {
 
 	public void stockDetails() {
 		stock = utils.Controller.getStock(companyName);
-		BigDecimal current = stock.getCurrentPrice();
-		BigDecimal previous = stock.getPreviousClosingPrice();
-		BigDecimal change = current.subtract(previous);
-		Double chg = Double.valueOf(change.doubleValue());
-		BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(previous, 2,
-				RoundingMode.CEILING);
-		Double pc = Double.valueOf(percent.doubleValue());
-		TextView tvCurrent = (TextView) findViewById(R.id.textView3);
-		tvCurrent.setText("" + current);
-		TextView tvPrevious1 = (TextView) findViewById(R.id.textView7);
-		tvPrevious1.setText("" + previous);
-		TextView tvChange = (TextView) findViewById(R.id.textView4);
-		if (chg > 0) {
-			tvChange.setText("+" + change);
-			tvChange.setTextColor(Color.GREEN);
-		} else {
-			tvChange.setText("" + change);
-			tvChange.setTextColor(Color.RED);
+		
+	}
+	
+	public class AsyncCurrencyRate extends AsyncTask<Void, Void, BigDecimal>{
+
+		@Override
+		protected BigDecimal doInBackground(Void... params) {
+			Log.d(TAG, "Checkign Currency Rage");
+			BigDecimal currencyRate = CurrencyConverter.getCurrentRate(stock
+					.getSymbol());
+			rate = currencyRate;
+			symbol = CurrencyConverter.getSymbol();
+			return currencyRate;
 		}
-		TextView tvPercent = (TextView) findViewById(R.id.textView5);
-		if (pc > 0) {
-			tvPercent.setText("+" + percent + "%");
-			tvPercent.setTextColor(Color.GREEN);
-		} else {
-			tvPercent.setText("" + percent + "%");
-			tvPercent.setTextColor(Color.RED);
+
+		@Override
+		protected void onPostExecute(BigDecimal result) {
+			BigDecimal current = stock.getCurrentPrice();
+			current = current.multiply(rate);
+			current = current.divide(BigDecimal.valueOf(1.00), 2, RoundingMode.CEILING);
+			BigDecimal previous = stock.getPreviousClosingPrice();
+			previous = previous.multiply(rate);
+			previous = previous.divide(BigDecimal.valueOf(1.00), 2, RoundingMode.CEILING);
+			BigDecimal change = current.subtract(previous);
+			Double chg = Double.valueOf(change.doubleValue());
+			BigDecimal percent = BigDecimal.valueOf(chg * 100).divide(previous, 2,
+					RoundingMode.CEILING);
+			Double pc = Double.valueOf(percent.doubleValue());
+			TextView tvCurrent = (TextView) findViewById(R.id.textView3);
+			tvCurrent.setText(symbol + current);
+			TextView tvPrevious1 = (TextView) findViewById(R.id.textView7);
+			tvPrevious1.setText(symbol + previous);
+			TextView tvChange = (TextView) findViewById(R.id.textView4);
+			if (chg > 0) {
+				tvChange.setText("+" + change);
+				tvChange.setTextColor(Color.rgb(0, 120, 0));
+			} else {
+				tvChange.setText("" + change);
+				tvChange.setTextColor(Color.rgb(0, 120, 0));
+			}
+			TextView tvPercent = (TextView) findViewById(R.id.textView5);
+			if (pc > 0) {
+				tvPercent.setText("+" + percent + "%");
+				tvPercent.setTextColor(Color.GREEN);
+			} else {
+				tvPercent.setText("" + percent + "%");
+				tvPercent.setTextColor(Color.RED);
+			}
+			dialog.dismiss();
+			super.onPostExecute(result);
 		}
+		
 	}
 	
 	

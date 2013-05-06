@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import categoriesAndTicker.Stock;
+import categoriesAndTicker.Ticker;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,6 +25,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * Display home page.
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class MainActivity extends Activity {
 	Intent intent;
 	public static final String PREFS_NAME = "MyHistoryFile";
@@ -154,18 +161,14 @@ public class MainActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// searchResults();
-						// Removing the screen with search suggestions
-
-//						pDialog.setMessage("Loading...");
-//						pDialog.setCancelable(false);
-//						pDialog.show();
 						String companyName = actv.getText().toString();
+						String company = Ticker.stockTickerTickerStock(companyName);
 						try {
 							intent = new Intent(getBaseContext(),
 									CompanyActivity.class);
-							intent.putExtra("Company", companyName);
+							intent.putExtra("Company", company);
 							startActivity(intent);
+							
 						} catch (Exception e) {
 							Toast.makeText(MainActivity.this,
 									"No information retrieved. Try again!",
@@ -179,39 +182,10 @@ public class MainActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 		
 		
-	}
-
-	protected void searchResults() {
-		final String[] searchValues = { "Microsoft", "Google", "Yahoo" };
-		new AlertDialog.Builder(this)
-				.setTitle("Search Results")
-				.setItems(searchValues, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						intent = new Intent(getBaseContext(),
-								CompanyActivity.class);
-						intent.putExtra("Company", searchValues[which]);
-						startActivity(intent);
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
-						}).show();
 	}
 
 	protected void categories() {
@@ -236,10 +210,7 @@ public class MainActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
 
@@ -270,10 +241,7 @@ public class MainActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
 
@@ -316,10 +284,7 @@ public class MainActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
 

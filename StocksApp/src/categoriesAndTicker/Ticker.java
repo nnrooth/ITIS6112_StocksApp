@@ -1,8 +1,5 @@
 package categoriesAndTicker;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-
 public class Ticker {
 	static String[] companies = { "DUK,Duke Energy Corp.,1,Energy",
 		"ATO,Atmos Energy Corp.,1,Energy",
@@ -32,8 +29,6 @@ public class Ticker {
 		"YHOO,Yahoo! Inc.,6,Information Technology",
 		"IBM,International Business Machines Corp.,6,Information Technology" };
 	public static String stockTickerTickerStock(String name) {
-		FileInputStream fs = null;
-		BufferedReader reader = null;
 		String stockDetail = null;
 		for(int i=0; i<companies.length; i++){
 			String line = companies[i];

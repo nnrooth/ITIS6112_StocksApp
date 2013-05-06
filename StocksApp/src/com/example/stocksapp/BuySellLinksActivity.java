@@ -18,6 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+/**
+ * Displays the links to buy and sell stocks.
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class BuySellLinksActivity extends Activity {
 	public static final String PREFS_NAME = "MyLinksFile";
 	Intent intent;
@@ -130,10 +136,7 @@ public class BuySellLinksActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
-								// TODO Auto-generated method stub
-
-							}
+									int which) {}
 						}).show();
 	}
 

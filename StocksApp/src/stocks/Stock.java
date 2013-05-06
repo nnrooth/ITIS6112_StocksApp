@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 
 import utils.WebData;
+import android.util.Log;
 
 /**
  * This class represents a stock object.
@@ -14,10 +15,12 @@ import utils.WebData;
  * Note on the use of BigDecimal. Due to some peculiarities of
  * the double type, prices are handled by BigDecimal types
  * 
- * @author NNRooth
+ * @author Team 3+4
  *
  */
 public class Stock {
+	
+	private static final String TAG = "StockObject";
 	
 	private String name; // Company's full name
 	private String symbol; // Stock ticker symbol
@@ -39,25 +42,27 @@ public class Stock {
 	private String[] pastPrices; // Added for larger range of past prices. ~25 stored
 		
 	/**
-	 * Custom constructor. I use this to automatically distribute the
+	 * Custom constructor. This is used to automatically distribute the
 	 * results from a search using the YahooFinance API
 	 * 
 	 * @param stockInfo Parsed and sorted response from YahooFinance
 	 */
 	public Stock(String[] stockInfo) {
-		int count = 0;
-		setName(stockInfo[count++]);
-		setSymbol(stockInfo[count++]);
-		setExchange(stockInfo[count++]);
-		setCurrentPrice(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
-		setPreviousClosingPrice(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
-		setEpseCYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
-		setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
-		setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
-		setPeRatio(Double.valueOf(stockInfo[count++]));
-		setDivYield(Double.valueOf(stockInfo[count++]));
-		setKwScore(0.00); setT10Score(0.00); setEgScore(0.00); setPcScore(0.00);
-		setScore(0.00);
+		try {
+			int count = 0;
+			setName(stockInfo[count++]);
+			setSymbol(stockInfo[count++]);
+			setExchange(stockInfo[count++]);
+			setCurrentPrice(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+			setPreviousClosingPrice(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+			setEpseCYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+			setEpseNYear(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+			setEpseNQuarter(BigDecimal.valueOf(Double.valueOf(stockInfo[count++])));
+			setPeRatio(Double.valueOf(stockInfo[count++]));
+			setDivYield(Double.valueOf(stockInfo[count++]));
+			setKwScore(0.00); setT10Score(0.00); setEgScore(0.00); setPcScore(0.00);
+			setScore(0.00);
+		} catch (Exception e) { }
 	}
 	
 	// Begin block of get/set methods
@@ -120,19 +125,28 @@ public class Stock {
 	 * @return The updated price
 	 */
 	public BigDecimal updatePrice() {
+		long timeout = 3500;
 		BigDecimal currentPrice = null; // BigDecimal for currency handling
 		String queryBaseUrl = "http://finance.yahoo.com/d/quote?";
 		String querySValue = "s=" + symbol;
-		String queryFValue = "f=" + "l1"; // Query for company name
+		String queryFValue = "f=" + "l1"; // Query for current price
 		WebData web = null;
+		Thread thread = null;
 		
 		// Attempt to fetch an updated price
 		try {
-		URL queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
-		web = new WebData(queryUrl);
-		currentPrice = BigDecimal.valueOf(Double.valueOf(web.makeRequest().replace("\"",  "").trim()));
-		setCurrentPrice(currentPrice);
+			URL queryUrl = new URL(queryBaseUrl + querySValue + "&" + queryFValue);
+			web = new WebData(queryUrl);
+			thread = new Thread(web);
+			thread.start();
+			thread.join(timeout);
+			currentPrice = BigDecimal.valueOf(Double.valueOf(web.getResponse().replace("\"",  "").trim()));
+			setCurrentPrice(currentPrice);
+			
+			// Log results for debug
+			Log.d(TAG, "Updated Price: " + currentPrice);
 		} catch (Exception e) {
+			Log.e(TAG, "Error on Fetch, Returning Last Fetch");
 			// An error... return the previously fetched price
 			currentPrice = getCurrentPrice();
 		}

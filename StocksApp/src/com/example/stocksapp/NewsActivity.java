@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import android.net.Uri;
-import utils.AsyncTaskEx;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,6 +24,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/**
+ * Displays the news of a particular stock.
+ * 
+ * @author Team 3+4
+ * 
+ */
 public class NewsActivity extends Activity {
 	Intent intent;
 	ArrayList<String> news_title;
@@ -62,44 +68,7 @@ public class NewsActivity extends Activity {
 		
 	}
 
-//	public void getNews() {
-//		// ArrayList<String> text = new ArrayList<String>();
-//		try {
-//			Connection.Response response = Jsoup.connect(
-//					"https://www.google.com/finance/company_news?q=GOOG")
-//					.execute();
-//			if (response.statusCode() == 200) {
-//				Document doc = Jsoup.connect(
-//						"https://www.google.com/finance/company_news?q=CSCO")
-//						.get();
-//				Elements abc = doc.getElementsByClass("name");
-//				Elements content = doc.getElementsByAttributeValueStarting(
-//						"id", "Article");
-//				news_title = new ArrayList<String>();
-//				news_link = new ArrayList<String>();
-//				ArrayList<String> news_content = new ArrayList<String>();
-//				for (int i = 0; i < abc.size(); i++) {
-//					news_title.add(abc.get(i).text());
-//					news_link.add(abc.get(i).getElementsByAttribute("href")
-//							.attr("href").toString());
-//					news_content.add(content.get(i + 1).text());
-//					System.out.println(news_title.get(i) + " "
-//							+ news_link.get(i) + " " + news_content.get(i)
-//							+ "\n\n\n");
-//				}
-//			} else {
-//				getNews();
-//			}
-//		}
-//
-//		catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-	public class AsyncGetNews extends AsyncTaskEx<Void, Void, Void>{
+	public class AsyncGetNews extends AsyncTask<Void, Void, Void>{
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -122,18 +91,12 @@ public class NewsActivity extends Activity {
 						news_link.add(abc.get(i).getElementsByAttribute("href")
 								.attr("href").toString());
 						news_content.add(content.get(i + 1).text());
-						System.out.println(news_title.get(i) + " "
-								+ news_link.get(i) + " " + news_content.get(i)
-								+ "\n\n\n");
 					}
 				}
 			}
 
-			catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			catch (MalformedURLException e) {}
+			catch (IOException e) {}
 			return null;
 		}
 		
