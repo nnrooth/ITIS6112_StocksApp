@@ -258,7 +258,7 @@ public class CompareActivity extends Activity {
 		map2.put(1, "Seeming good. Should wait and watch.");
 		map2.put(2, "Do not rush. Keep watching.");
 		map2.put(3, "Getting better. Might be a good buy.");
-		map2.put(4, "Nothing to loose.");
+		map2.put(4, "Nothing to lose.");
 		map2.put(5, "Uncertain. But, not bad.");
 		map2.put(6, "Try your luck.");
 		map2.put(7,
@@ -386,6 +386,7 @@ public class CompareActivity extends Activity {
 				TextView tvPrevious1 = (TextView) findViewById(R.id.textView6);
 				tvPrevious1.setText(symbol + previous);
 				TextView tvChange = (TextView) findViewById(R.id.textView3);
+				new AsyncPastPrices().execute(stock);
 				if (chg > 0) {
 					tvChange.setText("+" + change);
 					tvChange.setTextColor(Color.rgb(0, 120, 0));

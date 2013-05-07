@@ -11,7 +11,7 @@ import android.util.Log;
  * This class is used to fetch data from the internet. All the web related queried are fired in this class.
  * 
  * 
- * @author NNRooth
+ * @author Team 3+4
  * 
  */
 public class WebData implements Runnable {

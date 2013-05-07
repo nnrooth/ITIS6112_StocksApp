@@ -142,9 +142,6 @@ public class Stock {
 			thread.join(timeout);
 			currentPrice = BigDecimal.valueOf(Double.valueOf(web.getResponse().replace("\"",  "").trim()));
 			setCurrentPrice(currentPrice);
-			
-			// Log results for debug
-			Log.d(TAG, "Updated Price: " + currentPrice);
 		} catch (Exception e) {
 			Log.e(TAG, "Error on Fetch, Returning Last Fetch");
 			// An error... return the previously fetched price

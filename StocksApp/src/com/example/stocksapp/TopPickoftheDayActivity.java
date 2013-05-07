@@ -40,9 +40,7 @@ public class TopPickoftheDayActivity extends Activity {
 		
 		dialog = new ProgressDialog(this);
 		dialog.setCancelable(false);
-		Log.d(TAG, "Loading");
 		dialog.setMessage("Loading...");
-		Log.d(TAG, "Loaded");
 		dialog.show();
 
 		// update the company name with the top stock of the day
@@ -79,7 +77,7 @@ public class TopPickoftheDayActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... arg0) {
 			String[] values = utils.Controller.getTop10();
-			Log.d(TAG, "1");
+			Log.d("demo", "1");
 			return values[0];
 		}
 		
@@ -97,14 +95,13 @@ public class TopPickoftheDayActivity extends Activity {
 
 	public void stockDetails() {
 		stock = utils.Controller.getStock(companyName);
-		
+		new AsyncCurrencyRate().execute();
 	}
 	
 	public class AsyncCurrencyRate extends AsyncTask<Void, Void, BigDecimal>{
 
 		@Override
 		protected BigDecimal doInBackground(Void... params) {
-			Log.d(TAG, "Checkign Currency Rage");
 			BigDecimal currencyRate = CurrencyConverter.getCurrentRate(stock
 					.getSymbol());
 			rate = currencyRate;
@@ -159,5 +156,4 @@ public class TopPickoftheDayActivity extends Activity {
 		getMenuInflater().inflate(R.menu.top_pickofthe_day, menu);
 		return true;
 	}
-
 }

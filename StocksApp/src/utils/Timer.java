@@ -3,7 +3,7 @@ package utils;
 /**
  * This class is used to represent a timeclock object
  * 
- * @author NNRooth
+ * @author Team 3+4
  * @category Debug Utility
  *
  */

@@ -232,7 +232,7 @@ public class CompanyActivity extends Activity {
 		map2.put(1, "Seeming good. Should wait and watch.");
 		map2.put(2, "Do not rush. Keep watching.");
 		map2.put(3, "Getting better. Might be a good buy.");
-		map2.put(4, "Nothing to loose.");
+		map2.put(4, "Nothing to lose.");
 		map2.put(5, "Uncertain. But, not bad.");
 		map2.put(6, "Try your luck.");
 		map2.put(7,
@@ -363,8 +363,8 @@ public class CompanyActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						String companyName = actv.getText().toString();
-						String company2 = Ticker.stockTickerTickerStock(companyName);
+						String company = actv.getText().toString();
+						String company2 = Ticker.stockTickerTickerStock(company);
 						intent = new Intent(getBaseContext(),
 								CompareActivity.class);
 						intent.putExtra("Company1", companyName);
@@ -400,7 +400,7 @@ public class CompanyActivity extends Activity {
 				 * The amount of avaialble historical prices is rather large,
 				 * but we only need the last 25 or so. 
 				 */
-				for (int n = 0; n < values.size() - 4; n += 7) {
+				for (int n = 0; n < 173; n += 7) {
 					parsedResponse = values.get(n).toString();
 					parsedResponse = parsedResponse.substring(
 							parsedResponse.indexOf(">") + 1,
@@ -435,7 +435,6 @@ public class CompanyActivity extends Activity {
 					android.R.id.text1, pastPrices);
 			lv.setAdapter(adapter);
 			super.onPostExecute(result);
-			dialog.dismiss();
 		}
 
 	}
@@ -466,6 +465,7 @@ public class CompanyActivity extends Activity {
 					tvCompany.setText(stock.getName());
 					score = (int) stock.getScore();
 					tv.setText(randomPhrase(score));
+					dialog.dismiss();
 				}
 				
 				BigDecimal current = stock.getCurrentPrice();

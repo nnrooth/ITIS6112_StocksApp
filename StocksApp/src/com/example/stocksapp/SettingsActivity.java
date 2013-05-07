@@ -92,7 +92,7 @@ public class SettingsActivity extends Activity {
 								+ "\n\n"
 								+ "Developers:-"
 								+ "\n"
-								+ "Nathaneal Rooth"
+								+ "Nate Rooth"
 								+ "\n"
 								+ "Nikitha Gottam"
 								+ "\n"
